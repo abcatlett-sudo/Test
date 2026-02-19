@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luminary — Modern Business Solutions</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- Navigation -->
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <a href="#" class="logo">Luminary</a>
+      <ul class="nav-links">
+        <li><a href="#features">Services</a></li>
+        <li><a href="#about">About</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+      <button class="btn btn-outline nav-cta">Get Started</button>
+      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero" id="home">
+    <div class="container hero-content">
+      <span class="badge">New in 2026</span>
+      <h1>Grow your business<br /><span class="highlight">smarter, not harder.</span></h1>
+      <p class="hero-sub">
+        Luminary helps modern businesses streamline operations, reach more customers,
+        and scale with confidence — all from one powerful platform.
+      </p>
+      <div class="hero-actions">
+        <a href="#features" class="btn btn-primary">Explore Services</a>
+        <a href="#contact" class="btn btn-ghost">Talk to us &rarr;</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><span class="stat-num">10k+</span><span class="stat-label">Clients served</span></div>
+        <div class="stat"><span class="stat-num">98%</span><span class="stat-label">Satisfaction rate</span></div>
+        <div class="stat"><span class="stat-num">24/7</span><span class="stat-label">Support available</span></div>
+      </div>
+    </div>
+    <div class="hero-bg-shape"></div>
+  </section>
+
+  <!-- Features / Services Section -->
+  <section class="features" id="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">What We Offer</span>
+        <h2>Everything you need to succeed</h2>
+        <p>Tailored solutions built for businesses of every size.</p>
+      </div>
+      <div class="features-grid">
+
+        <div class="feature-card">
+          <div class="feature-icon">&#128200;</div>
+          <h3>Growth Strategy</h3>
+          <p>Data-driven strategies that identify opportunities and accelerate your market expansion.</p>
+          <a href="#contact" class="feature-link">Learn more &rarr;</a>
+        </div>
+
+        <div class="feature-card featured">
+          <div class="feature-badge">Most Popular</div>
+          <div class="feature-icon">&#9889;</div>
+          <h3>Process Automation</h3>
+          <p>Eliminate repetitive tasks and free up your team with smart, reliable automation workflows.</p>
+          <a href="#contact" class="feature-link">Learn more &rarr;</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">&#127760;</div>
+          <h3>Digital Marketing</h3>
+          <p>SEO, paid ads, and content marketing campaigns that drive measurable results.</p>
+          <a href="#contact" class="feature-link">Learn more &rarr;</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">&#128275;</div>
+          <h3>Security & Compliance</h3>
+          <p>Enterprise-grade security practices to keep your data and customers safe at all times.</p>
+          <a href="#contact" class="feature-link">Learn more &rarr;</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">&#128101;</div>
+          <h3>Team Collaboration</h3>
+          <p>Tools and processes that keep distributed teams aligned, productive, and connected.</p>
+          <a href="#contact" class="feature-link">Learn more &rarr;</a>
+        </div>
+
+        <div class="feature-card">
+          <div class="feature-icon">&#128202;</div>
+          <h3>Analytics & Insights</h3>
+          <p>Real-time dashboards and reporting so you always know where your business stands.</p>
+          <a href="#contact" class="feature-link">Learn more &rarr;</a>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- About Section -->
+  <section class="about" id="about">
+    <div class="container about-inner">
+      <div class="about-text">
+        <span class="section-tag">About Luminary</span>
+        <h2>We're on a mission to make business simple.</h2>
+        <p>
+          Founded in 2018, Luminary started with one goal: make enterprise-level tools
+          accessible to every business. Today we work with thousands of companies worldwide,
+          from ambitious startups to established industry leaders.
+        </p>
+        <p>
+          Our team of experts brings deep experience across strategy, technology, and marketing
+          — so you always have the right people in your corner.
+        </p>
+        <a href="#contact" class="btn btn-primary">Work with us</a>
+      </div>
+      <div class="about-visual">
+        <div class="about-card">
+          <div class="about-avatar">&#128188;</div>
+          <blockquote>
+            "Luminary transformed how we operate. We cut costs by 40% in the first quarter."
+          </blockquote>
+          <cite>— Sarah K., CEO of TechVault Inc.</cite>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Contact Section -->
+  <section class="contact" id="contact">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Get in Touch</span>
+        <h2>Ready to get started?</h2>
+        <p>Fill out the form and our team will reach out within 24 hours.</p>
+      </div>
+      <form class="contact-form" id="contactForm" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" name="name" placeholder="Jane Smith" required />
+          </div>
+          <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="jane@company.com" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label for="service">Service Interested In</label>
+          <select id="service" name="service">
+            <option value="">Select a service...</option>
+            <option>Growth Strategy</option>
+            <option>Process Automation</option>
+            <option>Digital Marketing</option>
+            <option>Security &amp; Compliance</option>
+            <option>Team Collaboration</option>
+            <option>Analytics &amp; Insights</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="message">Message</label>
+          <textarea id="message" name="message" rows="4" placeholder="Tell us about your goals..."></textarea>
+        </div>
+        <button type="submit" class="btn btn-primary btn-full">Send Message</button>
+        <p class="form-note" id="formNote"></p>
+      </form>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="#" class="logo">Luminary</a>
+        <p>Modern solutions for modern businesses.</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <h4>Services</h4>
+          <ul>
+            <li><a href="#features">Growth Strategy</a></li>
+            <li><a href="#features">Automation</a></li>
+            <li><a href="#features">Marketing</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Company</h4>
+          <ul>
+            <li><a href="#about">About</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><a href="#">Careers</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Legal</h4>
+          <ul>
+            <li><a href="#">Privacy Policy</a></li>
+            <li><a href="#">Terms of Service</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 Luminary. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
