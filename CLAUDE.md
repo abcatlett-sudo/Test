@@ -1,11 +1,14 @@
-# CLAUDE.md — Luminary Landing Page
+# CLAUDE.md — Business Landing Page (Starter Template)
 
 This file provides guidance for AI assistants working on this codebase.
 
 ## Project Overview
 
-**Luminary** is a static single-page business landing page. It requires no build tools,
-no package manager, and no server — open `index.html` directly in a browser.
+A **static, single-page business landing page** template — no build tools, no package
+manager, no server required. Open `index.html` directly in a browser to view it.
+
+All placeholder text is marked with `[brackets]` in `index.html` and is ready to be
+replaced with real business content.
 
 **Tech stack:** Vanilla HTML5 · CSS3 (custom properties) · Vanilla JavaScript (ES6+)
 
@@ -15,188 +18,160 @@ no package manager, and no server — open `index.html` directly in a browser.
 
 ```
 /
-├── index.html    # Entire page markup (single file, ~215 lines)
-├── styles.css    # All styles (~400 lines)
-├── script.js     # All JavaScript (~70 lines)
+├── index.html    # All page markup (~130 lines) — placeholder content inside [brackets]
+├── styles.css    # All styles (~450 lines) — fully commented with table of contents
+├── script.js     # All JavaScript (~107 lines) — three clearly labelled sections
 └── CLAUDE.md     # This file
 ```
 
-There are no subdirectories, no assets folder, no dependencies, and no configuration files.
+No subdirectories, no dependencies, no configuration files.
 
 ---
 
 ## Page Sections (index.html)
 
-The page is a single scrollable document with anchor-linked sections:
-
-| Section | ID / Class | Description |
+| Section | Element / ID | Description |
 |---|---|---|
-| Navigation | `.navbar` | Sticky top nav with logo, links, CTA button, mobile hamburger |
-| Hero | `#home` `.hero` | Headline, subtext, two CTA buttons, three stats, decorative shape |
-| Features | `#features` `.features` | 6-card grid of services; one card has `.featured` highlight style |
-| About | `#about` `.about` | Two-column layout: text left, testimonial card right |
-| Contact | `#contact` `.contact` | Form with name, email, service select, message, submit button |
-| Footer | `.footer` | Dark background; brand column + 3 link columns + copyright bar |
+| Navigation | `<nav class="navbar">` | Sticky top nav: logo, links, CTA button, mobile hamburger |
+| Hero | `<section id="home">` | Badge, headline with `.highlight` span, subtext, two CTA buttons |
+| Features | `<section id="features">` | `.section-header` + 3-card `.features-grid`; centre card has `.featured` style |
+| Contact | `<section id="contact">` | Name + email row, message textarea, submit button, `#formNote` feedback |
+| Footer | `<footer class="footer">` | Logo, copyright text, short nav links — single dark bar |
+
+### What to customise first
+
+1. `<title>` — page title in the browser tab
+2. All `[bracket]` placeholders in the HTML (logo, business name, headlines, copy)
+3. The three `.feature-card` entries — change icons (emoji), headings, and descriptions
+4. CSS variables in `:root` in `styles.css` — swap `--primary` and `--accent` colours to
+   match your brand
 
 ---
 
 ## CSS Conventions (styles.css)
 
+The stylesheet has a table of contents at the top. Sections are numbered 1–9.
+
 ### Design Tokens
 
-All visual values are defined as CSS custom properties on `:root`. **Always use these variables
-— never hardcode colors, radii, or shadow values.**
+**Always use CSS variables — never hardcode colour hex values, radii, or shadow values.**
 
 ```css
 :root {
-  --primary:    #6C47FF;   /* Brand purple — primary actions, links, accents */
-  --primary-d:  #5535e0;   /* Darker purple — hover state for primary */
-  --accent:     #FF6B6B;   /* Coral red — gradient pair, error text */
-  --dark:       #0F0E17;   /* Near-black — body text, footer background */
-  --mid:        #2E2C3F;   /* Dark grey — secondary text, form labels */
-  --muted:      #6B6880;   /* Muted purple-grey — body copy, placeholders */
-  --light:      #F4F3FF;   /* Off-white purple tint — section backgrounds, cards */
+  --primary:    #6C47FF;   /* Main brand colour — buttons, links, accents     */
+  --primary-d:  #5535e0;   /* Hover/active state for primary                  */
+  --accent:     #FF6B6B;   /* Secondary accent — gradient pair, error text    */
+  --dark:       #0F0E17;   /* Body text, footer background                    */
+  --mid:        #2E2C3F;   /* Labels, secondary text                          */
+  --muted:      #6B6880;   /* Supporting copy, placeholders                   */
+  --light:      #F4F3FF;   /* Card backgrounds, section fills                 */
   --white:      #ffffff;
-  --radius:     12px;       /* Standard border radius */
+  --radius:     12px;
   --shadow:     0 4px 24px rgba(108, 71, 255, 0.12);
   --transition: 0.25s ease;
 }
 ```
 
-### Naming Conventions
-
-Classes follow a BEM-like flat pattern — block name joined to element name with a hyphen:
-
-```
-.feature-card       Block
-.feature-icon       Block + element
-.feature-card.featured  Block + modifier (modifier is a second class, not --modifier)
-```
-
-Avoid deep nesting in selectors. The stylesheet uses at most two levels (e.g., `.feature-card h3`).
-
 ### Button System
 
-Four button variants share the base `.btn` class:
+All buttons share the `.btn` base class plus one variant:
 
-| Class | Appearance | Use |
+| Class | Style | When to use |
 |---|---|---|
-| `.btn-primary` | Filled purple | Primary CTAs |
-| `.btn-outline` | Purple border, transparent fill | Secondary nav CTA |
-| `.btn-ghost` | No border, no background | Inline soft actions |
-| `.btn-full` | `width: 100%` modifier | Full-width form submit |
+| `.btn-primary` | Filled purple | Primary calls-to-action |
+| `.btn-ghost` | No fill, no border | Soft secondary links |
+| `.btn-full` | `width: 100%` | Form submit button |
+
+### Naming Convention
+
+Flat BEM-style with hyphens: `.feature-card`, `.feature-icon`, `.section-header`.
+Modifiers are added as a second class: `.feature-card.featured` (not `--featured`).
 
 ### Responsive Breakpoint
 
-One breakpoint at `max-width: 768px`. At this width:
-- `.nav-links` and `.nav-cta` are hidden; `.nav-toggle` (hamburger) is shown.
-- `.features-grid` collapses from auto-fit columns to a single column.
-- `.about-inner` collapses from two columns to one.
-- `.form-row` collapses from two columns to one.
-- `.footer-inner` collapses from two columns to one.
-
-### Section Layout Pattern
-
-Each content section uses this structural pattern:
-
-```html
-<section class="[section-name]" id="[anchor]">
-  <div class="container">
-    <div class="section-header">
-      <span class="section-tag">Short Label</span>
-      <h2>Main Heading</h2>
-      <p>Supporting sentence.</p>
-    </div>
-    <!-- section content -->
-  </div>
-</section>
-```
-
-`.container` constrains content to `max-width: 1160px` with `padding: 0 24px`.
+One breakpoint: `max-width: 768px` (Section 9 of styles.css).
+Any new multi-column layout **must** include a collapse rule inside that media query.
 
 ---
 
-## JavaScript Conventions (script.js)
+## JavaScript (script.js)
 
-The file has three independent, clearly delimited responsibilities:
+Three independently labelled sections:
 
-1. **Mobile navigation toggle** — toggles `.open` class on `.nav-links`; removes it when
-   any nav link is clicked.
+| Section | What it does |
+|---|---|
+| 1. Mobile nav toggle | Toggles `.open` on `.nav-links`; closes on link click |
+| 2. Contact form | Validates name + email; simulates submission via `setTimeout` |
+| 3. Fade-in observer | `IntersectionObserver` adds `.visible` to cards/headers on scroll |
 
-2. **Contact form handling** — client-side validation (name + email required), simulates
-   a network request via `setTimeout(1200ms)`, resets form on success, shows inline
-   feedback in `#formNote`.
+The fade-in CSS (`.fade-in` / `.fade-in.visible`) is injected via `script.js` because
+the animation is JavaScript-dependent and would do nothing without the observer.
 
-3. **Scroll-triggered fade-in** — `IntersectionObserver` (threshold `0.12`) adds `.visible`
-   to `.feature-card`, `.about-card`, `.about-text`, and `.section-header` elements as they
-   scroll into view. The CSS for `.fade-in` / `.fade-in.visible` is injected dynamically
-   via `document.createElement('style')` to keep `styles.css` clean.
-
-**No external libraries, no module system, no transpilation.** The script runs as a classic
-`<script>` at the bottom of `<body>`.
+**To connect the form to a real backend**, replace the `setTimeout` block in section 2
+with a `fetch()` call to your API endpoint.
 
 ---
 
 ## Development Workflow
 
-### Running the site
-
-No build step required. Open `index.html` in a browser:
+### View the site
 
 ```bash
-# Option 1 — open directly
-open index.html          # macOS
-xdg-open index.html      # Linux
+# No build step needed — open directly:
+open index.html            # macOS
+xdg-open index.html        # Linux
 
-# Option 2 — simple local server (avoids some browser file:// restrictions)
+# Or run a local server to avoid browser file:// quirks:
 python3 -m http.server 8080
-# then visit http://localhost:8080
+# → http://localhost:8080
 ```
 
-### Making changes
+### Which file to edit
 
-- **HTML structure / content** → edit `index.html`
-- **All visual styling** → edit `styles.css`; use existing CSS variables
-- **Behavior / interactivity** → edit `script.js`
-- **New color or spacing value** → add it as a CSS variable in `:root` first
+| Task | File |
+|---|---|
+| Change text, headings, or add/remove sections | `index.html` |
+| Change colours, spacing, layout, fonts | `styles.css` |
+| Change interactivity or add new behaviour | `script.js` |
+| Add a new colour or spacing value | Add a CSS variable to `:root` first |
 
-### No tests or linters are configured. Manual browser testing is the verification method.
+### Adding a new section
+
+1. Add the HTML in `index.html` using the standard pattern:
+   ```html
+   <section class="your-section" id="anchor">
+     <div class="container">
+       <div class="section-header">
+         <span class="section-tag">Label</span>
+         <h2>Heading</h2>
+         <p>Supporting text.</p>
+       </div>
+       <!-- content -->
+     </div>
+   </section>
+   ```
+2. Add the section's styles in `styles.css` (in order, before Section 9).
+3. Add a responsive collapse rule in the `@media (max-width: 768px)` block.
+4. Add a nav link in the `<ul class="nav-links">` in the navbar.
+
+No tests or linters are configured — verify changes by opening the page in a browser.
 
 ---
 
 ## Key Conventions for AI Assistants
 
-1. **Use CSS variables** — never hardcode color hex values or magic numbers that already
-   exist as variables.
-
-2. **Follow the existing naming pattern** — flat BEM-style with hyphens (`.section-tag`,
-   `.hero-sub`, `.footer-brand`). Do not introduce camelCase or underscore naming.
-
-3. **Keep JavaScript vanilla** — do not import libraries or introduce module syntax.
-   The page has no bundler.
-
-4. **Maintain the section pattern** — new sections should use `.container` > `.section-header`
-   > content, matching the structure of existing sections.
-
-5. **Mobile breakpoint at 768px** — any new grid or multi-column layout must include a
-   responsive collapse rule inside the `@media (max-width: 768px)` block at the end of
-   `styles.css`.
-
-6. **One file per concern** — keep HTML in `index.html`, styles in `styles.css`, and
-   behavior in `script.js`. Do not inline `<style>` blocks or `onclick` handlers in HTML
-   (the dynamic fade-in injection in `script.js` is intentional and acceptable).
-
-7. **Smooth scroll is on by default** — `html { scroll-behavior: smooth; }` is set globally.
-   All internal navigation uses `href="#anchor"` links; keep this pattern for new sections.
-
-8. **Form feedback** uses `#formNote` — write success messages in `--primary` purple and
-   error messages in `--accent` coral (`#FF6B6B`), matching the existing pattern in
-   `script.js`.
+1. **CSS variables only** — no hardcoded colours or magic numbers that exist as variables.
+2. **Flat BEM naming** — hyphens, no camelCase, no underscores.
+3. **No libraries** — vanilla JS only; no imports, no bundler.
+4. **One breakpoint** — `max-width: 768px`; always add responsive rules there for new layouts.
+5. **One file per concern** — no `<style>` tags in HTML, no `onclick` attributes.
+6. **Section pattern** — `.container` > `.section-header` > content for every section.
+7. **Form feedback colours** — success: `--primary` (`#6C47FF`), error: `--accent` (`#FF6B6B`).
 
 ---
 
 ## Git
 
+- Active branch: `claude/claude-md-mluz9y8kd1kiqm0f-sMWF4`
 - Default branch: `master`
-- One commit in history: initial landing page creation
 - Remote: `origin` (GitHub — `abcatlett-sudo/Test`)
