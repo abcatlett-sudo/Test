@@ -46,7 +46,7 @@ form.addEventListener('submit', (e) => {
 
   // Basic validation
   if (!name || !email) {
-    formNote.style.color = '#FF6B6B';       // --accent
+    formNote.style.color = '#F05230';       // --accent
     formNote.textContent = 'Please fill in your name and email.';
     return;
   }
@@ -61,7 +61,7 @@ form.addEventListener('submit', (e) => {
     form.reset();
     submitBtn.disabled    = false;
     submitBtn.textContent = 'Send Message';
-    formNote.style.color  = '#6C47FF';      // --primary
+    formNote.style.color  = '#00C4A7';      // --teal
     formNote.textContent  = "Thanks! We'll be in touch within 24 hours.";
 
     // Clear the message after 5 seconds

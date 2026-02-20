@@ -1,6 +1,11 @@
 /* =========================================================
    STYLES.CSS — [Your Business Name] Landing Page
 
+   Design inspiration: PhotoRoom (dark premium aesthetic,
+   glassmorphism, purple/violet palette) + GoCardless
+   (structured fintech layout, coral CTAs, teal accents,
+   bold Inter typography).
+
    Table of contents:
    1. Design tokens (CSS variables)
    2. Reset & base
@@ -19,21 +24,39 @@
    Change these variables to restyle the entire site.
    --------------------------------------------------------- */
 :root {
-  /* Brand colours — swap these to match your palette */
-  --primary:    #6C47FF;          /* Main brand colour (buttons, links, accents) */
-  --primary-d:  #5535e0;          /* Darker shade — hover states */
-  --accent:     #FF6B6B;          /* Secondary accent — gradient highlights, errors */
+  /* Brand colours */
+  --primary:       #7C4DFF;      /* Vibrant violet — primary brand, buttons, links */
+  --primary-d:     #6030EE;      /* Darker violet — hover states */
+  --accent:        #F05230;      /* Warm coral — form CTA (GoCardless-inspired) */
+  --accent-d:      #D94420;      /* Darker coral — hover */
+  --teal:          #00C4A7;      /* Fresh teal — section tags, success, gradients */
 
-  /* Neutral shades */
-  --dark:       #0F0E17;          /* Headings, body text, footer background */
-  --mid:        #2E2C3F;          /* Secondary text, labels */
-  --muted:      #6B6880;          /* Placeholder, supporting copy */
-  --light:      #F4F3FF;          /* Card and section backgrounds */
-  --white:      #ffffff;
+  /* Dark surfaces (PhotoRoom-inspired) */
+  --dark:          #0B0A1E;      /* Page background */
+  --dark-deep:     #06051A;      /* Footer — deepest background */
+  --surface:       #14122D;      /* Features section, card backgrounds */
+  --surface-2:     #1E1B3D;      /* Elevated / hover surfaces */
+  --mid:           #3A3760;      /* Borders, dividers */
+  --muted:         #9896B8;      /* Supporting copy, placeholders */
+
+  /* Light (minimal use in dark theme) */
+  --light:         #F4F3FF;      /* Reserved for components that need light bg */
+  --white:         #ffffff;
+
+  /* Alpha / glow tokens — used in gradients and overlays */
+  --primary-glow:  rgba(124, 77, 255, 0.22);
+  --teal-glow:     rgba(0, 196, 167, 0.10);
+  --accent-glow:   rgba(240, 82, 48, 0.28);
+  --glass-bg:      rgba(255, 255, 255, 0.04);
+  --glass-border:  rgba(255, 255, 255, 0.08);
+  --input-bg:      rgba(255, 255, 255, 0.05);
+  --input-bg-f:    rgba(124, 77, 255, 0.06);
 
   /* Spacing & shape */
-  --radius:     12px;
-  --shadow:     0 4px 24px rgba(108, 71, 255, 0.12);
+  --radius:     14px;
+  --shadow:     0 8px 40px rgba(124, 77, 255, 0.20);
+  --shadow-card: 0 2px 20px rgba(0, 0, 0, 0.35);
+  --glow:       0 0 60px rgba(124, 77, 255, 0.28);
   --transition: 0.25s ease;
 }
 
@@ -50,9 +73,9 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-  color: var(--dark);
-  background: var(--white);
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: var(--white);
+  background: var(--dark);
   line-height: 1.65;
 }
 
@@ -75,29 +98,50 @@ img { max-width: 100%; display: block; }
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 28px;
+  padding: 13px 28px;
   border-radius: 50px;
   font-size: 0.95rem;
   font-weight: 600;
   cursor: pointer;
   transition: all var(--transition);
   border: 2px solid transparent;
+  font-family: inherit;
 }
 
-/* Filled — primary actions */
-.btn-primary { background: var(--primary); color: var(--white); }
+/* Filled — primary brand colour */
+.btn-primary {
+  background: var(--primary);
+  color: var(--white);
+  box-shadow: 0 4px 20px rgba(124, 77, 255, 0.30);
+}
 .btn-primary:hover {
   background: var(--primary-d);
   transform: translateY(-2px);
-  box-shadow: var(--shadow);
+  box-shadow: var(--glow);
 }
 
-/* Ghost — soft secondary actions */
-.btn-ghost { background: transparent; color: var(--mid); padding-left: 0; }
-.btn-ghost:hover { color: var(--primary); }
+/* Ghost — soft secondary on dark backgrounds */
+.btn-ghost {
+  background: transparent;
+  color: rgba(255, 255, 255, 0.70);
+  padding-left: 0;
+  border-color: transparent;
+}
+.btn-ghost:hover { color: var(--white); }
 
-/* Full-width — form submit */
-.btn-full { width: 100%; justify-content: center; }
+/* Full-width — form submit, coral accent (GoCardless-inspired) */
+.btn-full {
+  width: 100%;
+  justify-content: center;
+  background: var(--accent);
+  color: var(--white);
+  box-shadow: 0 4px 20px var(--accent-glow);
+}
+.btn-full:hover {
+  background: var(--accent-d);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 32px var(--accent-glow);
+}
 
 
 /* ---------------------------------------------------------
@@ -107,22 +151,23 @@ img { max-width: 100%; display: block; }
   position: sticky;
   top: 0;
   z-index: 100;
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px);
-  border-bottom: 1px solid rgba(108, 71, 255, 0.08);
+  background: rgba(11, 10, 30, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid var(--glass-border);
 }
 
 .nav-inner {
   display: flex;
   align-items: center;
   gap: 32px;
-  padding: 16px 0;
+  padding: 18px 0;
 }
 
 .logo {
   font-size: 1.4rem;
   font-weight: 800;
-  background: linear-gradient(135deg, var(--primary), var(--accent));
+  background: linear-gradient(135deg, var(--primary), var(--teal));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -131,19 +176,20 @@ img { max-width: 100%; display: block; }
 
 .nav-links {
   display: flex;
-  gap: 28px;
+  gap: 32px;
   margin-left: auto;
 }
 
 .nav-links a {
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--muted);
+  color: rgba(255, 255, 255, 0.58);
   transition: color var(--transition);
 }
-.nav-links a:hover { color: var(--primary); }
+.nav-links a:hover { color: var(--white); }
 
 .nav-cta { padding: 10px 22px; font-size: 0.88rem; }
+.nav-cta:hover { transform: none; box-shadow: none; }
 
 /* Hamburger — hidden on desktop */
 .nav-toggle {
@@ -153,7 +199,7 @@ img { max-width: 100%; display: block; }
   font-size: 1.5rem;
   cursor: pointer;
   margin-left: auto;
-  color: var(--dark);
+  color: var(--white);
 }
 
 
@@ -163,71 +209,97 @@ img { max-width: 100%; display: block; }
 .hero {
   position: relative;
   overflow: hidden;
-  padding: 100px 0 80px;
-  background: linear-gradient(160deg, var(--light) 0%, var(--white) 60%);
+  padding: 120px 0 100px;
+  background: var(--dark);
 }
 
-/* Decorative background circle */
+/* Large radial purple glow — top right (PhotoRoom signature) */
 .hero-shape {
   position: absolute;
-  top: -200px;
-  right: -200px;
-  width: 600px;
-  height: 600px;
+  top: -150px;
+  right: -150px;
+  width: 750px;
+  height: 750px;
   border-radius: 50%;
-  background: linear-gradient(
-    135deg,
-    rgba(108, 71, 255, 0.12),
-    rgba(255, 107, 107, 0.06)
+  background: radial-gradient(
+    circle,
+    var(--primary-glow) 0%,
+    rgba(0, 196, 167, 0.07) 55%,
+    transparent 72%
+  );
+  pointer-events: none;
+}
+
+/* Secondary teal glow — bottom left */
+.hero::after {
+  content: '';
+  position: absolute;
+  bottom: -80px;
+  left: -80px;
+  width: 520px;
+  height: 520px;
+  border-radius: 50%;
+  background: radial-gradient(
+    circle,
+    var(--teal-glow) 0%,
+    transparent 65%
   );
   pointer-events: none;
 }
 
 .hero-content {
   position: relative;
-  max-width: 680px;
+  z-index: 1;
+  max-width: 700px;
 }
 
-/* Small badge above the headline */
+/* Glass-style announcement badge */
 .badge {
-  display: inline-block;
-  background: rgba(108, 71, 255, 0.1);
-  color: var(--primary);
-  padding: 4px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(124, 77, 255, 0.12);
+  border: 1px solid rgba(124, 77, 255, 0.35);
+  color: rgba(255, 255, 255, 0.88);
+  padding: 6px 16px;
   border-radius: 50px;
   font-size: 0.82rem;
   font-weight: 600;
-  margin-bottom: 20px;
-  letter-spacing: 0.5px;
+  margin-bottom: 24px;
+  letter-spacing: 0.3px;
+  backdrop-filter: blur(8px);
 }
 
 .hero h1 {
-  font-size: clamp(2.2rem, 5vw, 3.6rem);
+  font-size: clamp(2.4rem, 5.5vw, 4rem);
   font-weight: 900;
-  line-height: 1.15;
-  letter-spacing: -1px;
-  margin-bottom: 20px;
+  line-height: 1.1;
+  letter-spacing: -1.5px;
+  margin-bottom: 24px;
+  color: var(--white);
 }
 
-/* Gradient text — used inside h1 */
+/* Gradient text — violet to teal */
 .highlight {
-  background: linear-gradient(135deg, var(--primary), var(--accent));
+  background: linear-gradient(135deg, var(--primary), var(--teal));
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
 }
 
 .hero-sub {
-  font-size: 1.1rem;
+  font-size: 1.15rem;
   color: var(--muted);
   max-width: 520px;
-  margin-bottom: 36px;
+  margin-bottom: 40px;
+  line-height: 1.75;
 }
 
 .hero-actions {
   display: flex;
   gap: 16px;
   flex-wrap: wrap;
+  align-items: center;
 }
 
 
@@ -235,97 +307,118 @@ img { max-width: 100%; display: block; }
    6. FEATURES
    --------------------------------------------------------- */
 .features {
-  padding: 100px 0;
-  background: var(--white);
+  padding: 110px 0;
+  background: var(--surface);
 }
 
 /* Shared section header */
 .section-header {
   text-align: center;
-  margin-bottom: 56px;
+  margin-bottom: 60px;
 }
 
 .section-tag {
   display: inline-block;
-  color: var(--primary);
-  font-size: 0.82rem;
+  color: var(--teal);
+  font-size: 0.78rem;
   font-weight: 700;
-  letter-spacing: 1px;
+  letter-spacing: 1.8px;
   text-transform: uppercase;
-  margin-bottom: 12px;
+  margin-bottom: 14px;
 }
 
 .section-header h2 {
-  font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+  font-size: clamp(1.9rem, 3.5vw, 2.8rem);
   font-weight: 800;
-  letter-spacing: -0.5px;
-  margin-bottom: 12px;
+  letter-spacing: -0.75px;
+  margin-bottom: 14px;
+  color: var(--white);
 }
 
-.section-header p { color: var(--muted); font-size: 1.05rem; }
+.section-header p {
+  color: var(--muted);
+  font-size: 1.05rem;
+  max-width: 540px;
+  margin: 0 auto;
+}
 
-/* Responsive card grid — auto-fits columns min 280px wide */
+/* Glassmorphism card grid */
 .features-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
+  gap: 20px;
 }
 
 .feature-card {
   position: relative;
-  background: var(--light);
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
   border-radius: var(--radius);
   padding: 36px 32px;
   transition: all var(--transition);
-  border: 1px solid transparent;
+  backdrop-filter: blur(8px);
 }
 
 .feature-card:hover {
   transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.07);
+  border-color: rgba(124, 77, 255, 0.30);
   box-shadow: var(--shadow);
-  border-color: rgba(108, 71, 255, 0.15);
 }
 
-/* Highlighted / featured card */
+/* Featured card — violet-to-teal gradient */
 .feature-card.featured {
-  background: linear-gradient(135deg, var(--primary), var(--primary-d));
+  background: linear-gradient(135deg, var(--primary), var(--teal));
+  border-color: transparent;
   color: var(--white);
+  box-shadow: var(--shadow);
 }
 
-/* Small "Most Popular" badge inside the featured card */
+.feature-card.featured:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(124, 77, 255, 0.40);
+}
+
+/* "Most Popular" badge inside the featured card */
 .feature-badge {
   display: inline-block;
-  background: rgba(255, 255, 255, 0.2);
-  color: white;
-  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.20);
+  color: var(--white);
+  font-size: 0.72rem;
   font-weight: 700;
-  padding: 3px 10px;
+  padding: 4px 12px;
   border-radius: 50px;
-  margin-bottom: 16px;
+  margin-bottom: 18px;
   letter-spacing: 0.5px;
+  text-transform: uppercase;
 }
 
-.feature-icon { font-size: 2rem; margin-bottom: 16px; }
+.feature-icon {
+  font-size: 2.2rem;
+  margin-bottom: 18px;
+  display: block;
+}
 
 .feature-card h3 {
   font-size: 1.15rem;
   font-weight: 700;
   margin-bottom: 10px;
+  color: var(--white);
 }
 
 .feature-card p {
   font-size: 0.92rem;
   color: var(--muted);
-  line-height: 1.7;
+  line-height: 1.75;
 }
 
-.feature-card.featured p { color: rgba(255, 255, 255, 0.8); }
+.feature-card.featured p { color: rgba(255, 255, 255, 0.82); }
 
 
 /* ---------------------------------------------------------
    7. CONTACT
    --------------------------------------------------------- */
-.contact { padding: 100px 0; background: var(--light); }
+.contact { padding: 110px 0; background: var(--dark); }
 
 .contact-form {
   max-width: 640px;
@@ -341,29 +434,36 @@ img { max-width: 100%; display: block; }
   gap: 20px;
 }
 
-.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group { display: flex; flex-direction: column; gap: 8px; }
 
 .form-group label {
-  font-size: 0.88rem;
+  font-size: 0.85rem;
   font-weight: 600;
-  color: var(--mid);
+  color: rgba(255, 255, 255, 0.58);
+  letter-spacing: 0.2px;
 }
 
 .form-group input,
 .form-group textarea {
-  padding: 12px 16px;
-  border: 1.5px solid #E0DEEF;
+  padding: 13px 16px;
+  border: 1.5px solid var(--glass-border);
   border-radius: var(--radius);
   font-size: 0.95rem;
   font-family: inherit;
-  color: var(--dark);
-  background: var(--white);
-  transition: border-color var(--transition);
+  color: var(--white);
+  background: var(--input-bg);
+  transition: border-color var(--transition), background var(--transition);
   outline: none;
 }
 
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: var(--muted); }
+
 .form-group input:focus,
-.form-group textarea:focus { border-color: var(--primary); }
+.form-group textarea:focus {
+  border-color: var(--primary);
+  background: var(--input-bg-f);
+}
 
 .form-group textarea { resize: vertical; }
 
@@ -371,7 +471,7 @@ img { max-width: 100%; display: block; }
 .form-note {
   text-align: center;
   font-size: 0.9rem;
-  color: var(--primary);
+  color: var(--teal);
   font-weight: 500;
   min-height: 1.2em;
 }
@@ -381,9 +481,10 @@ img { max-width: 100%; display: block; }
    8. FOOTER
    --------------------------------------------------------- */
 .footer {
-  background: var(--dark);
+  background: var(--dark-deep);
   color: var(--white);
-  padding: 32px 0;
+  padding: 36px 0;
+  border-top: 1px solid var(--glass-border);
 }
 
 .footer-inner {
@@ -396,17 +497,17 @@ img { max-width: 100%; display: block; }
 
 .footer-copy {
   font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.4);
+  color: rgba(255, 255, 255, 0.32);
 }
 
 .footer-nav {
   display: flex;
-  gap: 24px;
+  gap: 28px;
 }
 
 .footer-nav a {
   font-size: 0.88rem;
-  color: rgba(255, 255, 255, 0.55);
+  color: rgba(255, 255, 255, 0.42);
   transition: color var(--transition);
 }
 .footer-nav a:hover { color: var(--white); }
@@ -421,7 +522,7 @@ img { max-width: 100%; display: block; }
   .nav-cta  { display: none; }
   .nav-toggle { display: block; }
 
-  /* Mobile nav dropdown */
+  /* Mobile nav dropdown — dark themed */
   .nav-links.open {
     display: flex;
     flex-direction: column;
@@ -430,15 +531,15 @@ img { max-width: 100%; display: block; }
     top: 100%;
     left: 0;
     right: 0;
-    background: white;
-    padding: 20px 24px;
-    border-bottom: 1px solid #eee;
-    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+    background: var(--surface);
+    padding: 24px;
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.50);
     z-index: 99;
   }
 
   /* Tighten hero */
-  .hero { padding: 64px 0 48px; }
+  .hero { padding: 72px 0 56px; }
 
   /* Stack feature cards */
   .features-grid { grid-template-columns: 1fr; }
