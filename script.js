@@ -38,7 +38,7 @@ navLinks.querySelectorAll('a').forEach(link => {
 const form     = document.getElementById('contactForm');
 const formNote = document.getElementById('formNote');
 
-form.addEventListener('submit', (e) => {
+if (form) form.addEventListener('submit', (e) => {
   e.preventDefault();
 
   const name  = document.getElementById('name').value.trim();

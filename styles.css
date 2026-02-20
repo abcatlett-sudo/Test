@@ -514,6 +514,412 @@ img { max-width: 100%; display: block; }
 
 
 /* ---------------------------------------------------------
+   10. PAGE HERO — compact header for inner pages
+   --------------------------------------------------------- */
+.page-hero {
+  padding: 80px 0 64px;
+  background: var(--dark);
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Radial glow centred above text */
+.page-hero::before {
+  content: '';
+  position: absolute;
+  top: -120px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 540px;
+  height: 540px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.page-hero-inner {
+  position: relative;
+  z-index: 1;
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.page-hero .section-tag { display: block; margin-bottom: 14px; }
+
+.page-hero h1 {
+  font-size: clamp(2rem, 4.5vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: -1px;
+  margin-bottom: 16px;
+  color: var(--white);
+}
+
+.page-hero p {
+  font-size: 1.05rem;
+  color: var(--muted);
+  line-height: 1.75;
+}
+
+
+/* ---------------------------------------------------------
+   11. WILL / PRICING CARDS
+   --------------------------------------------------------- */
+.will-section {
+  padding: 80px 0 110px;
+  background: var(--surface);
+}
+
+.will-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+  align-items: start;
+}
+
+.will-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  transition: all var(--transition);
+  backdrop-filter: blur(8px);
+}
+
+.will-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(124, 77, 255, 0.30);
+  box-shadow: var(--shadow);
+}
+
+.will-card.featured {
+  background: linear-gradient(160deg, var(--primary), var(--teal));
+  border-color: transparent;
+  box-shadow: var(--shadow);
+}
+
+.will-card.featured:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 48px rgba(124, 77, 255, 0.40);
+}
+
+.will-badge {
+  display: inline-block;
+  background: rgba(255, 255, 255, 0.20);
+  color: var(--white);
+  font-size: 0.72rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 50px;
+  margin-bottom: 20px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.will-name {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.will-price { margin-bottom: 16px; }
+
+.will-price strong {
+  font-size: 2.4rem;
+  font-weight: 900;
+  letter-spacing: -1px;
+  color: var(--white);
+}
+
+.will-price span {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-left: 4px;
+}
+
+.will-card.featured .will-price span { color: rgba(255, 255, 255, 0.70); }
+
+.will-desc {
+  font-size: 0.92rem;
+  color: var(--muted);
+  line-height: 1.7;
+  margin-bottom: 24px;
+  padding-bottom: 24px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.will-card.featured .will-desc {
+  color: rgba(255, 255, 255, 0.75);
+  border-bottom-color: rgba(255, 255, 255, 0.15);
+}
+
+.will-features {
+  list-style: none;
+  margin-bottom: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.will-features li {
+  font-size: 0.9rem;
+  color: var(--muted);
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.will-features li::before {
+  content: '✓';
+  color: var(--teal);
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.will-card.featured .will-features li { color: rgba(255, 255, 255, 0.82); }
+.will-card.featured .will-features li::before { color: var(--white); }
+
+/* CTA inside will cards */
+.will-cta {
+  width: 100%;
+  justify-content: center;
+}
+
+.will-card.featured .will-cta {
+  background: var(--white);
+  color: var(--primary);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.20);
+}
+
+.will-card.featured .will-cta:hover {
+  background: rgba(255, 255, 255, 0.92);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25);
+}
+
+
+/* ---------------------------------------------------------
+   12. BLOG
+   --------------------------------------------------------- */
+.blog-section {
+  padding: 80px 0 110px;
+  background: var(--surface);
+}
+
+.blog-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+}
+
+.blog-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  transition: all var(--transition);
+  display: flex;
+  flex-direction: column;
+}
+
+.blog-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(124, 77, 255, 0.30);
+  box-shadow: var(--shadow);
+}
+
+/* Placeholder thumbnail — gradient + emoji */
+.blog-card-thumb {
+  aspect-ratio: 16 / 9;
+  background: linear-gradient(135deg, var(--surface-2), var(--mid));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.blog-card-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.blog-card-tag {
+  display: inline-block;
+  color: var(--teal);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: 10px;
+}
+
+.blog-card-title {
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--white);
+  line-height: 1.4;
+  margin-bottom: 10px;
+}
+
+.blog-card-title a { transition: color var(--transition); }
+.blog-card-title a:hover { color: var(--primary); }
+
+.blog-card-excerpt {
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.7;
+  flex: 1;
+}
+
+.blog-card-meta {
+  margin-top: 16px;
+  font-size: 0.80rem;
+  color: var(--mid);
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  border-top: 1px solid var(--glass-border);
+  padding-top: 14px;
+}
+
+/* First card — featured post, spans 2 columns */
+.blog-card:first-child {
+  grid-column: span 2;
+  flex-direction: row;
+}
+
+.blog-card:first-child .blog-card-thumb {
+  width: 40%;
+  aspect-ratio: auto;
+  flex-shrink: 0;
+}
+
+.blog-card:first-child .blog-card-title { font-size: 1.25rem; }
+
+
+/* ---------------------------------------------------------
+   13. AUTH — login page
+   --------------------------------------------------------- */
+.auth-section {
+  min-height: calc(100vh - 72px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 24px;
+  background: var(--dark);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Centred background glow */
+.auth-section::before {
+  content: '';
+  position: absolute;
+  top: -100px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 600px;
+  height: 600px;
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--primary-glow) 0%, transparent 70%);
+  pointer-events: none;
+}
+
+.auth-card {
+  position: relative;
+  z-index: 1;
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  border-radius: calc(var(--radius) * 1.5);
+  padding: 48px;
+  width: 100%;
+  max-width: 440px;
+  backdrop-filter: blur(12px);
+}
+
+.auth-logo {
+  display: block;
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, var(--primary), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 28px;
+  text-align: center;
+}
+
+.auth-header {
+  margin-bottom: 32px;
+  text-align: center;
+}
+
+.auth-header h1 {
+  font-size: 1.75rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+  color: var(--white);
+}
+
+.auth-header p {
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.auth-forgot {
+  display: block;
+  text-align: right;
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: -6px;
+  transition: color var(--transition);
+}
+.auth-forgot:hover { color: var(--primary); }
+
+.auth-divider {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin: 4px 0;
+  color: var(--mid);
+  font-size: 0.82rem;
+}
+
+.auth-divider::before,
+.auth-divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--glass-border);
+}
+
+.auth-footer {
+  margin-top: 24px;
+  text-align: center;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+
+.auth-footer a {
+  color: var(--primary);
+  font-weight: 600;
+  transition: color var(--transition);
+}
+.auth-footer a:hover { color: var(--primary-d); }
+
+
+/* ---------------------------------------------------------
    9. RESPONSIVE — collapses at 768px
    --------------------------------------------------------- */
 @media (max-width: 768px) {
@@ -550,4 +956,15 @@ img { max-width: 100%; display: block; }
   /* Stack footer */
   .footer-inner { flex-direction: column; text-align: center; }
   .footer-nav   { justify-content: center; }
+
+  /* Will cards */
+  .will-grid { grid-template-columns: 1fr; }
+
+  /* Blog grid — collapse to single column */
+  .blog-grid { grid-template-columns: 1fr; }
+  .blog-card:first-child { grid-column: span 1; flex-direction: column; }
+  .blog-card:first-child .blog-card-thumb { width: 100%; aspect-ratio: 16 / 9; }
+
+  /* Auth card */
+  .auth-card { padding: 32px 24px; }
 }
