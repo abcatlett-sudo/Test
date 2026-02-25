@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sign In — [Your Business Name]</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- =====================
+       NAVIGATION
+  ======================== -->
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">[Logo]</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="choose-a-will.html">Choose a Will</a></li>
+        <li><a href="blog.html">Blog</a></li>
+      </ul>
+      <a href="login.html" class="btn btn-primary nav-cta">Sign In</a>
+      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </nav>
+
+  <!-- =====================
+       AUTH CARD
+  ======================== -->
+  <section class="auth-section">
+    <div class="auth-card">
+
+      <a href="index.html" class="auth-logo">[Logo]</a>
+
+      <div class="auth-header">
+        <h1>Welcome back</h1>
+        <p>Sign in to manage your will and documents.</p>
+      </div>
+
+      <form class="auth-form" id="loginForm" novalidate>
+
+        <div class="form-group">
+          <label for="email">Email address</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            placeholder="jane@example.com"
+            required
+            autocomplete="email"
+          />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            id="password"
+            name="password"
+            placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
+            required
+            autocomplete="current-password"
+          />
+          <a href="#" class="auth-forgot">Forgot your password?</a>
+        </div>
+
+        <button type="submit" class="btn btn-full">Sign In</button>
+
+        <p class="form-note" id="loginNote"></p>
+
+      </form>
+
+      <div class="auth-divider">or</div>
+
+      <p class="auth-footer">
+        Don't have an account?
+        <a href="choose-a-will.html">Create one &rarr;</a>
+      </p>
+
+    </div>
+  </section>
+
+  <!-- =====================
+       FOOTER
+  ======================== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="index.html" class="logo">[Logo]</a>
+      <p class="footer-copy">&copy; 2026 [Your Business Name]. All rights reserved.</p>
+      <nav class="footer-nav">
+        <a href="index.html">Home</a>
+        <a href="choose-a-will.html">Choose a Will</a>
+        <a href="blog.html">Blog</a>
+        <a href="login.html">Sign In</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>
