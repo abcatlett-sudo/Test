@@ -30,6 +30,7 @@
   --accent:        #F05230;      /* Warm coral — form CTA (GoCardless-inspired) */
   --accent-d:      #D94420;      /* Darker coral — hover */
   --teal:          #00C4A7;      /* Fresh teal — section tags, success, gradients */
+  --green:         #22C55E;      /* Green — How it works labels */
 
   /* Dark surfaces (PhotoRoom-inspired) */
   --dark:          #0B0A1E;      /* Page background */
@@ -123,9 +124,10 @@ img { max-width: 100%; display: block; }
 /* Ghost — soft secondary on dark backgrounds */
 .btn-ghost {
   background: transparent;
-  color: var(--teal);
+  color: var(--green);
   padding-left: 0;
   border-color: transparent;
+  font-size: 0.78rem;
 }
 .btn-ghost:hover { color: var(--white); }
 
@@ -319,7 +321,7 @@ img { max-width: 100%; display: block; }
 
 .section-tag {
   display: inline-block;
-  color: var(--teal);
+  color: var(--green);
   font-size: 0.78rem;
   font-weight: 700;
   letter-spacing: 1.8px;
