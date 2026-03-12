@@ -309,7 +309,7 @@ img { max-width: 100%; display: block; }
    6. FEATURES
    --------------------------------------------------------- */
 .features {
-  padding: 110px 0;
+  padding: 180px 0 110px;
   background: var(--surface);
 }
 
