@@ -211,7 +211,7 @@ img { max-width: 100%; display: block; }
 .hero {
   position: relative;
   overflow: hidden;
-  padding: 120px 0 100px;
+  padding: 120px 0 220px;
   background: var(--dark);
 }
 
