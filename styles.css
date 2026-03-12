@@ -30,7 +30,7 @@
   --accent:        #F05230;      /* Warm coral — form CTA (GoCardless-inspired) */
   --accent-d:      #D94420;      /* Darker coral — hover */
   --teal:          #00C4A7;      /* Fresh teal — section tags, success, gradients */
-  --green:         #22C55E;      /* Green — How it works labels */
+  --green:         #00C4A7;      /* Turquoise — How it works labels */
 
   /* Dark surfaces (PhotoRoom-inspired) */
   --dark:          #0B0A1E;      /* Page background */
