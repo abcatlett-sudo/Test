@@ -441,6 +441,11 @@ img { max-width: 100%; display: block; }
   border-color: rgba(124, 77, 255, 0.30);
 }
 
+.features-cta {
+  text-align: center;
+  margin-top: 48px;
+}
+
 .step-num {
   width: 40px;
   height: 40px;
