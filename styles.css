@@ -334,7 +334,10 @@ img { max-width: 100%; display: block; }
   font-weight: 800;
   letter-spacing: -0.75px;
   margin-bottom: 14px;
-  color: var(--white);
+  background: linear-gradient(135deg, var(--primary), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .section-header p {
