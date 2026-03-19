@@ -637,7 +637,10 @@ img { max-width: 100%; display: block; }
   font-weight: 900;
   letter-spacing: -1px;
   margin-bottom: 16px;
-  color: var(--white);
+  background: linear-gradient(135deg, var(--primary), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .page-hero p {
