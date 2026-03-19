@@ -316,7 +316,7 @@ img { max-width: 100%; display: block; }
 /* Shared section header */
 .section-header {
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: 32px;
 }
 
 .section-tag {
