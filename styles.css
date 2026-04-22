@@ -1142,6 +1142,168 @@ img { max-width: 100%; display: block; }
 
 
 /* ---------------------------------------------------------
+   16. BLOG ARTICLE — full single-post reading layout
+   --------------------------------------------------------- */
+.blog-article-section {
+  padding: 64px 0 110px;
+  background: var(--surface);
+}
+
+.blog-article {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.blog-article-meta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 28px;
+  flex-wrap: wrap;
+}
+
+.blog-article-tag {
+  display: inline-block;
+  color: var(--teal);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+}
+
+.blog-article-date {
+  font-size: 0.82rem;
+  color: var(--muted);
+}
+
+.blog-article-dot { color: var(--mid); font-size: 0.7rem; }
+
+.blog-article h1 {
+  font-size: clamp(1.8rem, 4vw, 2.8rem);
+  font-weight: 900;
+  line-height: 1.18;
+  letter-spacing: -1px;
+  margin-bottom: 20px;
+  background: linear-gradient(135deg, var(--primary), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.blog-article-deck {
+  font-size: 1.2rem;
+  color: rgba(255, 255, 255, 0.75);
+  line-height: 1.7;
+  margin-bottom: 40px;
+  padding-bottom: 36px;
+  border-bottom: 1px solid var(--glass-border);
+  font-weight: 500;
+}
+
+.blog-thumb {
+  aspect-ratio: 16 / 7;
+  background: linear-gradient(135deg, var(--surface-2), var(--mid));
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 4rem;
+  margin-bottom: 48px;
+}
+
+/* Long-form body copy */
+.blog-body { color: var(--muted); font-size: 1.02rem; line-height: 1.85; }
+
+.blog-body p { margin-bottom: 22px; }
+
+.blog-body h2 {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: var(--white);
+  letter-spacing: -0.3px;
+  margin: 44px 0 16px;
+}
+
+.blog-body h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--white);
+  margin: 32px 0 12px;
+}
+
+.blog-body strong { color: rgba(255, 255, 255, 0.90); font-weight: 600; }
+
+.blog-body em { color: rgba(255, 255, 255, 0.70); font-style: italic; }
+
+.blog-body a { color: var(--primary); text-decoration: underline; text-underline-offset: 3px; }
+.blog-body a:hover { color: var(--teal); }
+
+/* Pull-quote / stat callout */
+.blog-stat {
+  background: linear-gradient(135deg, rgba(124, 77, 255, 0.12), rgba(0, 196, 167, 0.08));
+  border-left: 3px solid var(--primary);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 20px 28px;
+  margin: 36px 0;
+}
+
+.blog-stat p {
+  font-size: 1.15rem;
+  font-weight: 600;
+  color: rgba(255, 255, 255, 0.88);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.blog-stat span {
+  display: block;
+  font-size: 0.82rem;
+  color: var(--muted);
+  margin-top: 8px;
+  font-weight: 400;
+}
+
+/* Inline keyword highlight */
+.blog-kw {
+  color: var(--teal);
+  font-weight: 600;
+}
+
+/* CTA block at end of article */
+.blog-cta-block {
+  margin-top: 56px;
+  padding: 40px;
+  background: linear-gradient(135deg, var(--primary), var(--teal));
+  border-radius: calc(var(--radius) * 1.2);
+  text-align: center;
+}
+
+.blog-cta-block h3 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+
+.blog-cta-block p {
+  font-size: 0.97rem;
+  color: rgba(255, 255, 255, 0.82);
+  margin-bottom: 24px;
+  line-height: 1.6;
+}
+
+.blog-cta-block .btn {
+  background: var(--white);
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.blog-cta-block .btn:hover {
+  background: rgba(255, 255, 255, 0.90);
+  transform: translateY(-2px);
+}
+
+/* ---------------------------------------------------------
    15. BASKET PAGE
    --------------------------------------------------------- */
 .basket-section {
@@ -1311,6 +1473,10 @@ img { max-width: 100%; display: block; }
 
   /* Basket */
   .basket-layout { grid-template-columns: 1fr; }
+
+  /* Blog article */
+  .blog-cta-block { padding: 28px 20px; }
+  .blog-stat { padding: 16px 20px; }
 
   /* About story */
   .story-block { padding-left: 24px; }
