@@ -193,6 +193,61 @@ img { max-width: 100%; display: block; }
 .nav-cta { padding: 10px 22px; font-size: 0.88rem; }
 .nav-cta:hover { transform: none; box-shadow: none; }
 
+/* Basket icon in nav */
+.nav-basket {
+  position: relative;
+  font-size: 1.35rem;
+  line-height: 1;
+  color: rgba(255, 255, 255, 0.70);
+  transition: color var(--transition);
+  display: flex;
+  align-items: center;
+}
+.nav-basket:hover { color: var(--white); }
+
+.basket-count {
+  position: absolute;
+  top: -6px;
+  right: -8px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 50px;
+  background: var(--primary);
+  color: var(--white);
+  font-size: 0.68rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+.basket-count:empty { display: none; }
+
+/* Toast notification */
+.toast {
+  position: fixed;
+  bottom: 32px;
+  left: 50%;
+  transform: translateX(-50%) translateY(16px);
+  background: var(--surface-2);
+  border: 1px solid var(--glass-border);
+  color: var(--white);
+  padding: 12px 24px;
+  border-radius: 50px;
+  font-size: 0.92rem;
+  font-weight: 500;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none;
+  white-space: nowrap;
+}
+.toast.toast-show {
+  opacity: 1;
+  transform: translateX(-50%) translateY(0);
+}
+
 /* Hamburger — hidden on desktop */
 .nav-toggle {
   display: none;
@@ -1087,6 +1142,121 @@ img { max-width: 100%; display: block; }
 
 
 /* ---------------------------------------------------------
+   15. BASKET PAGE
+   --------------------------------------------------------- */
+.basket-section {
+  padding: 80px 0 110px;
+  background: var(--surface);
+  min-height: 60vh;
+}
+
+.basket-layout {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 32px;
+  align-items: start;
+}
+
+.basket-items { display: flex; flex-direction: column; gap: 16px; }
+
+.basket-item {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  transition: all var(--transition);
+}
+
+.basket-item-info { flex: 1; }
+
+.basket-item-name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.basket-item-price {
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--primary);
+  letter-spacing: -0.5px;
+}
+
+.basket-item-remove {
+  background: none;
+  border: 1px solid var(--glass-border);
+  color: var(--muted);
+  border-radius: 50px;
+  padding: 6px 14px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all var(--transition);
+}
+.basket-item-remove:hover {
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+.basket-summary {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 28px;
+  position: sticky;
+  top: 90px;
+}
+
+.basket-summary h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--glass-border);
+}
+
+.summary-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 10px;
+}
+
+.summary-row.total {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--white);
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid var(--glass-border);
+  margin-bottom: 24px;
+}
+
+.basket-empty {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--muted);
+}
+
+.basket-empty-icon { font-size: 3.5rem; margin-bottom: 20px; display: block; }
+
+.basket-empty h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+
+.basket-empty p { font-size: 0.95rem; margin-bottom: 28px; }
+
+/* ---------------------------------------------------------
    9. RESPONSIVE — collapses at 768px
    --------------------------------------------------------- */
 @media (max-width: 768px) {
@@ -1138,6 +1308,9 @@ img { max-width: 100%; display: block; }
 
   /* Auth card */
   .auth-card { padding: 32px 24px; }
+
+  /* Basket */
+  .basket-layout { grid-template-columns: 1fr; }
 
   /* About story */
   .story-block { padding-left: 24px; }
