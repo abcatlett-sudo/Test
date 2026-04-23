@@ -1332,6 +1332,33 @@ img { max-width: 100%; display: block; }
   padding: 72px 0 80px;
   background: var(--dark);
   border-top: 1px solid var(--glass-border);
+}
+
+.basket-process .process-step {
+  padding: 20px 16px;
+}
+
+.basket-process .step-num {
+  width: 28px;
+  height: 28px;
+  font-size: 0.78rem;
+  margin-bottom: 12px;
+}
+
+.basket-process .step-icon {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+}
+
+.basket-process .process-step h3 {
+  font-size: 0.82rem;
+  font-weight: 600;
+}
+
+.basket-process .process-connector {
+  width: 32px;
+  font-size: 1rem;
+  padding-bottom: 40px;
 }.basket-section {
   padding: 80px 0 110px;
   background: var(--surface);
