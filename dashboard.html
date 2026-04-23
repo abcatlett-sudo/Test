@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sign In — Wills Assured</title>
+  <title>Dashboard — Wills Assured</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -30,58 +30,25 @@
   </nav>
 
   <!-- =====================
-       AUTH CARD
+       PAGE HERO
   ======================== -->
-  <section class="auth-section">
-    <div class="auth-card">
+  <section class="page-hero">
+    <div class="container page-hero-inner">
+      <span class="section-tag">My Account</span>
+      <h1>Your <span class="highlight">dashboard</span></h1>
+      <p>Everything you need to manage your will and account in one place.</p>
+    </div>
+  </section>
 
-      <a href="index.html" class="auth-logo">Wills Assured</a>
-
-      <div class="auth-header">
-        <h1>Welcome back</h1>
-        <p>Sign in to manage your will and documents.</p>
+  <!-- =====================
+       DASHBOARD CONTENT
+       Populated by auth.js once session is confirmed
+  ======================== -->
+  <section class="dashboard-section">
+    <div class="container" id="dashboardContent">
+      <div class="dashboard-loading">
+        <p>Loading your account&hellip;</p>
       </div>
-
-      <form class="auth-form" id="loginForm" novalidate>
-
-        <div class="form-group">
-          <label for="email">Email address</label>
-          <input
-            type="email"
-            id="email"
-            name="email"
-            placeholder="jane@example.com"
-            required
-            autocomplete="email"
-          />
-        </div>
-
-        <div class="form-group">
-          <label for="password">Password</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;"
-            required
-            autocomplete="current-password"
-          />
-          <a href="#" class="auth-forgot">Forgot your password?</a>
-        </div>
-
-        <button type="submit" class="btn btn-full">Sign In</button>
-
-        <p class="form-note" id="loginNote"></p>
-
-      </form>
-
-      <div class="auth-divider">or</div>
-
-      <p class="auth-footer">
-        Don't have an account?
-        <a href="register.html">Create one &rarr;</a>
-      </p>
-
     </div>
   </section>
 
@@ -97,7 +64,6 @@
         <a href="about.html">About</a>
         <a href="choose-a-will.html">Choose a Will</a>
         <a href="blog.html">Blog</a>
-        <a href="login.html">Sign In</a>
       </nav>
     </div>
   </footer>

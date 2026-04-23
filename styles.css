@@ -1325,6 +1325,81 @@ img { max-width: 100%; display: block; }
 }
 
 /* ---------------------------------------------------------
+   17. DASHBOARD
+   --------------------------------------------------------- */
+.dashboard-section {
+  padding: 64px 0 110px;
+  background: var(--surface);
+  min-height: 60vh;
+}
+
+.dashboard-loading {
+  text-align: center;
+  color: var(--muted);
+  padding: 80px 0;
+}
+
+.dashboard-welcome {
+  margin-bottom: 40px;
+}
+
+.dashboard-welcome h2 {
+  font-size: clamp(1.6rem, 3vw, 2.2rem);
+  font-weight: 900;
+  letter-spacing: -0.5px;
+  margin-bottom: 8px;
+  background: linear-gradient(135deg, var(--primary), var(--teal));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.dashboard-welcome p {
+  font-size: 1rem;
+  color: var(--muted);
+}
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.dashboard-card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 36px 32px;
+  transition: all var(--transition);
+  backdrop-filter: blur(8px);
+}
+
+.dashboard-card:hover {
+  transform: translateY(-4px);
+  border-color: rgba(124, 77, 255, 0.30);
+  box-shadow: var(--shadow);
+}
+
+.dashboard-card-icon {
+  font-size: 2.4rem;
+  margin-bottom: 16px;
+  display: block;
+}
+
+.dashboard-card h3 {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 8px;
+}
+
+.dashboard-status {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin-bottom: 24px;
+}
+
+/* ---------------------------------------------------------
    15. BASKET PAGE
    --------------------------------------------------------- */
 
