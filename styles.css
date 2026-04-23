@@ -1327,7 +1327,12 @@ img { max-width: 100%; display: block; }
 /* ---------------------------------------------------------
    15. BASKET PAGE
    --------------------------------------------------------- */
-.basket-section {
+
+.basket-process {
+  padding: 72px 0 80px;
+  background: var(--dark);
+  border-top: 1px solid var(--glass-border);
+}.basket-section {
   padding: 80px 0 110px;
   background: var(--surface);
   min-height: 60vh;
