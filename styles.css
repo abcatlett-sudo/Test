@@ -955,9 +955,11 @@ img { max-width: 100%; display: block; }
 }
 
 .blog-index-grid .blog-card .blog-card-thumb {
-  width: 280px;
+  width: 320px;
+  min-height: 220px;
   flex-shrink: 0;
   aspect-ratio: auto;
+  font-size: 4.5rem;
 }
 
 .blog-index-grid .blog-card .blog-card-title { font-size: 1.15rem; }
