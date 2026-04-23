@@ -191,7 +191,7 @@ function renderBasket() {
         <h3>Order summary</h3>
         ${summaryRows}
         <div class="summary-row total"><span>Total</span><span>&pound;${total.toFixed(2)}</span></div>
-        <a href="login.html" class="btn btn-primary will-cta">Proceed to Checkout &rarr;</a>
+        <button id="checkoutBtn" class="btn btn-primary will-cta">Proceed to Checkout &rarr;</button>
       </aside>
     </div>`;
 

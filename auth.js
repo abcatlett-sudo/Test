@@ -1,14 +1,5 @@
 // ================================================================
-// AUTH.JS — Supabase authentication for Wills Assured
-//
-// SETUP (do this once before going live):
-//   1. Go to https://supabase.com and create a free account
-//   2. Create a new project (e.g. "wills-assured")
-//   3. In your project go to Settings → API
-//   4. Copy "Project URL" and "anon / public" key into the two
-//      constants below and save the file
-//   5. In Supabase go to Authentication → URL Configuration and
-//      add your site URL to "Redirect URLs"
+// AUTH.JS — Supabase authentication & Stripe checkout for Wills Assured
 // ================================================================
 
 const SUPABASE_URL      = 'https://fgyqumgvmllhiqdmgrfc.supabase.co';
@@ -18,19 +9,18 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 
 // ----------------------------------------------------------------
-// NAV — update 'Sign In' button to 'Dashboard' when logged in.
-// onAuthStateChange fires synchronously from localStorage on load
-// so there is no visible flash.
+// NAV — swap 'Sign In' for 'Dashboard' when a session is active.
+// onAuthStateChange reads from localStorage so there is no flash.
 // ----------------------------------------------------------------
 sb.auth.onAuthStateChange((_event, session) => {
   const cta = document.querySelector('.nav-cta');
   if (!cta) return;
   if (session) {
     cta.textContent = 'Dashboard';
-    cta.href = 'dashboard.html';
+    cta.href        = 'dashboard.html';
   } else {
     cta.textContent = 'Sign In';
-    cta.href = 'login.html';
+    cta.href        = 'login.html';
   }
 });
 
@@ -40,12 +30,45 @@ sb.auth.onAuthStateChange((_event, session) => {
 // ----------------------------------------------------------------
 async function requireAuth() {
   const { data: { user } } = await sb.auth.getUser();
-  if (!user) {
-    window.location.href = 'login.html';
-    return null;
-  }
+  if (!user) { window.location.href = 'login.html'; return null; }
   return user;
 }
+
+
+// ----------------------------------------------------------------
+// CHECKOUT — "Proceed to Checkout" button on basket page.
+// Uses event delegation because the button is rendered dynamically.
+// Calls the create-checkout Supabase Edge Function which returns
+// a Stripe-hosted checkout URL.
+// ----------------------------------------------------------------
+document.addEventListener('click', async (e) => {
+  if (e.target.id !== 'checkoutBtn') return;
+
+  const btn    = e.target;
+  const basket = JSON.parse(localStorage.getItem('wa_basket') || '[]');
+
+  if (basket.length === 0) return;
+
+  btn.disabled    = true;
+  btn.textContent = 'Redirecting to payment…';
+
+  try {
+    const { data, error } = await sb.functions.invoke('create-checkout', {
+      body: { productId: basket[0].id },
+    });
+
+    if (error || !data?.url) throw new Error(error?.message || 'No checkout URL returned');
+
+    // Clear basket then redirect to Stripe
+    localStorage.removeItem('wa_basket');
+    window.location.href = data.url;
+  } catch (err) {
+    console.error('Checkout error:', err);
+    btn.disabled    = false;
+    btn.textContent = 'Proceed to Checkout →';
+    alert('Something went wrong starting checkout. Please try again.');
+  }
+});
 
 
 // ----------------------------------------------------------------
@@ -63,7 +86,6 @@ if (registerForm) {
     const note     = document.getElementById('registerNote');
     const btn      = registerForm.querySelector('button[type="submit"]');
 
-    // Client-side validation
     if (!name) {
       note.style.color = 'var(--accent)';
       note.textContent = 'Please enter your full name.';
@@ -83,17 +105,13 @@ if (registerForm) {
     btn.disabled    = true;
     btn.textContent = 'Creating account…';
 
-    // Build redirect URL dynamically so it works on any host
     const base       = window.location.href.replace(/[^/]*$/, '');
     const redirectTo = base + 'dashboard.html';
 
     const { error } = await sb.auth.signUp({
       email,
       password,
-      options: {
-        emailRedirectTo: redirectTo,
-        data: { full_name: name }
-      }
+      options: { emailRedirectTo: redirectTo, data: { full_name: name } },
     });
 
     if (error) {
@@ -143,6 +161,7 @@ if (loginForm) {
 
 // ----------------------------------------------------------------
 // DASHBOARD PAGE (#dashboardContent)
+// Requires auth + a paid purchase matched by email.
 // ----------------------------------------------------------------
 const dashboardContent = document.getElementById('dashboardContent');
 if (dashboardContent) {
@@ -150,8 +169,34 @@ if (dashboardContent) {
     const user = await requireAuth();
     if (!user) return;
 
-    const fullName   = user.user_metadata?.full_name || user.email;
-    const firstName  = fullName.split(' ')[0];
+    // Check for a paid purchase against this email
+    const { data: purchases } = await sb
+      .from('purchases')
+      .select('*')
+      .eq('status', 'paid');
+
+    if (!purchases || purchases.length === 0) {
+      dashboardContent.innerHTML = `
+        <div class="dashboard-empty">
+          <span style="font-size:3rem;display:block;margin-bottom:20px;">&#128274;</span>
+          <h2>No active purchase found</h2>
+          <p>You need to complete a purchase before accessing your will dashboard.</p>
+          <a href="choose-a-will.html" class="btn btn-primary">Choose a Will &rarr;</a>
+        </div>`;
+      return;
+    }
+
+    const purchase  = purchases[0];
+    const fullName  = user.user_metadata?.full_name || user.email;
+    const firstName = fullName.split(' ')[0];
+
+    const productLabels = {
+      single:        'Single Will',
+      mirror:        'Mirror Wills',
+      comprehensive: 'Comprehensive Will',
+    };
+    const productName = productLabels[purchase.product_id] || 'Will';
+    const amountPaid  = `£${(purchase.amount / 100).toFixed(2)}`;
 
     dashboardContent.innerHTML = `
       <div class="dashboard-welcome">
@@ -163,8 +208,8 @@ if (dashboardContent) {
         <div class="dashboard-card">
           <div class="dashboard-card-icon">&#128196;</div>
           <h3>Your Will</h3>
-          <p class="dashboard-status">Not yet started</p>
-          <a href="choose-a-will.html" class="btn btn-primary">Get Started &rarr;</a>
+          <p class="dashboard-status">${productName} — questionnaire coming soon</p>
+          <span class="dashboard-badge">Paid ${amountPaid}</span>
         </div>
 
         <div class="dashboard-card">

@@ -1325,9 +1325,97 @@ img { max-width: 100%; display: block; }
 }
 
 /* ---------------------------------------------------------
-   17. DASHBOARD
+   17. DASHBOARD & SUCCESS PAGE
    --------------------------------------------------------- */
-.dashboard-section {
+
+/* Payment success card */
+.success-card { text-align: center; }
+
+.success-icon {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary), var(--teal));
+  color: var(--white);
+  font-size: 2rem;
+  font-weight: 900;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 28px;
+  box-shadow: 0 0 40px rgba(124, 77, 255, 0.40);
+}
+
+.success-steps {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin: 28px 0;
+  text-align: left;
+}
+
+.success-step {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
+.success-step-num {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.75rem;
+  font-weight: 700;
+  flex-shrink: 0;
+  color: var(--muted);
+}
+
+.success-step-num.done {
+  background: var(--teal);
+  border-color: var(--teal);
+  color: var(--white);
+}
+
+.success-step-num.active {
+  background: var(--primary);
+  border-color: var(--primary);
+  color: var(--white);
+}
+
+.success-step:has(.success-step-num.done) { color: var(--white); }
+.success-step:has(.success-step-num.active) { color: var(--white); font-weight: 600; }
+
+/* Dashboard no-purchase state */
+.dashboard-empty {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--muted);
+}
+.dashboard-empty h2 {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 12px;
+}
+.dashboard-empty p { margin-bottom: 28px; }
+
+.dashboard-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--primary), var(--teal));
+  color: var(--white);
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 4px 12px;
+  border-radius: 50px;
+  margin-top: 8px;
+}.dashboard-section {
   padding: 64px 0 110px;
   background: var(--surface);
   min-height: 60vh;
