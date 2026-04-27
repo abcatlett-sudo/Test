@@ -174,6 +174,7 @@ const STEPS = [
     type: 'yesno_with_text',
     key: 'specific_gifts_yes',
     showTextOn: 'yes',
+    noFirst: true,
     yesLabel: 'Yes — I\'d like to leave specific gifts',
     noLabel:  'No specific gifts',
     textKey:        'specific_gifts_details',
@@ -189,6 +190,7 @@ const STEPS = [
     type: 'yesno_with_text',
     key: 'exclusions_yes',
     showTextOn: 'yes',
+    noFirst: true,
     yesLabel: 'Yes — I want to exclude specific people',
     noLabel:  'No exclusions',
     textKey:        'exclusions_details',
@@ -388,10 +390,10 @@ function renderYesNoWithText(step) {
   const trigger  = step.showTextOn || 'no';
   const showText = responses[step.key] === trigger;
   return `
-    <div class="quest-options-grid quest-yesno">${[
-      { value: 'yes', label: step.yesLabel },
-      { value: 'no',  label: step.noLabel  },
-    ].map(o => `
+    <div class="quest-options-grid quest-yesno">${(step.noFirst
+      ? [{ value: 'no', label: step.noLabel }, { value: 'yes', label: step.yesLabel }]
+      : [{ value: 'yes', label: step.yesLabel }, { value: 'no', label: step.noLabel }]
+    ).map(o => `
       <button class="quest-option${responses[step.key] === o.value ? ' selected' : ''}" data-key="${step.key}" data-value="${o.value}">
         ${o.label}
       </button>`).join('')}</div>
