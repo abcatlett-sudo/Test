@@ -173,6 +173,7 @@ const STEPS = [
     subtitle: 'Would you like to leave specific items — jewellery, artwork, a family heirloom — to particular people, or make a charitable donation?',
     type: 'yesno_with_text',
     key: 'specific_gifts_yes',
+    showTextOn: 'yes',
     yesLabel: 'Yes — I\'d like to leave specific gifts',
     noLabel:  'No specific gifts',
     textKey:        'specific_gifts_details',
@@ -187,6 +188,7 @@ const STEPS = [
     subtitle: 'Is there anyone you specifically want to exclude from benefiting from your will? This is sometimes appropriate where there has been a family estrangement.',
     type: 'yesno_with_text',
     key: 'exclusions_yes',
+    showTextOn: 'yes',
     yesLabel: 'Yes — I want to exclude specific people',
     noLabel:  'No exclusions',
     textKey:        'exclusions_details',
@@ -383,7 +385,8 @@ function renderYesNo(step) {
 }
 
 function renderYesNoWithText(step) {
-  const showText = responses[step.key] === 'no';
+  const trigger  = step.showTextOn || 'no';
+  const showText = responses[step.key] === trigger;
   return `
     <div class="quest-options-grid quest-yesno">${[
       { value: 'yes', label: step.yesLabel },
@@ -392,7 +395,7 @@ function renderYesNoWithText(step) {
       <button class="quest-option${responses[step.key] === o.value ? ' selected' : ''}" data-key="${step.key}" data-value="${o.value}">
         ${o.label}
       </button>`).join('')}</div>
-    <div class="quest-conditional${showText ? ' visible' : ''}" id="conditionalText">
+    <div class="quest-conditional${showText ? ' visible' : ''}" id="conditionalText" data-show-on="${trigger}">
       <div class="quest-field" style="margin-top:16px;">
         <label class="quest-label">${step.textLabel}</label>
         <textarea class="quest-input quest-textarea" name="${step.textKey}" placeholder="${esc(step.textPlaceholder)}" rows="4">${esc(responses[step.textKey] || '')}</textarea>
@@ -542,7 +545,10 @@ function attachListeners(step) {
       responses[key] = value;
 
       const conditional = document.getElementById('conditionalText') || document.getElementById('pctFields');
-      if (conditional) conditional.classList.toggle('visible', value === 'no');
+      if (conditional) {
+        const showOn = conditional.dataset.showOn || 'no';
+        conditional.classList.toggle('visible', value === showOn);
+      }
     });
   });
 
