@@ -208,8 +208,11 @@ if (dashboardContent) {
         <div class="dashboard-card">
           <div class="dashboard-card-icon">&#128196;</div>
           <h3>Your Will</h3>
-          <p class="dashboard-status">${productName} — questionnaire coming soon</p>
+          <p class="dashboard-status">${productName}</p>
           <span class="dashboard-badge">Paid ${amountPaid}</span>
+          <a href="questionnaire.html" class="btn btn-primary" style="margin-top:14px;display:inline-block;">
+            Start Your Questionnaire &rarr;
+          </a>
         </div>
 
         <div class="dashboard-card">
