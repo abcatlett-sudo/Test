@@ -13,15 +13,15 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 // onAuthStateChange reads from localStorage so there is no flash.
 // ----------------------------------------------------------------
 sb.auth.onAuthStateChange((_event, session) => {
-  const cta = document.querySelector('.nav-cta');
-  if (!cta) return;
-  if (session) {
-    cta.textContent = 'Dashboard';
-    cta.href        = 'dashboard.html';
-  } else {
-    cta.textContent = 'Sign In';
-    cta.href        = 'login.html';
-  }
+  document.querySelectorAll('.nav-cta').forEach(cta => {
+    if (session) {
+      cta.textContent = 'Dashboard';
+      cta.href        = 'dashboard.html';
+    } else {
+      cta.textContent = 'Sign In';
+      cta.href        = 'login.html';
+    }
+  });
 });
 
 
