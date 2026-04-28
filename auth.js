@@ -206,16 +206,17 @@ if (dashboardContent) {
       .eq('product_type', purchase.product_id)
       .maybeSingle();
 
+    const questUrl = `questionnaire.html?type=${purchase.product_id}`;
     let questBtnLabel, questBtnHref;
     if (!questResponse) {
       questBtnLabel = 'Start Your Questionnaire &rarr;';
-      questBtnHref  = 'questionnaire.html';
+      questBtnHref  = questUrl;
     } else if (questResponse.completed) {
       questBtnLabel = 'View Questionnaire &rarr;';
-      questBtnHref  = 'questionnaire.html';
+      questBtnHref  = questUrl;
     } else {
       questBtnLabel = 'Continue Your Questionnaire &rarr;';
-      questBtnHref  = 'questionnaire.html';
+      questBtnHref  = questUrl;
     }
 
     dashboardContent.innerHTML = `

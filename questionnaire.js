@@ -1,11 +1,12 @@
 // ================================================================
-// QUESTIONNAIRE.JS — Mirror Will guided questionnaire
+// QUESTIONNAIRE.JS — Will questionnaire (mirror & single)
 // One step at a time, auto-saved to Supabase on every advance.
 // ================================================================
 
-const PRODUCT_TYPE = 'mirror';
+const urlParams    = new URLSearchParams(window.location.search);
+const PRODUCT_TYPE = urlParams.get('type') || 'mirror';
 
-const SECTIONS = [
+const MIRROR_SECTIONS = [
   { id: 'about',     label: 'About You & Your Partner' },
   { id: 'family',    label: 'Your Family'               },
   { id: 'wishes',    label: 'Your Wishes'               },
@@ -14,7 +15,18 @@ const SECTIONS = [
   { id: 'final',     label: 'Final Details'             },
 ];
 
-const STEPS = [
+const SINGLE_SECTIONS = [
+  { id: 'about',     label: 'About You'     },
+  { id: 'family',    label: 'Your Family'   },
+  { id: 'wishes',    label: 'Your Wishes'   },
+  { id: 'executors', label: 'Executors'     },
+  { id: 'estate',    label: 'Your Estate'   },
+  { id: 'final',     label: 'Final Details' },
+];
+
+const SECTIONS = PRODUCT_TYPE === 'single' ? SINGLE_SECTIONS : MIRROR_SECTIONS;
+
+const MIRROR_STEPS = [
   // ── SECTION 1: About You & Your Partner ─────────────────────
   {
     id: 'your_details',
@@ -230,6 +242,199 @@ const STEPS = [
   },
 ];
 
+// ── SINGLE WILL STEPS ────────────────────────────────────────────
+const SINGLE_STEPS = [
+  // ── SECTION 1: About You ─────────────────────────────────────
+  {
+    id: 'your_details',
+    section: 'about',
+    icon: '&#128100;',
+    title: 'Your details',
+    subtitle: 'These will appear on your will exactly as entered — please use your full legal name.',
+    type: 'fields',
+    fields: [
+      { key: 'your_full_name', label: 'Full legal name', type: 'text',     placeholder: 'e.g. Jane Elizabeth Smith',        required: true },
+      { key: 'your_dob',       label: 'Date of birth',   type: 'date',     placeholder: '',                                 required: true },
+      { key: 'your_address',   label: 'Home address',    type: 'textarea', placeholder: 'Full address including postcode',  required: true },
+    ],
+  },
+  {
+    id: 'confirmation',
+    section: 'about',
+    icon: '&#9989;',
+    title: 'A few important declarations',
+    subtitle: 'These statements are required for your will to be legally valid. Please confirm each one.',
+    type: 'checkboxes',
+    requireAll: true,
+    options: [
+      { key: 'confirm_over_18',    label: 'I am over 18 years of age' },
+      { key: 'confirm_sound_mind', label: 'I am of sound mind and fully understand what I am signing' },
+      { key: 'confirm_voluntary',  label: 'I am making this will freely and voluntarily, without any pressure or coercion' },
+    ],
+  },
+  // ── SECTION 2: Your Family ───────────────────────────────────
+  {
+    id: 'children',
+    section: 'family',
+    icon: '&#128106;',
+    title: 'Do you have any children?',
+    subtitle: 'Include all children — biological, adopted, or step-children you wish to include in your will.',
+    type: 'children',
+  },
+  {
+    id: 'guardians',
+    section: 'family',
+    icon: '&#128737;',
+    title: 'Appointing guardians',
+    subtitle: 'If you passed away, who would you trust to care for your children? Guardians must be over 18.',
+    type: 'fields',
+    showIf: (r) => parseInt(r.children_count || 0) > 0,
+    fields: [
+      { key: 'guardian_name',    label: "Guardian's full name", type: 'text',     placeholder: 'e.g. Sarah Louise Jones',        required: true },
+      { key: 'guardian_address', label: "Guardian's address",   type: 'textarea', placeholder: 'Full address including postcode', required: true },
+    ],
+  },
+  // ── SECTION 3: Your Wishes ───────────────────────────────────
+  {
+    id: 'primary_beneficiary',
+    section: 'wishes',
+    icon: '&#128140;',
+    title: 'Your primary beneficiary',
+    subtitle: 'Who should inherit your entire estate if you pass away? Please provide their details below.',
+    type: 'fields',
+    fields: [
+      { key: 'beneficiary_name',         label: 'Full legal name',     type: 'text',     placeholder: 'e.g. James Robert Smith',        required: true },
+      { key: 'beneficiary_relationship', label: 'Relationship to you', type: 'text',     placeholder: 'e.g. Son, Partner, Friend',       required: true },
+      { key: 'beneficiary_address',      label: 'Address',             type: 'textarea', placeholder: 'Full address including postcode', required: true },
+    ],
+  },
+  {
+    id: 'substitute_beneficiary',
+    section: 'wishes',
+    icon: '&#9878;&#65039;',
+    title: 'If your primary beneficiary passes away before you',
+    subtitle: 'In the event your primary beneficiary predeceases you, who should your estate pass to?',
+    type: 'single_secondary_wish',
+  },
+  {
+    id: 'inheritance_age',
+    section: 'wishes',
+    icon: '&#9203;',
+    title: 'At what age should your children inherit?',
+    subtitle: 'Choose when your children should receive their inheritance. Delaying can provide important financial protection.',
+    type: 'options',
+    key: 'inheritance_age',
+    required: true,
+    options: [
+      { value: '18',     label: '18 years old',       description: 'At the age of legal adulthood'     },
+      { value: '21',     label: '21 years old',       description: 'A little more financial maturity'  },
+      { value: '25',     label: '25 years old',       description: 'Greater financial responsibility'  },
+      { value: 'staged', label: 'Staged',             description: 'Half at 21, the remainder at 25'   },
+      { value: 'custom', label: 'Custom arrangement', description: 'I\'d like to specify my own terms' },
+    ],
+  },
+  // ── SECTION 4: Executors ─────────────────────────────────────
+  {
+    id: 'executor_both',
+    section: 'executors',
+    icon: '&#128203;',
+    title: 'Your executor(s)',
+    subtitle: 'An executor <span class="quest-info-icon" data-tip="An executor is the person legally responsible for carrying out the instructions in your will — settling debts, distributing assets, and handling the estate administration.">&#9432;</span> is the person who carries out the wishes in your will. It is good practice to name two.',
+    type: 'executors',
+  },
+  // ── SECTION 5: Your Estate ───────────────────────────────────
+  {
+    id: 'net_assets',
+    section: 'estate',
+    icon: '&#127968;',
+    title: 'Your net assets',
+    subtitle: 'This covers everything you own — property, savings, investments, and personal possessions.',
+    type: 'yesno_with_text',
+    key: 'net_assets_yes',
+    yesLabel: 'Yes — net assets pass to my primary beneficiary; if they predecease me, equally to my children',
+    noLabel:  'No — I have a different arrangement in mind',
+    textKey:        'net_assets_custom',
+    textLabel:      'Please describe your wishes',
+    textPlaceholder:'Describe how you\'d like your net assets distributed...',
+  },
+  {
+    id: 'business_interests',
+    section: 'estate',
+    icon: '&#128188;',
+    title: 'Business interests',
+    subtitle: 'If you own a business or hold business interests, this clause ensures they are handled in the most tax-efficient way.',
+    type: 'yesno',
+    key: 'business_interests_yes',
+    yesLabel: 'Yes — business interests pass to my primary beneficiary, managed tax-efficiently by the executor',
+    noLabel:  'No — I have no business interests, or have different wishes',
+  },
+  {
+    id: 'specific_gifts',
+    section: 'estate',
+    icon: '&#127873;',
+    title: 'Specific gifts or charitable donations',
+    subtitle: 'Would you like to leave specific items — jewellery, artwork, a family heirloom — to particular people, or make a charitable donation?',
+    type: 'yesno_with_text',
+    key: 'specific_gifts_yes',
+    showTextOn: 'yes',
+    noFirst: true,
+    yesLabel: 'Yes — I\'d like to leave specific gifts',
+    noLabel:  'No specific gifts',
+    textKey:        'specific_gifts_details',
+    textLabel:      'Please describe the gifts or donations',
+    textPlaceholder:'e.g. My grandmother\'s engagement ring to my daughter Emma...',
+  },
+  {
+    id: 'exclusions',
+    section: 'estate',
+    icon: '&#128683;',
+    title: 'Exclusions',
+    subtitle: 'Is there anyone you specifically want to exclude from benefiting from your will? This is sometimes appropriate where there has been a family estrangement.',
+    type: 'yesno_with_text',
+    key: 'exclusions_yes',
+    showTextOn: 'yes',
+    noFirst: true,
+    yesLabel: 'Yes — I want to exclude specific people',
+    noLabel:  'No exclusions',
+    textKey:        'exclusions_details',
+    textLabel:      'Please name the person(s) you wish to exclude and the reason',
+    textPlaceholder:'e.g. John Smith — estranged since 2015...',
+  },
+  // ── SECTION 6: Final Details ─────────────────────────────────
+  {
+    id: 'previous_wills',
+    section: 'final',
+    icon: '&#128196;',
+    title: 'Revoking previous wills',
+    subtitle: 'If you have an existing will, it\'s important to formally revoke it to ensure there is no ambiguity.',
+    type: 'checkbox_confirm',
+    key: 'previous_wills_confirmed',
+    label: 'I confirm that this will revokes and replaces any and all previous wills I have made',
+  },
+  {
+    id: 'funeral_wishes',
+    section: 'final',
+    icon: '&#128538;',
+    title: 'Funeral wishes',
+    subtitle: 'This is optional, but many people find it a comfort to leave clear guidance for their loved ones.',
+    type: 'textarea_optional',
+    key: 'funeral_wishes',
+    placeholder: 'e.g. I would prefer cremation, with a small family gathering at a location of their choosing...',
+  },
+  {
+    id: 'witnesses',
+    section: 'final',
+    icon: '&#9997;&#65039;',
+    title: 'Signing your will',
+    subtitle: 'Your will must be signed in the presence of two independent witnesses to be legally valid in England and Wales.',
+    type: 'checkbox_confirm',
+    key: 'witnesses_confirmed',
+    label: 'I understand that I must sign my will in the presence of two independent witnesses who are: over 18, not named as beneficiaries in the will, and not related to any beneficiaries',
+  },
+];
+
+const ACTIVE_STEPS = PRODUCT_TYPE === 'single' ? SINGLE_STEPS : MIRROR_STEPS;
+
 
 // ================================================================
 // STATE
@@ -249,7 +454,7 @@ function esc(str) {
 }
 
 function getVisibleSteps() {
-  return STEPS.filter(s => !s.showIf || s.showIf(responses));
+  return ACTIVE_STEPS.filter(s => !s.showIf || s.showIf(responses));
 }
 
 function sectionLabel() {
@@ -338,7 +543,8 @@ function buildStepHTML(step) {
     case 'yesno':           return renderYesNo(step);
     case 'yesno_with_text': return renderYesNoWithText(step);
     case 'children':        return renderChildren();
-    case 'secondary_wish':  return renderSecondaryWish();
+    case 'secondary_wish':        return renderSecondaryWish();
+    case 'single_secondary_wish': return renderSingleSecondaryWish();
     case 'executors':       return renderExecutors();
     case 'checkbox_confirm':return renderCheckboxConfirm(step);
     case 'textarea_optional':return renderTextareaOptional(step);
@@ -474,6 +680,38 @@ function renderSecondaryWish() {
     <div class="quest-conditional${isCustom ? ' visible' : ''}" id="pctFields">
       <p class="quest-hint" style="margin-top:16px;">Percentages must add up to 100%</p>
       ${pctFields}
+    </div>`;
+}
+
+function renderSingleSecondaryWish() {
+  const count    = parseInt(responses.children_count || 0);
+  const isCustom = responses.secondary_equal === 'no';
+
+  const btns = `
+    <div class="quest-options-grid quest-yesno">
+      <button class="quest-option${!isCustom ? ' selected' : ''}" data-key="secondary_equal" data-value="yes">
+        Yes — divided equally between my children
+      </button>
+      <button class="quest-option${isCustom ? ' selected' : ''}" data-key="secondary_equal" data-value="no">
+        No — I want to name a specific person
+      </button>
+    </div>`;
+
+  let conditionalContent = '';
+  if (count > 0 && !isCustom) {
+    conditionalContent = '';
+  }
+  if (isCustom || count === 0) {
+    conditionalContent = `
+      <div class="quest-field" style="margin-top:16px;">
+        <label class="quest-label">Please name the substitute beneficiary</label>
+        <textarea class="quest-input quest-textarea" name="secondary_custom" placeholder="e.g. My sister Sarah Jones, 14 High Street, Leeds, LS1 1AA..." rows="4">${esc(responses.secondary_custom || '')}</textarea>
+      </div>`;
+  }
+
+  return `${btns}
+    <div class="quest-conditional${isCustom || count === 0 ? ' visible' : ''}" id="pctFields">
+      ${conditionalContent}
     </div>`;
 }
 
