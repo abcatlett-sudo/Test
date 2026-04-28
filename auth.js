@@ -198,6 +198,26 @@ if (dashboardContent) {
     const productName = productLabels[purchase.product_id] || 'Will';
     const amountPaid  = `£${(purchase.amount / 100).toFixed(2)}`;
 
+    // Check questionnaire progress
+    const { data: questResponse } = await sb
+      .from('will_responses')
+      .select('completed, current_step')
+      .eq('user_id', user.id)
+      .eq('product_type', purchase.product_id)
+      .maybeSingle();
+
+    let questBtnLabel, questBtnHref;
+    if (!questResponse) {
+      questBtnLabel = 'Start Your Questionnaire &rarr;';
+      questBtnHref  = 'questionnaire.html';
+    } else if (questResponse.completed) {
+      questBtnLabel = 'View Questionnaire &rarr;';
+      questBtnHref  = 'questionnaire.html';
+    } else {
+      questBtnLabel = 'Continue Your Questionnaire &rarr;';
+      questBtnHref  = 'questionnaire.html';
+    }
+
     dashboardContent.innerHTML = `
       <div class="dashboard-welcome">
         <h2>Welcome back, ${firstName}.</h2>
@@ -210,8 +230,8 @@ if (dashboardContent) {
           <h3>Your Will</h3>
           <p class="dashboard-status">${productName}</p>
           <span class="dashboard-badge">Paid ${amountPaid}</span>
-          <a href="questionnaire.html" class="btn btn-primary" style="margin-top:14px;display:inline-block;">
-            Start Your Questionnaire &rarr;
+          <a href="${questBtnHref}" class="btn btn-primary" style="margin-top:14px;display:inline-block;">
+            ${questBtnLabel}
           </a>
         </div>
 
