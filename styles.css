@@ -1946,4 +1946,188 @@ img { max-width: 100%; display: block; }
   .quest-options-grid   { grid-template-columns: 1fr; }
   .quest-executor-grid  { grid-template-columns: 1fr; }
   .quest-complete       { padding: 40px 20px; }
+
+  /* Will preview */
+  .will-preview-header  { padding: 12px 20px; }
+  .will-document        { padding: 32px 20px; }
+  .will-doc-title       { font-size: 1.3rem; }
+}
+
+
+/* ---------------------------------------------------------
+   10. WILL PREVIEW
+   --------------------------------------------------------- */
+
+/* Page shell */
+.will-preview-body {
+  background: var(--surface, #13111e);
+  min-height: 100vh;
+}
+
+.will-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 40px;
+  background: rgba(19,17,30,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--glass-border, rgba(255,255,255,0.08));
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.will-preview-header .logo {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--white);
+  letter-spacing: -0.01em;
+}
+
+.will-preview-notice {
+  background: rgba(124,77,255,0.10);
+  border-bottom: 1px solid rgba(124,77,255,0.22);
+  padding: 10px 40px;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+
+.will-preview-notice p { margin: 0; }
+
+/* Document container */
+.will-document {
+  max-width: 800px;
+  margin: 40px auto 80px;
+  padding: 60px 72px;
+  background: #ffffff;
+  color: #1a1a1a;
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1rem;
+  line-height: 1.7;
+  border-radius: 4px;
+  box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+}
+
+/* Title block */
+.will-doc-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 0.06em;
+  margin: 0 0 4px;
+  font-family: 'EB Garamond', Georgia, serif;
+}
+
+.will-title-rule {
+  border: none;
+  border-top: 2px solid #1a1a1a;
+  margin: 16px auto 28px;
+  width: 60%;
+}
+
+/* Opening paragraph */
+.will-opening {
+  margin: 0 0 20px;
+  text-align: justify;
+}
+
+/* Spacer between blocks */
+.will-spacer {
+  height: 10px;
+}
+
+/* Clause headings */
+.will-clause-heading {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin: 28px 0 10px;
+  color: #1a1a1a;
+}
+
+/* Sub-clause paragraphs (1.1, 1.2 …) */
+.will-subclause {
+  margin: 0 0 10px;
+  padding-left: 0;
+  text-align: justify;
+}
+
+/* Lettered sub-items (a), (b) … */
+.will-subitem {
+  margin: 4px 0 4px 2rem;
+  text-align: justify;
+}
+
+/* Indented names / addresses */
+.will-indented {
+  margin: 2px 0 2px 2.5rem;
+  font-style: italic;
+}
+
+/* Default body paragraph */
+.will-para {
+  margin: 0 0 10px;
+  text-align: justify;
+}
+
+/* Attestation section */
+.will-attest {
+  margin: 0 0 10px;
+  text-align: justify;
+}
+
+/* Signature lines */
+.will-signature-line {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.88rem;
+  margin: 12px 0 4px;
+  letter-spacing: 0.01em;
+}
+
+/* Witness headings */
+.will-witness-heading {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  margin: 24px 0 8px;
+  border-top: 1px solid #ccc;
+  padding-top: 16px;
+}
+
+
+/* ---------------------------------------------------------
+   PRINT STYLES (will-preview.html only)
+   --------------------------------------------------------- */
+@media print {
+  .no-print { display: none !important; }
+
+  body, .will-preview-body {
+    background: #fff !important;
+  }
+
+  .will-document {
+    max-width: 100%;
+    margin: 0;
+    padding: 20mm 20mm;
+    box-shadow: none;
+    border-radius: 0;
+    font-size: 10.5pt;
+    line-height: 1.55;
+    color: #000;
+  }
+
+  .will-doc-title      { font-size: 14pt; }
+  .will-clause-heading { font-size: 10pt; page-break-after: avoid; }
+  .will-subclause,
+  .will-para,
+  .will-attest         { orphans: 3; widows: 3; }
+
+  .will-witness-heading { page-break-before: auto; }
+
+  /* Keep attestation block together if possible */
+  .will-signature-line { page-break-inside: avoid; }
 }

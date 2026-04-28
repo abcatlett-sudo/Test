@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Will — Wills Assured</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=EB+Garamond:wght@400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body class="will-preview-body">
+
+  <header class="will-preview-header no-print">
+    <a href="dashboard.html" class="btn btn-ghost">&larr; Back to Dashboard</a>
+    <span class="logo">Wills Assured</span>
+    <button class="btn btn-primary" onclick="window.print()">&#128438; Download as PDF</button>
+  </header>
+
+  <div class="will-preview-notice no-print">
+    <p>&#9432;&nbsp; This is a draft will for review. Print or save as PDF using the button above. You will need to sign in the presence of two independent witnesses before it is legally valid.</p>
+  </div>
+
+  <main class="will-document" id="willDocument">
+    <p style="color:var(--muted);text-align:center;padding:60px 0;">Loading your will&hellip;</p>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script src="auth.js"></script>
+  <script src="will-preview.js"></script>
+</body>
+</html>

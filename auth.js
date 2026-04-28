@@ -219,6 +219,37 @@ if (dashboardContent) {
       questBtnHref  = questUrl;
     }
 
+    // Check for generated wills
+    const { data: generatedWills } = await sb
+      .from('generated_wills')
+      .select('id, testator_key')
+      .eq('user_id', user.id);
+
+    const isMirror      = purchase.product_id === 'mirror';
+    const questComplete = questResponse?.completed === true;
+
+    // Build will actions block
+    let willActionsHtml = '';
+    if (questComplete) {
+      const primaryWill  = generatedWills?.find(w => w.testator_key === 'primary');
+      const partnerWill  = generatedWills?.find(w => w.testator_key === 'partner');
+      const hasAnyWill   = !!primaryWill || !!partnerWill;
+
+      if (hasAnyWill) {
+        willActionsHtml += `<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">`;
+        if (primaryWill) {
+          willActionsHtml += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary" style="display:inline-block;">View Your Will &rarr;</a>`;
+        }
+        if (isMirror && partnerWill) {
+          willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-ghost" style="display:inline-block;">View Partner's Will &rarr;</a>`;
+        }
+        willActionsHtml += `<button id="regenWillBtn" class="btn btn-ghost" style="font-size:0.8rem;opacity:0.7;">Regenerate Will &rarr;</button>`;
+        willActionsHtml += `</div>`;
+      } else {
+        willActionsHtml = `<button id="generateWillBtn" class="btn btn-primary" style="margin-top:14px;">Generate My Will &rarr;</button>`;
+      }
+    }
+
     dashboardContent.innerHTML = `
       <div class="dashboard-welcome">
         <h2>Welcome back, ${firstName}.</h2>
@@ -234,6 +265,7 @@ if (dashboardContent) {
           <a href="${questBtnHref}" class="btn btn-primary" style="margin-top:14px;display:inline-block;">
             ${questBtnLabel}
           </a>
+          ${willActionsHtml}
         </div>
 
         <div class="dashboard-card">
@@ -249,5 +281,40 @@ if (dashboardContent) {
       await sb.auth.signOut();
       window.location.href = 'index.html';
     });
+
+    async function triggerWillGeneration(btn) {
+      btn.disabled    = true;
+      btn.textContent = 'Generating your will…';
+      try {
+        const { data: { session } } = await sb.auth.getSession();
+        const resp = await fetch(
+          'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/generate-will',
+          {
+            method:  'POST',
+            headers: {
+              'Content-Type':  'application/json',
+              'Authorization': `Bearer ${session.access_token}`,
+            },
+          }
+        );
+        const result = await resp.json();
+        if (!resp.ok) throw new Error(result.error || 'Generation failed');
+
+        // Redirect to first generated will
+        const first = result.wills[0];
+        window.location.href = `will-preview.html?id=${first.id}`;
+      } catch (err) {
+        console.error('Will generation error:', err);
+        btn.disabled    = false;
+        btn.textContent = 'Generate My Will →';
+        alert('Something went wrong generating your will. Please try again.');
+      }
+    }
+
+    const generateBtn = document.getElementById('generateWillBtn');
+    if (generateBtn) generateBtn.addEventListener('click', () => triggerWillGeneration(generateBtn));
+
+    const regenBtn = document.getElementById('regenWillBtn');
+    if (regenBtn) regenBtn.addEventListener('click', () => triggerWillGeneration(regenBtn));
   })();
 }
