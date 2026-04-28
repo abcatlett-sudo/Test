@@ -69,7 +69,7 @@ const STEPS = [
   {
     id: 'guardians',
     section: 'family',
-    icon: '&#128739;',
+    icon: '&#128737;',
     title: 'Appointing guardians',
     subtitle: 'If you both passed away, who would you trust to care for your children? Guardians must be over 18.',
     type: 'fields',
@@ -105,7 +105,7 @@ const STEPS = [
   {
     id: 'inheritance_age',
     section: 'wishes',
-    icon: '&#127881;',
+    icon: '&#9203;',
     title: 'At what age should your children inherit?',
     subtitle: 'Choose when your children should receive their inheritance. Delaying can provide important financial protection.',
     type: 'options',
@@ -211,7 +211,7 @@ const STEPS = [
   {
     id: 'funeral_wishes',
     section: 'final',
-    icon: '&#127774;',
+    icon: '&#128538;',
     title: 'Funeral wishes',
     subtitle: 'This is optional, but many people find it a comfort to leave clear guidance for their loved ones.',
     type: 'textarea_optional',
