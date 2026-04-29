@@ -882,7 +882,7 @@ img { max-width: 100%; display: block; }
   font-family: 'Inter', sans-serif;
   font-size: 0.82rem;
   font-weight: 600;
-  color: var(--dark);
+  color: var(--white);
 }
 
 .voucher-option-price {
