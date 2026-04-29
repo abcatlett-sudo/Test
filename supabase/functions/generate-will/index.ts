@@ -246,9 +246,9 @@ My Trustees shall have all the powers conferred by the Trustee Act 2000 and any 
 
 [NEXT_CLAUSE]. ATTESTATION CLAUSE
 
-IN WITNESS whereof I have hereunto set my hand this _____ day of _______________ 20_____.
+I sign this will on the _____ day of _______________ 20_____.
 
-SIGNED by the said ${caps(tName)} as and for their last will in the presence of us both present at the same time who at their request in their presence and in the presence of each other have hereunto subscribed our names as witnesses:
+Signed by ${caps(tName)} as their last will and testament, in our presence, and then by us in theirs:
 
 Signature of Testator: _________________________________
 ${caps(tName)}
