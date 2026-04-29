@@ -2013,10 +2013,11 @@ img { max-width: 100%; display: block; }
   .quest-complete       { padding: 40px 20px; }
 
   /* Will preview */
-  .will-preview-header  { padding: 12px 20px; }
-  .will-document        { padding: 32px 20px; }
-  .will-doc-title       { font-size: 1.3rem; }
-  .will-download-btn    { font-size: 0.7rem; padding: 6px 10px; letter-spacing: 0; }
+  .will-preview-header              { padding: 10px 16px; }
+  .will-preview-header .logo        { display: none; }
+  .will-document                    { padding: 32px 20px; }
+  .will-doc-title                   { font-size: 1.3rem; }
+  .will-download-btn                { font-size: 0.65rem; padding: 5px 8px; letter-spacing: 0; margin-left: auto; }
 }
 
 
