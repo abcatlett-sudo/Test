@@ -2016,6 +2016,7 @@ img { max-width: 100%; display: block; }
   .will-preview-header  { padding: 12px 20px; }
   .will-document        { padding: 32px 20px; }
   .will-doc-title       { font-size: 1.3rem; }
+  .will-download-btn    { font-size: 0.75rem; padding: 8px 12px; margin-left: auto; }
 }
 
 
