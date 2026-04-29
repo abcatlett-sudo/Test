@@ -728,6 +728,12 @@ img { max-width: 100%; display: block; }
   padding: 36px 32px;
   transition: all var(--transition);
   backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+}
+
+.will-card .will-cta {
+  margin-top: auto;
 }
 
 .will-card:hover {
