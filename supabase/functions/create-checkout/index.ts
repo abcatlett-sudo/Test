@@ -35,7 +35,7 @@ Deno.serve(async (req) => {
           currency: 'gbp',
           product_data: {
             name: price.name,
-            description: 'Wills Assured — legally binding will, drafted by qualified solicitors',
+            description: 'Wills Assured — simple, affordable, and accessible wills',
           },
           unit_amount: price.amount,
         },
