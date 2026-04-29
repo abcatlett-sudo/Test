@@ -156,6 +156,7 @@ RULES:
 - Number all clauses sequentially — if a clause is omitted, renumber all following clauses
 - Format names of named parties in CAPITALS throughout
 - Use "their/them" as gender-neutral pronouns for the testator
+- Wrap every piece of customer-specific data in **double asterisks**: full names, dates of birth, addresses, specific gift details, business interests, exclusion details, and any other data taken from the questionnaire
 - Return ONLY the completed will document — no commentary, no preamble
 
 ---

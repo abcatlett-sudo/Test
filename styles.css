@@ -2103,6 +2103,13 @@ img { max-width: 100%; display: block; }
   height: 10px;
 }
 
+/* Section separator rule */
+.will-section-rule {
+  border: none;
+  border-top: 1px solid #d0d0d0;
+  margin: 24px 0 20px;
+}
+
 /* Clause headings */
 .will-clause-heading {
   font-family: 'Inter', sans-serif;

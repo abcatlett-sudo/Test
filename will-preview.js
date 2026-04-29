@@ -47,8 +47,14 @@ function formatWillText(text) {
   if (!text) return ''
 
   const lines = text.split('\n')
-  let html    = ''
+  let html     = ''
   let inAttest = false
+  let firstClause = true
+
+  // Bold any **customer data** markers from Claude
+  function applyBold(str) {
+    return str.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+  }
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i]
@@ -65,61 +71,63 @@ function formatWillText(text) {
       continue
     }
     if (trimmed.startsWith('OF ') && i < 5) {
-      html += `<h1 class="will-doc-title">${trimmed}</h1>`
+      html += `<h1 class="will-doc-title">${applyBold(trimmed)}</h1>`
       html += '<div class="will-title-rule"></div>'
       continue
     }
 
     // Opening paragraph (I, NAME, of...)
     if (trimmed.startsWith('I, ') && trimmed.includes('hereby revoke')) {
-      html += `<p class="will-opening">${trimmed}</p>`
+      html += `<p class="will-opening">${applyBold(trimmed)}</p>`
       continue
     }
 
     // Main clause headings (e.g. "1. APPOINTMENT OF EXECUTORS")
     if (/^\d+\.\s+[A-Z]/.test(trimmed)) {
+      if (!firstClause) html += '<hr class="will-section-rule">'
       html += `<h2 class="will-clause-heading">${trimmed}</h2>`
+      firstClause = false
       continue
     }
 
     // Sub-clause headings (e.g. "1.1 I appoint...")
     if (/^\d+\.\d+\s/.test(trimmed)) {
-      html += `<p class="will-subclause"><strong>${trimmed.match(/^\d+\.\d+/)[0]}</strong> ${trimmed.replace(/^\d+\.\d+\s/, '')}</p>`
+      html += `<p class="will-subclause"><strong>${trimmed.match(/^\d+\.\d+/)[0]}</strong> ${applyBold(trimmed.replace(/^\d+\.\d+\s/, ''))}</p>`
       continue
     }
 
     // Lettered sub-items
     if (/^\([a-z]\)/.test(trimmed)) {
-      html += `<p class="will-subitem">${trimmed}</p>`
+      html += `<p class="will-subitem">${applyBold(trimmed)}</p>`
       continue
     }
 
     // Indented names/addresses (lines starting with spaces/bullet in original)
     if (line.startsWith('  ') || line.startsWith('\t')) {
-      html += `<p class="will-indented">${trimmed}</p>`
+      html += `<p class="will-indented">${applyBold(trimmed)}</p>`
       continue
     }
 
     // Attestation section
-    if (trimmed.startsWith('IN WITNESS whereof')) {
+    if (trimmed.startsWith('I sign this will') || trimmed.startsWith('IN WITNESS whereof')) {
       inAttest = true
-      html += `<p class="will-attest">${trimmed}</p>`
+      html += `<p class="will-attest">${applyBold(trimmed)}</p>`
       continue
     }
 
     if (inAttest) {
       if (trimmed.includes('_____')) {
-        html += `<p class="will-signature-line">${trimmed}</p>`
+        html += `<p class="will-signature-line">${applyBold(trimmed)}</p>`
       } else if (trimmed === 'FIRST WITNESS' || trimmed === 'SECOND WITNESS') {
         html += `<h3 class="will-witness-heading">${trimmed}</h3>`
       } else {
-        html += `<p class="will-attest">${trimmed}</p>`
+        html += `<p class="will-attest">${applyBold(trimmed)}</p>`
       }
       continue
     }
 
     // Default paragraph
-    html += `<p class="will-para">${trimmed}</p>`
+    html += `<p class="will-para">${applyBold(trimmed)}</p>`
   }
 
   return html
