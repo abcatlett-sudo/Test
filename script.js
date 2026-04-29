@@ -246,3 +246,24 @@ fadeStyle.textContent = `
   .fade-in.visible { opacity: 1; transform: none; }
 `;
 document.head.appendChild(fadeStyle);
+
+
+// -------------------------------------------------------------
+// 5. COOKIE CONSENT BANNER
+// -------------------------------------------------------------
+if (!localStorage.getItem('wa_cookie_consent')) {
+  const banner = document.createElement('div');
+  banner.className = 'cookie-banner';
+  banner.innerHTML = `
+    <p>We use essential cookies to keep you logged in and process payments securely. See our <a href="privacy-policy.html">Privacy Policy</a> for details.</p>
+    <div class="cookie-banner-actions">
+      <a href="privacy-policy.html" class="btn btn-ghost" style="font-size:0.85rem;">Learn More</a>
+      <button id="cookieAcceptBtn" class="btn btn-primary" style="font-size:0.85rem;">Accept</button>
+    </div>`;
+  document.body.appendChild(banner);
+
+  document.getElementById('cookieAcceptBtn').addEventListener('click', () => {
+    localStorage.setItem('wa_cookie_consent', 'accepted');
+    banner.classList.add('hidden');
+  });
+}
