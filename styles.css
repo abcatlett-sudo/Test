@@ -2102,11 +2102,15 @@ img { max-width: 100%; display: block; }
 /* Brand header inside document */
 .will-brand-header {
   font-family: 'Inter', sans-serif;
-  font-size: 1.4rem;
+  font-size: 1.6rem;
   font-weight: 800;
   letter-spacing: -0.5px;
-  color: #7C4DFF;
+  background: linear-gradient(135deg, #7C4DFF, #00C4A7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
   margin-bottom: 32px;
+  display: inline-block;
 }
 
 /* ---------------------------------------------------------
