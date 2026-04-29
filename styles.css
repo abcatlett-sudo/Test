@@ -811,6 +811,7 @@ img { max-width: 100%; display: block; }
   display: flex;
   flex-direction: column;
   gap: 10px;
+  flex-grow: 1;
 }
 
 .will-features li {
