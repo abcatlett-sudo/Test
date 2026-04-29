@@ -40,7 +40,7 @@ async function initWillPreview() {
     : "Your Will — Wills Assured"
 
   // Render the will text as formatted HTML
-  container.innerHTML = formatWillText(data.will_text)
+  container.innerHTML = `<div class="will-brand-header">Wills Assured</div>` + formatWillText(data.will_text)
 }
 
 function formatWillText(text) {

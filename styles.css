@@ -2099,6 +2099,16 @@ img { max-width: 100%; display: block; }
 }
 
 
+/* Brand header inside document */
+.will-brand-header {
+  font-family: 'Inter', sans-serif;
+  font-size: 1.4rem;
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  color: #7C4DFF;
+  margin-bottom: 32px;
+}
+
 /* ---------------------------------------------------------
    PRINT STYLES (will-preview.html only)
    --------------------------------------------------------- */
