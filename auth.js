@@ -307,16 +307,17 @@ if (dashboardContent) {
 
       if (hasAnyWill) {
         willActionsHtml += `<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">`;
+        willActionsHtml += `<a href="${questUrl}" class="btn btn-primary" style="display:block;text-align:center;">View Questionnaire &rarr;</a>`;
         if (primaryWill) {
-          willActionsHtml += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary" style="display:inline-block;">View Your Will &rarr;</a>`;
+          willActionsHtml += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary" style="display:block;text-align:center;">View Your Will &rarr;</a>`;
         }
         if (isMirror && partnerWill) {
-          willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-ghost" style="display:inline-block;">View Partner's Will &rarr;</a>`;
+          willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary" style="display:block;text-align:center;">View Partner's Will &rarr;</a>`;
         }
-        willActionsHtml += `<button id="regenWillBtn" class="btn btn-ghost" style="font-size:0.8rem;opacity:0.7;">Regenerate Will &rarr;</button>`;
+        willActionsHtml += `<button id="regenWillBtn" class="btn btn-primary" style="display:block;width:100%;text-align:center;">Regenerate Will &rarr;</button>`;
         willActionsHtml += `</div>`;
       } else {
-        willActionsHtml = `<button id="generateWillBtn" class="btn btn-primary" style="margin-top:14px;">Generate My Will &rarr;</button>`;
+        willActionsHtml = `<button id="generateWillBtn" class="btn btn-primary" style="margin-top:14px;display:block;width:100%;text-align:center;">Generate My Will &rarr;</button>`;
       }
     }
 
@@ -332,10 +333,7 @@ if (dashboardContent) {
           <h3>Your Will</h3>
           <p class="dashboard-status">${productName}</p>
           <span class="dashboard-badge">Paid ${amountPaid}</span>
-          <a href="${questBtnHref}" class="btn btn-primary" style="margin-top:14px;display:inline-block;">
-            ${questBtnLabel}
-          </a>
-          ${willActionsHtml}
+          ${willActionsHtml || `<a href="${questBtnHref}" class="btn btn-primary" style="margin-top:14px;display:block;text-align:center;">${questBtnLabel}</a>`}
         </div>
 
         <div class="dashboard-card">
