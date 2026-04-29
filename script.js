@@ -213,7 +213,7 @@ document.querySelectorAll('.voucher-option').forEach(btn => {
 
     const priceEl = document.getElementById('voucherPrice');
     if (priceEl) {
-      priceEl.innerHTML = `<strong>&pound;${parseFloat(btn.dataset.price).toFixed(2)}</strong><span>one-off fee</span>`;
+      priceEl.innerHTML = `<strong>&pound;${parseFloat(btn.dataset.price).toFixed(2)}</strong>`;
     }
 
     if (voucherAddBtn) {
