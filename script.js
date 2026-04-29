@@ -204,6 +204,36 @@ function renderBasket() {
   });
 }
 
+// Voucher sub-option selection (choose-a-will.html)
+const voucherAddBtn = document.getElementById('voucherAddBtn');
+document.querySelectorAll('.voucher-option').forEach(btn => {
+  btn.addEventListener('click', () => {
+    document.querySelectorAll('.voucher-option').forEach(b => b.classList.remove('selected'));
+    btn.classList.add('selected');
+
+    const priceEl = document.getElementById('voucherPrice');
+    if (priceEl) {
+      priceEl.innerHTML = `<strong>&pound;${parseFloat(btn.dataset.price).toFixed(2)}</strong><span>one-off fee</span>`;
+    }
+
+    if (voucherAddBtn) {
+      voucherAddBtn.disabled     = false;
+      voucherAddBtn.textContent  = 'Add to Basket →';
+      voucherAddBtn.dataset.id    = btn.dataset.id;
+      voucherAddBtn.dataset.name  = btn.dataset.name;
+      voucherAddBtn.dataset.price = btn.dataset.price;
+    }
+  });
+});
+
+if (voucherAddBtn) {
+  voucherAddBtn.addEventListener('click', () => {
+    if (!voucherAddBtn.disabled) {
+      addToBasket(voucherAddBtn.dataset.id, voucherAddBtn.dataset.name, parseFloat(voucherAddBtn.dataset.price));
+    }
+  });
+}
+
 // Initialise on every page
 updateBasketCount();
 renderBasket();

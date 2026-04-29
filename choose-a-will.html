@@ -94,25 +94,34 @@
           <button class="btn will-cta add-to-basket" data-id="mirror" data-name="Mirror Wills" data-price="29.99">Add to Basket &rarr;</button>
         </div>
 
-        <!-- Comprehensive Will -->
+        <!-- Will Voucher -->
         <div class="will-card">
-          <p class="will-name">Comprehensive Will</p>
-          <div class="will-price">
-            <strong>£249</strong><span>one-off fee</span>
+          <p class="will-name">Will Voucher</p>
+          <div class="will-price" id="voucherPrice">
+            <strong>&mdash;</strong><span>select an option</span>
           </div>
           <p class="will-desc">
-            For complex estates, business interests, trusts, or beneficiaries
-            who require additional legal safeguards and expert review.
+            Give the gift of peace of mind. A Wills Assured voucher lets your loved one create their will at a time that suits them.
           </p>
+          <div class="voucher-options">
+            <button class="voucher-option" data-id="voucher-single" data-name="Single Will Voucher" data-price="19.99">
+              <span class="voucher-option-label">Single Will</span>
+              <span class="voucher-option-price">&pound;19.99</span>
+            </button>
+            <button class="voucher-option" data-id="voucher-mirror" data-name="Mirror Wills Voucher" data-price="29.99">
+              <span class="voucher-option-label">Mirror Wills</span>
+              <span class="voucher-option-price">&pound;29.99</span>
+            </button>
+          </div>
           <ul class="will-features">
-            <li>Everything in Mirror Wills</li>
-            <li>Discretionary trust provisions</li>
-            <li>Business succession planning</li>
-            <li>Foreign asset guidance</li>
-            <li>Dedicated solicitor review call</li>
-            <li>Lifetime free amendments</li>
+            <li>Redeemable online at any time</li>
+            <li>Valid for 12 months from purchase</li>
+            <li>Covers the full questionnaire</li>
+            <li>AI-generated, legally structured will</li>
+            <li>Delivered by email instantly</li>
+            <li>Perfect as a thoughtful gift</li>
           </ul>
-          <button class="btn btn-primary will-cta add-to-basket" data-id="comprehensive" data-name="Comprehensive Will" data-price="249.00">Add to Basket &rarr;</button>
+          <button class="btn btn-primary will-cta" id="voucherAddBtn" disabled>Select an option above</button>
         </div>
 
       </div>
