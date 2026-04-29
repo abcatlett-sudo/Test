@@ -514,7 +514,6 @@ function renderStep() {
   main.innerHTML = `
     <div class="quest-card quest-card-enter">
       <div class="quest-section-tag">${esc(sectionLabel())}</div>
-      <div class="quest-icon">${step.icon}</div>
       <h2 class="quest-title">${step.title}</h2>
       <p class="quest-subtitle">${step.subtitle}</p>
       <div class="quest-fields">${fieldHTML}</div>
