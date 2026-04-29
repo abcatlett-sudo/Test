@@ -5,3 +5,6 @@ verify_jwt = false
 
 [functions.generate-will]
 verify_jwt = true
+
+[functions.redeem-voucher]
+verify_jwt = true

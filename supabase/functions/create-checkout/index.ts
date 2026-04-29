@@ -6,9 +6,10 @@ const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') ?? '', {
 })
 
 const PRICES: Record<string, { name: string; amount: number }> = {
-  single:        { name: 'Single Will',       amount: 1999  },
-  mirror:        { name: 'Mirror Wills',       amount: 2999  },
-  comprehensive: { name: 'Comprehensive Will', amount: 24900 },
+  single:          { name: 'Single Will',               amount: 1999  },
+  mirror:          { name: 'Mirror Wills',               amount: 2999  },
+  'voucher-single': { name: 'Single Will Voucher',       amount: 1999  },
+  'voucher-mirror': { name: 'Mirror Wills Voucher',      amount: 2999  },
 }
 
 const cors = {

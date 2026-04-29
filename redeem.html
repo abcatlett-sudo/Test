@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Redeem Voucher — Wills Assured</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">Wills Assured</a>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="choose-a-will.html">Choose a Will</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li class="nav-mobile-signin"><a href="login.html" class="nav-cta nav-cta-mobile">Sign In</a></li>
+      </ul>
+      <a href="basket.html" class="nav-basket" aria-label="View basket">&#128722;<span class="basket-count" id="basketCount"></span></a>
+      <a href="login.html" class="btn btn-primary nav-cta">Sign In</a>
+      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+  </nav>
+
+  <section class="auth-section">
+    <div class="auth-card">
+      <a href="index.html" class="auth-logo logo">Wills Assured</a>
+      <h1 class="auth-title">Redeem Your Voucher</h1>
+      <p class="auth-subtitle">Enter your voucher code below to unlock your will.</p>
+
+      <div id="redeemForm">
+        <div class="form-group">
+          <label class="form-label" for="voucherCodeInput">Voucher Code</label>
+          <input
+            type="text"
+            id="voucherCodeInput"
+            class="form-input"
+            placeholder="e.g. WA-XXXX-XXXX"
+            autocomplete="off"
+            spellcheck="false"
+            style="text-transform:uppercase;letter-spacing:0.08em;"
+          />
+        </div>
+        <p id="redeemNote" class="form-note"></p>
+        <button id="redeemBtn" class="btn btn-primary btn-full" style="margin-top:8px;">Redeem Voucher &rarr;</button>
+      </div>
+
+      <p style="margin-top:20px;font-size:0.85rem;color:var(--muted);text-align:center;">
+        Don't have an account? <a href="register.html" style="color:var(--primary);">Create one free &rarr;</a>
+      </p>
+    </div>
+  </section>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    (async () => {
+      // Auto-fill code from URL param
+      const params = new URLSearchParams(window.location.search)
+      const codeParam = params.get('code')
+      const input = document.getElementById('voucherCodeInput')
+      if (codeParam) input.value = codeParam.toUpperCase()
+
+      // Require auth
+      const { data: { user } } = await sb.auth.getUser()
+      if (!user) {
+        const redirect = encodeURIComponent('redeem.html' + (codeParam ? `?code=${codeParam}` : ''))
+        window.location.href = `login.html?redirect=${redirect}`
+        return
+      }
+
+      document.getElementById('redeemBtn').addEventListener('click', async () => {
+        const code = input.value.trim().toUpperCase()
+        const note = document.getElementById('redeemNote')
+        const btn  = document.getElementById('redeemBtn')
+
+        if (!code) {
+          note.style.color = 'var(--accent)'
+          note.textContent = 'Please enter your voucher code.'
+          return
+        }
+
+        btn.disabled    = true
+        btn.textContent = 'Redeeming…'
+        note.textContent = ''
+
+        try {
+          const { data: { session } } = await sb.auth.getSession()
+          const resp = await fetch(
+            'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/redeem-voucher',
+            {
+              method:  'POST',
+              headers: {
+                'Content-Type':  'application/json',
+                'Authorization': `Bearer ${session.access_token}`,
+              },
+              body: JSON.stringify({ code }),
+            }
+          )
+          const result = await resp.json()
+
+          if (!resp.ok) {
+            note.style.color = 'var(--accent)'
+            note.textContent = result.error || 'Something went wrong. Please try again.'
+            btn.disabled    = false
+            btn.textContent = 'Redeem Voucher →'
+            return
+          }
+
+          note.style.color = 'var(--teal)'
+          note.textContent = '✓ Voucher redeemed! Redirecting to your dashboard…'
+          setTimeout(() => { window.location.href = 'dashboard.html' }, 1500)
+
+        } catch (err) {
+          note.style.color = 'var(--accent)'
+          note.textContent = 'Something went wrong. Please try again.'
+          btn.disabled    = false
+          btn.textContent = 'Redeem Voucher →'
+        }
+      })
+    })()
+  </script>
+</body>
+</html>

@@ -900,6 +900,13 @@ img { max-width: 100%; display: block; }
   transform: none !important;
 }
 
+/* Voucher redeem box inside dashboard card */
+.voucher-redeem-box {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+}
+
 
 /* ---------------------------------------------------------
    12. BLOG

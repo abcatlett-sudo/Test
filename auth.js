@@ -177,12 +177,82 @@ if (dashboardContent) {
 
     if (!purchases || purchases.length === 0) {
       dashboardContent.innerHTML = `
-        <div class="dashboard-empty">
-          <span style="font-size:3rem;display:block;margin-bottom:20px;">&#128274;</span>
-          <h2>No active purchase found</h2>
-          <p>You need to complete a purchase before accessing your will dashboard.</p>
-          <a href="choose-a-will.html" class="btn btn-primary">Choose a Will &rarr;</a>
+        <div class="dashboard-welcome">
+          <h2>Welcome to Wills Assured.</h2>
+          <p>Get started by choosing a will or redeeming a voucher.</p>
+        </div>
+        <div class="dashboard-grid">
+          <div class="dashboard-card">
+            <div class="dashboard-card-icon">&#128196;</div>
+            <h3>Get a Will</h3>
+            <p class="dashboard-status">No active purchase yet</p>
+            <a href="choose-a-will.html" class="btn btn-primary" style="margin-top:14px;display:inline-block;">Choose a Will &rarr;</a>
+          </div>
+          <div class="dashboard-card">
+            <div class="dashboard-card-icon">&#127981;</div>
+            <h3>Redeem a Voucher</h3>
+            <p class="dashboard-status">Have a voucher code?</p>
+            <div class="voucher-redeem-box">
+              <input type="text" id="dashVoucherInput" class="form-input" placeholder="WA-XXXX-XXXX" autocomplete="off" spellcheck="false" style="text-transform:uppercase;letter-spacing:0.06em;margin-top:14px;" />
+              <p id="dashRedeemNote" class="form-note" style="min-height:20px;margin-top:6px;"></p>
+              <button id="dashRedeemBtn" class="btn btn-primary will-cta" style="margin-top:4px;">Redeem Voucher &rarr;</button>
+            </div>
+          </div>
         </div>`;
+
+      // Wire up dashboard redeem button
+      const dashRedeemBtn = document.getElementById('dashRedeemBtn');
+      if (dashRedeemBtn) {
+        dashRedeemBtn.addEventListener('click', async () => {
+          const input = document.getElementById('dashVoucherInput');
+          const note  = document.getElementById('dashRedeemNote');
+          const code  = input.value.trim().toUpperCase();
+
+          if (!code) {
+            note.style.color = 'var(--accent)';
+            note.textContent = 'Please enter your voucher code.';
+            return;
+          }
+
+          dashRedeemBtn.disabled    = true;
+          dashRedeemBtn.textContent = 'Redeeming…';
+          note.textContent = '';
+
+          try {
+            const { data: { session } } = await sb.auth.getSession();
+            const resp = await fetch(
+              'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/redeem-voucher',
+              {
+                method:  'POST',
+                headers: {
+                  'Content-Type':  'application/json',
+                  'Authorization': `Bearer ${session.access_token}`,
+                },
+                body: JSON.stringify({ code }),
+              }
+            );
+            const result = await resp.json();
+
+            if (!resp.ok) {
+              note.style.color = 'var(--accent)';
+              note.textContent = result.error || 'Something went wrong. Please try again.';
+              dashRedeemBtn.disabled    = false;
+              dashRedeemBtn.textContent = 'Redeem Voucher →';
+              return;
+            }
+
+            note.style.color = 'var(--teal)';
+            note.textContent = '✓ Voucher redeemed! Reloading…';
+            setTimeout(() => window.location.reload(), 1500);
+
+          } catch (err) {
+            note.style.color = 'var(--accent)';
+            note.textContent = 'Something went wrong. Please try again.';
+            dashRedeemBtn.disabled    = false;
+            dashRedeemBtn.textContent = 'Redeem Voucher →';
+          }
+        });
+      }
       return;
     }
 
