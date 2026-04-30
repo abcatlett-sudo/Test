@@ -360,25 +360,13 @@ img { max-width: 100%; display: block; }
   align-items: center;
 }
 
-.hero-logo {
-  display: inline-block;
-  font-size: 2rem;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--primary), var(--teal));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  letter-spacing: -0.5px;
-  margin-bottom: 10px;
-  text-decoration: none;
-}
-
-.trustpilot-mock {
+.nav-trustpilot {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 10px;
-  margin-top: 0;
-  margin-bottom: 32px;
+  padding: 6px 0;
+  border-top: 1px solid var(--glass-border);
   flex-wrap: wrap;
 }
 
