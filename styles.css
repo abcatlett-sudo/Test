@@ -367,7 +367,8 @@ img { max-width: 100%; display: block; }
   gap: 10px;
   padding: 6px 0;
   border-top: 1px solid var(--glass-border);
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
+  white-space: nowrap;
 }
 
 .tp-stars {
@@ -1981,6 +1982,14 @@ img { max-width: 100%; display: block; }
    9. RESPONSIVE — collapses at 768px
    --------------------------------------------------------- */
 @media (max-width: 768px) {
+  /* Trustpilot strip — shrink to fit one line */
+  .nav-trustpilot { gap: 6px; padding: 5px 12px; }
+  .tp-star        { font-size: 0.85rem; }
+  .tp-label       { font-size: 0.7rem; }
+  .tp-score       { font-size: 0.68rem; }
+  .tp-brand       { font-size: 0.68rem; }
+  .tp-divider     { font-size: 0.6rem; }
+
   /* Hide desktop nav; show hamburger */
   .nav-links,
   .nav-cta  { display: none; }
