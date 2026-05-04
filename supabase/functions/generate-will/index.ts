@@ -107,31 +107,67 @@ function buildPrompt(
       `If any specific beneficiary named in this clause shall predecease me, the gift to them shall fall into the residuary estate.`
     : ''
 
+  // ── under-18 trust reference (appended to children disposition clauses)
+  const under18Notice = `\n\n(d) Where any child has not attained the age of eighteen years at the date of my death, my Trustees shall hold that child's share on trust in accordance with the Trust for Children provisions set out below.`
+
   // ── disposition
   let dispositionClause = ''
+  let secondaryClause = ''
+
   if (productType === 'mirror') {
     const primaryWish = r.primary_wish_yes !== 'no'
     dispositionClause = primaryWish
       ? `If my spouse, ${caps(spouseName)}, survives me by twenty-eight days, I give the whole of my estate (including any property over which I have a general power of appointment) to them absolutely.`
       : `Primary Estate Disposition: ${r.primary_wish_custom || 'To be determined.'}`
-  } else {
-    dispositionClause = `I give the whole of my estate to ${caps(r.beneficiary_name || '')} of ${r.beneficiary_address || ''} absolutely, provided they survive me by twenty-eight days.`
-  }
 
-  // ── substitute/secondary disposition
-  let secondaryClause = ''
-  const secondaryParty = productType === 'mirror' ? `my spouse` : `${r.beneficiary_name || 'my primary beneficiary'}`
-  if (r.secondary_equal !== 'no' && childCount > 0) {
-    secondaryClause =
-      `If ${secondaryParty} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold upon the following trusts:\n\n` +
-      `(a) My Trustees shall divide my estate into as many equal shares as there are children of mine living at my death, and hold one such share for each child upon the terms set out below.\n\n` +
-      `(b) The children of mine living at my death are:\n${childrenList}\n` +
-      `(c) If any child of mine has died before me but leaving a child or children living at my death, such child or children shall take by substitution and if more than one in equal shares the share which their parent would have taken had they survived me.`
-  } else if (r.secondary_equal === 'no' && r.secondary_custom) {
-    secondaryClause = `If ${secondaryParty} does not survive me by twenty-eight days: ${r.secondary_custom}`
-  } else if (childCount > 0) {
-    secondaryClause =
-      `If ${secondaryParty} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold in equal shares for my children:\n${childrenList}`
+    // Mirror secondary — children or custom
+    const spouseRef = `my spouse`
+    if (r.secondary_equal !== 'no' && childCount > 0) {
+      secondaryClause =
+        `If ${spouseRef} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold upon the following trusts:\n\n` +
+        `(a) My Trustees shall divide my estate into as many equal shares as there are children of mine living at my death, and hold one such share for each child upon the terms set out below.\n\n` +
+        `(b) The children of mine living at my death are:\n${childrenList}\n` +
+        `(c) If any child of mine has died before me but leaving a child or children living at my death, such child or children shall take by substitution and if more than one in equal shares the share which their parent would have taken had they survived me.` +
+        under18Notice
+    } else if (r.secondary_equal === 'no' && r.secondary_custom) {
+      secondaryClause = `If ${spouseRef} does not survive me by twenty-eight days: ${r.secondary_custom}`
+    } else if (childCount > 0) {
+      secondaryClause =
+        `If ${spouseRef} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold in equal shares for my children:\n${childrenList}` +
+        under18Notice
+    }
+
+  } else {
+    // Single will — children as primary beneficiaries
+    if (r.primary_beneficiary_type === 'children' && childCount > 0) {
+      dispositionClause =
+        `I give the whole of my estate to my Trustees to hold upon the following trusts:\n\n` +
+        `(a) My Trustees shall divide my estate into as many equal shares as there are children of mine living at my death, and hold one such share for each child upon the terms set out below.\n\n` +
+        `(b) The children of mine living at my death are:\n${childrenList}\n` +
+        `(c) If any child of mine has died before me but leaving a child or children living at my death, such child or children shall take by substitution and if more than one in equal shares the share which their parent would have taken had they survived me.` +
+        under18Notice
+      secondaryClause = '' // children are already primary — no secondary needed
+
+    } else {
+      // Single will — named primary beneficiary
+      dispositionClause = `I give the whole of my estate to ${caps(r.beneficiary_name || '')} of ${r.beneficiary_address || ''} absolutely, provided they survive me by twenty-eight days.`
+
+      const namedParty = r.beneficiary_name || 'my primary beneficiary'
+      if (r.secondary_equal !== 'no' && childCount > 0) {
+        secondaryClause =
+          `If ${namedParty} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold upon the following trusts:\n\n` +
+          `(a) My Trustees shall divide my estate into as many equal shares as there are children of mine living at my death, and hold one such share for each child upon the terms set out below.\n\n` +
+          `(b) The children of mine living at my death are:\n${childrenList}\n` +
+          `(c) If any child of mine has died before me but leaving a child or children living at my death, such child or children shall take by substitution and if more than one in equal shares the share which their parent would have taken had they survived me.` +
+          under18Notice
+      } else if (r.secondary_equal === 'no' && r.secondary_custom) {
+        secondaryClause = `If ${namedParty} does not survive me by twenty-eight days: ${r.secondary_custom}`
+      } else if (childCount > 0) {
+        secondaryClause =
+          `If ${namedParty} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold in equal shares for my children:\n${childrenList}` +
+          under18Notice
+      }
+    }
   }
 
   // ── trust for children
@@ -191,8 +227,7 @@ ${hasGifts ? '5. ' + giftsClause + '\n\n' : ''}[NEXT_CLAUSE]. DISPOSITION OF EST
 [NEXT_CLAUSE].1 Gift to ${productType === 'mirror' ? 'Spouse' : 'Primary Beneficiary'}
 ${dispositionClause}
 
-[NEXT_CLAUSE].2 ${productType === 'mirror' ? 'Gift to Children (if spouse does not survive)' : 'Gift if Primary Beneficiary does not survive'}
-${secondaryClause}
+${secondaryClause ? `[NEXT_CLAUSE].2 ${productType === 'mirror' ? 'Gift to Children (if spouse does not survive)' : 'Gift if Primary Beneficiary does not survive'}\n${secondaryClause}` : ''}
 
 ${hasTrust ? `[NEXT_CLAUSE]. TRUST FOR CHILDREN
 
