@@ -298,11 +298,26 @@ const SINGLE_STEPS = [
   },
   // ── SECTION 3: Your Wishes ───────────────────────────────────
   {
+    id: 'primary_beneficiary_choice',
+    section: 'wishes',
+    title: 'Who should your estate pass to?',
+    subtitle: 'You\'ve told us you have children. Choose who should be the main beneficiary of your estate.',
+    type: 'options',
+    key: 'primary_beneficiary_type',
+    required: true,
+    showIf: (r) => parseInt(r.children_count || 0) > 0,
+    options: [
+      { value: 'children', label: 'My children',    description: 'My estate passes to my children in equal shares' },
+      { value: 'other',    label: 'Someone else',   description: 'I want to name a specific person as my primary beneficiary — my children would inherit if that person predeceases me' },
+    ],
+  },
+  {
     id: 'primary_beneficiary',
     section: 'wishes',
     icon: '&#128140;',
     title: 'Your primary beneficiary',
     subtitle: 'Who should inherit your entire estate if you pass away? Please provide their details below.',
+    showIf: (r) => parseInt(r.children_count || 0) === 0 || r.primary_beneficiary_type === 'other',
     type: 'fields',
     fields: [
       { key: 'beneficiary_name',         label: 'Full legal name',     type: 'text',     placeholder: 'e.g. James Robert Smith',        required: true },
@@ -317,6 +332,7 @@ const SINGLE_STEPS = [
     title: 'If your primary beneficiary passes away before you',
     subtitle: 'In the event your primary beneficiary predeceases you, who should your estate pass to?',
     type: 'single_secondary_wish',
+    showIf: (r) => parseInt(r.children_count || 0) === 0 || r.primary_beneficiary_type === 'other',
   },
   {
     id: 'inheritance_age',
@@ -327,6 +343,7 @@ const SINGLE_STEPS = [
     type: 'options',
     key: 'inheritance_age',
     required: true,
+    showIf: (r) => parseInt(r.children_count || 0) > 0,
     options: [
       { value: '18',     label: '18 years old',       description: 'At the age of legal adulthood'     },
       { value: '21',     label: '21 years old',       description: 'A little more financial maturity'  },
@@ -697,7 +714,17 @@ function renderSingleSecondaryWish() {
   const count    = parseInt(responses.children_count || 0);
   const isCustom = responses.secondary_equal === 'no';
 
-  const btns = `
+  // No children — skip the yes/no and just ask who the substitute is
+  if (count === 0) {
+    return `
+      <div class="quest-field">
+        <label class="quest-label">Please name your substitute beneficiary</label>
+        <textarea class="quest-input quest-textarea" name="secondary_custom" placeholder="e.g. My sister Sarah Jones, 14 High Street, Leeds, LS1 1AA..." rows="4">${esc(responses.secondary_custom || '')}</textarea>
+      </div>`;
+  }
+
+  // Has children — offer equal split to children or a named person
+  return `
     <div class="quest-options-grid quest-yesno">
       <button class="quest-option${!isCustom ? ' selected' : ''}" data-key="secondary_equal" data-value="yes">
         Yes — divided equally between my children
@@ -705,23 +732,12 @@ function renderSingleSecondaryWish() {
       <button class="quest-option${isCustom ? ' selected' : ''}" data-key="secondary_equal" data-value="no">
         No — I want to name a specific person
       </button>
-    </div>`;
-
-  let conditionalContent = '';
-  if (count > 0 && !isCustom) {
-    conditionalContent = '';
-  }
-  if (isCustom || count === 0) {
-    conditionalContent = `
+    </div>
+    <div class="quest-conditional${isCustom ? ' visible' : ''}" id="pctFields">
       <div class="quest-field" style="margin-top:16px;">
         <label class="quest-label">Please name the substitute beneficiary</label>
         <textarea class="quest-input quest-textarea" name="secondary_custom" placeholder="e.g. My sister Sarah Jones, 14 High Street, Leeds, LS1 1AA..." rows="4">${esc(responses.secondary_custom || '')}</textarea>
-      </div>`;
-  }
-
-  return `${btns}
-    <div class="quest-conditional${isCustom || count === 0 ? ' visible' : ''}" id="pctFields">
-      ${conditionalContent}
+      </div>
     </div>`;
 }
 
