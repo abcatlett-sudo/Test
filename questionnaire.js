@@ -130,6 +130,8 @@ const MIRROR_STEPS = [
       { value: 'staged', label: 'Staged',               description: 'Half at 21, the remainder at 25'     },
       { value: 'custom', label: 'Custom arrangement',   description: 'I\'d like to specify my own terms'   },
     ],
+    customTextKey:         'inheritance_age_custom',
+    customTextPlaceholder: 'Describe your custom inheritance arrangement, e.g. one third at 21, one third at 25, the remainder at 30...',
   },
   // ── SECTION 4: Executors ─────────────────────────────────────
   {
@@ -332,6 +334,8 @@ const SINGLE_STEPS = [
       { value: 'staged', label: 'Staged',             description: 'Half at 21, the remainder at 25'   },
       { value: 'custom', label: 'Custom arrangement', description: 'I\'d like to specify my own terms' },
     ],
+    customTextKey:         'inheritance_age_custom',
+    customTextPlaceholder: 'Describe your custom inheritance arrangement, e.g. one third at 21, one third at 25, the remainder at 30...',
   },
   // ── SECTION 4: Executors ─────────────────────────────────────
   {
@@ -574,11 +578,18 @@ function renderCheckboxes(step) {
 }
 
 function renderOptions(step) {
-  return `<div class="quest-options-grid">${step.options.map(o => `
+  let html = `<div class="quest-options-grid">${step.options.map(o => `
     <button class="quest-option${responses[step.key] === o.value ? ' selected' : ''}" data-key="${step.key}" data-value="${o.value}">
       <strong>${o.label}</strong>
       <span>${o.description}</span>
     </button>`).join('')}</div>`;
+  if (step.customTextKey) {
+    const isCustom = responses[step.key] === 'custom';
+    html += `<div id="conditionalText" class="quest-conditional${isCustom ? ' visible' : ''}" data-show-on="custom">
+      <textarea class="quest-input quest-textarea" name="${step.customTextKey}" placeholder="${step.customTextPlaceholder || ''}" rows="4">${esc(responses[step.customTextKey] || '')}</textarea>
+    </div>`;
+  }
+  return html;
 }
 
 function renderYesNo(step) {
