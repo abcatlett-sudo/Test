@@ -1,0 +1,17 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- Purple background -->
+  <rect width="32" height="32" rx="6" fill="#7C4DFF"/>
+  <!-- Document body -->
+  <rect x="7" y="3" width="14" height="19" rx="2" fill="white"/>
+  <!-- Folded corner (dog-ear) -->
+  <polygon points="17,3 21,3 21,7 17,7" fill="#C4B0FF"/>
+  <polygon points="17,3 21,7 17,7" fill="white" opacity="0.4"/>
+  <!-- Text lines on document -->
+  <rect x="9" y="10" width="9" height="1.5" rx="0.75" fill="#7C4DFF" opacity="0.45"/>
+  <rect x="9" y="13" width="9" height="1.5" rx="0.75" fill="#7C4DFF" opacity="0.45"/>
+  <rect x="9" y="16" width="6" height="1.5" rx="0.75" fill="#7C4DFF" opacity="0.45"/>
+  <!-- Signature line -->
+  <rect x="9" y="19" width="9" height="0.75" rx="0.375" fill="#7C4DFF" opacity="0.25"/>
+  <!-- Small pen mark on signature -->
+  <path d="M9 19.4 Q10.5 18.8 11.5 19.4" stroke="#00C4A7" stroke-width="0.8" fill="none" stroke-linecap="round"/>
+</svg>
