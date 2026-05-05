@@ -41,6 +41,69 @@ async function requireAuth() {
 // Calls the create-checkout Supabase Edge Function which returns
 // a Stripe-hosted checkout URL.
 // ----------------------------------------------------------------
+// ----------------------------------------------------------------
+// BASKET — "Apply Voucher" inline panel.
+// Validates code, redeems immediately if logged in, otherwise
+// saves code to localStorage and redirects to register.html.
+// ----------------------------------------------------------------
+document.addEventListener('click', async (e) => {
+  if (e.target.id !== 'applyVoucherBtn') return;
+
+  const btn   = e.target;
+  const input = document.getElementById('voucherCodeInput');
+  const note  = document.getElementById('voucherNote');
+  const code  = input.value.trim().toUpperCase();
+
+  if (!code) {
+    note.style.color = 'var(--accent)';
+    note.textContent = 'Please enter your voucher code.';
+    return;
+  }
+
+  btn.disabled    = true;
+  btn.textContent = 'Checking…';
+  note.textContent = '';
+
+  const { data: { session } } = await sb.auth.getSession();
+
+  if (session) {
+    try {
+      const resp = await fetch(
+        'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/redeem-voucher',
+        {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
+          body:    JSON.stringify({ code }),
+        }
+      );
+      const result = await resp.json();
+      if (!resp.ok) {
+        note.style.color = 'var(--accent)';
+        note.textContent = result.error || 'Something went wrong. Please try again.';
+        btn.disabled    = false;
+        btn.textContent = 'Apply Voucher →';
+        return;
+      }
+      note.style.color = 'var(--teal)';
+      note.textContent = '✓ Voucher redeemed! Taking you to your dashboard…';
+      localStorage.removeItem('wa_basket');
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+    } catch {
+      note.style.color = 'var(--accent)';
+      note.textContent = 'Something went wrong. Please try again.';
+      btn.disabled    = false;
+      btn.textContent = 'Apply Voucher →';
+    }
+  } else {
+    localStorage.setItem('wa_pending_voucher', code);
+    localStorage.removeItem('wa_basket');
+    note.style.color = 'var(--teal)';
+    note.textContent = '✓ Code saved! Create your account to complete redemption.';
+    setTimeout(() => { window.location.href = 'register.html'; }, 1200);
+  }
+});
+
+
 document.addEventListener('click', async (e) => {
   if (e.target.id !== 'checkoutBtn') return;
 
@@ -252,6 +315,14 @@ if (dashboardContent) {
             dashRedeemBtn.textContent = 'Redeem Voucher →';
           }
         });
+
+        // Auto-redeem a voucher saved from the basket page
+        const pendingVoucher = localStorage.getItem('wa_pending_voucher');
+        if (pendingVoucher) {
+          localStorage.removeItem('wa_pending_voucher');
+          document.getElementById('dashVoucherInput').value = pendingVoucher;
+          setTimeout(() => dashRedeemBtn.click(), 400);
+        }
       }
       return;
     }

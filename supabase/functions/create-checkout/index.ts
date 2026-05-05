@@ -43,7 +43,7 @@ Deno.serve(async (req) => {
       }],
       mode: 'payment',
       billing_address_collection: 'auto',
-      success_url: `${base}/success.html?session_id={CHECKOUT_SESSION_ID}`,
+      success_url: `${base}/success.html?session_id={CHECKOUT_SESSION_ID}&type=${productId}`,
       cancel_url:  `${base}/basket.html`,
       metadata: { productId },
     })

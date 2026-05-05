@@ -192,6 +192,12 @@ function renderBasket() {
         ${summaryRows}
         <div class="summary-row total"><span>Total</span><span>&pound;${total.toFixed(2)}</span></div>
         <button id="checkoutBtn" class="btn btn-primary will-cta">Proceed to Checkout &rarr;</button>
+        <button id="redeemVoucherBtn" class="btn btn-ghost will-cta" style="margin-top:10px;width:100%;text-align:center;">Have a voucher code?</button>
+        <div id="voucherPanel" class="quest-conditional" style="margin-top:10px;">
+          <input type="text" id="voucherCodeInput" class="quest-input" placeholder="e.g. WA-XXXX-XXXX" autocomplete="off" spellcheck="false" style="text-transform:uppercase;letter-spacing:0.06em;" />
+          <p id="voucherNote" style="font-size:0.85rem;min-height:20px;margin-top:6px;color:var(--muted);"></p>
+          <button id="applyVoucherBtn" class="btn btn-primary will-cta" style="margin-top:4px;">Apply Voucher &rarr;</button>
+        </div>
       </aside>
     </div>`;
 
@@ -202,6 +208,17 @@ function renderBasket() {
       renderBasket();
     });
   });
+
+  const redeemVoucherBtn = document.getElementById('redeemVoucherBtn');
+  const voucherPanel     = document.getElementById('voucherPanel');
+  if (redeemVoucherBtn && voucherPanel) {
+    redeemVoucherBtn.addEventListener('click', () => {
+      const opening = !voucherPanel.classList.contains('visible');
+      voucherPanel.classList.toggle('visible');
+      redeemVoucherBtn.textContent = opening ? 'Hide voucher panel' : 'Have a voucher code?';
+      if (opening) document.getElementById('voucherCodeInput').focus();
+    });
+  }
 }
 
 // Voucher sub-option selection (choose-a-will.html)
