@@ -70,8 +70,9 @@
   ======================== -->
   <section class="features" id="features">
     <div class="container">
-      <div class="section-header">
+      <div class="section-header" style="position:relative;">
         <span class="section-tag">HOW IT WORKS</span>
+        <button id="shareBtn" aria-label="Share this site" style="position:absolute;right:0;top:50%;transform:translateY(-50%);background:none;border:none;cursor:pointer;font-size:1.25rem;opacity:0.55;padding:4px;line-height:1;display:none;" title="Share Wills Assured">&#128279;</button>
         <h2>Your will, done in four simple steps</h2>
 </div>
       <div class="process-flow">
@@ -136,5 +137,18 @@
   </footer>
 
   <script src="script.js"></script>
+  <script>
+    const shareBtn = document.getElementById('shareBtn');
+    if (shareBtn && navigator.share) {
+      shareBtn.style.display = 'block';
+      shareBtn.addEventListener('click', () => {
+        navigator.share({
+          title: 'Wills Assured',
+          text: 'Create a legally binding will online in 20 minutes — from £19.99.',
+          url: 'https://www.willsassured.co.uk',
+        });
+      });
+    }
+  </script>
 </body>
 </html>
