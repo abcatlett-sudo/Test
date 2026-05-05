@@ -1513,6 +1513,38 @@ img { max-width: 100%; display: block; }
 .success-step:has(.success-step-num.done) { color: var(--white); }
 .success-step:has(.success-step-num.active) { color: var(--white); font-weight: 600; }
 
+.voucher-success-box {
+  background: var(--surface-2);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-top: 24px;
+  text-align: left;
+}
+
+.voucher-success-label {
+  font-size: 0.75rem;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--teal);
+  margin-bottom: 0;
+}
+
+.voucher-success-note {
+  background: rgba(124, 77, 255, 0.08);
+  border: 1px solid rgba(124, 77, 255, 0.2);
+  border-radius: var(--radius);
+  padding: 16px 20px;
+  margin-top: 20px;
+  font-size: 0.88rem;
+  color: var(--muted);
+  line-height: 1.6;
+  text-align: left;
+}
+
+.voucher-success-note strong { color: var(--white); }
+
 /* Dashboard no-purchase state */
 .dashboard-empty {
   text-align: center;

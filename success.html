@@ -40,15 +40,14 @@
        SUCCESS CONTENT
   ======================== -->
   <section class="auth-section">
-    <div class="auth-card success-card">
 
+    <!-- Regular will purchase -->
+    <div class="auth-card success-card" id="regularSuccess">
       <div class="success-icon">&#10003;</div>
-
       <div class="auth-header">
         <h1>Payment confirmed</h1>
         <p>Your will is secured. Now create your account to get started.</p>
       </div>
-
       <div class="success-steps">
         <div class="success-step">
           <span class="success-step-num done">&#10003;</span>
@@ -67,17 +66,53 @@
           <span>Answer questions &amp; get your will</span>
         </div>
       </div>
-
       <a href="register.html" class="btn btn-full" style="margin-top: 8px;">
         Create Your Account &rarr;
       </a>
-
       <p class="auth-footer" style="margin-top: 20px;">
-        Already have an account?
-        <a href="login.html">Sign in &rarr;</a>
+        Already have an account? <a href="login.html">Sign in &rarr;</a>
       </p>
-
     </div>
+
+    <!-- Voucher purchase -->
+    <div class="auth-card success-card" id="voucherSuccess" style="display:none;">
+      <div class="success-icon" style="background: linear-gradient(135deg, var(--primary), var(--teal)); font-size: 2rem;">&#127873;</div>
+      <div class="auth-header">
+        <h1>Your voucher is on its way!</h1>
+        <p>Payment confirmed. We've emailed your voucher code — check your inbox.</p>
+      </div>
+
+      <div class="voucher-success-box">
+        <p class="voucher-success-label">What happens next</p>
+        <div class="success-steps" style="margin-top: 12px;">
+          <div class="success-step">
+            <span class="success-step-num done">&#10003;</span>
+            <span>Payment complete</span>
+          </div>
+          <div class="success-step">
+            <span class="success-step-num done">&#10003;</span>
+            <span>Voucher code emailed to you</span>
+          </div>
+          <div class="success-step">
+            <span class="success-step-num active">3</span>
+            <span>Share the code with your recipient</span>
+          </div>
+          <div class="success-step">
+            <span class="success-step-num">4</span>
+            <span>They redeem it at willsassured.co.uk and create their will</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="voucher-success-note">
+        <p>The recipient will need to create a free account at <strong>willsassured.co.uk</strong>, then enter the voucher code on their dashboard to unlock their will.</p>
+      </div>
+
+      <a href="index.html" class="btn btn-full" style="margin-top: 8px;">
+        Return to Home &rarr;
+      </a>
+    </div>
+
   </section>
 
   <footer class="footer">
@@ -97,5 +132,13 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
   <script src="auth.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const type   = params.get('type') || '';
+    if (type.startsWith('voucher')) {
+      document.getElementById('regularSuccess').style.display = 'none';
+      document.getElementById('voucherSuccess').style.display = '';
+    }
+  </script>
 </body>
 </html>
