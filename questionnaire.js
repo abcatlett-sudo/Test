@@ -531,9 +531,14 @@ function renderStep() {
       <p class="quest-subtitle">${step.subtitle}</p>
       <div class="quest-fields">${fieldHTML}</div>
       <div class="quest-nav-btns">
-        ${currentStep > 0
-          ? '<button class="btn btn-ghost" id="questBack">&#8592; Back</button>'
-          : '<span></span>'}
+        <div class="quest-nav-left">
+          ${currentStep > 0
+            ? '<button class="btn btn-ghost" id="questBack">&#8592; Back</button>'
+            : '<span></span>'}
+          ${currentStep > 0
+            ? '<button class="btn btn-teal" id="questRestart" style="margin-top:8px;">&#8592; Back to the Beginning</button>'
+            : '<span></span>'}
+        </div>
         <button class="btn btn-primary" id="questNext">
           ${isLast ? 'Complete &#10003;' : 'Continue &#8594;'}
         </button>
@@ -562,7 +567,7 @@ function renderGuardians() {
       ${hasSecondary ? '&#9660; Secondary guardian added' : '&#43; Add a secondary guardian'}
     </button>
     <div id="secondaryGuardianPanel" class="quest-conditional${hasSecondary ? ' visible' : ''}" style="margin-top:10px;">
-      <p class="quest-hint" style="margin-bottom:10px;">If the primary guardian is unable or unwilling to act, this person will be appointed instead.</p>
+      <p class="quest-hint" style="margin-bottom:10px;">If the primary guardian has passed away, is unable or unwilling to act, this person will be appointed instead.</p>
       <div class="quest-field">
         <label class="quest-label">Secondary guardian's full name</label>
         <input class="quest-input" type="text" name="secondary_guardian_name" placeholder="e.g. Michael James Brown" value="${esc(responses.secondary_guardian_name || '')}" />
@@ -831,6 +836,16 @@ function attachListeners(step) {
     currentStep--;
     renderStep();
     window.scrollTo(0, 0);
+  });
+
+  // Start Over
+  document.getElementById('questRestart')?.addEventListener('click', () => {
+    if (confirm('Are you sure you want to go back to the first step?')) {
+      collectInputValues();
+      currentStep = 0;
+      renderStep();
+      window.scrollTo(0, 0);
+    }
   });
 
   // Next / Complete
