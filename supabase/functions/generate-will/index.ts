@@ -88,10 +88,13 @@ function buildPrompt(
   }
 
   // ── guardian clause
-  const hasGuardian = r.guardian_name && childCount > 0
+  const hasGuardian          = r.guardian_name && childCount > 0
+  const hasSecondaryGuardian = hasGuardian && r.secondary_guardian_name
   const guardianClause = hasGuardian
     ? `2.1 If ${productType === 'mirror' ? `my spouse does not survive me` : `I pass away`}, I appoint ${caps(r.guardian_name)} of ${r.guardian_address}, to be the guardian of any of my children who are under the age of eighteen years at my death.\n\n` +
-      `2.2 If ${r.guardian_name} is unable or unwilling to act as guardian, the guardianship shall be determined by the court.`
+      (hasSecondaryGuardian
+        ? `2.2 If ${caps(r.guardian_name)} is unable or unwilling to act as guardian, I appoint ${caps(r.secondary_guardian_name)} of ${r.secondary_guardian_address} as substitute guardian in their place.`
+        : `2.2 If ${caps(r.guardian_name)} is unable or unwilling to act as guardian, the guardianship shall be determined by the court.`)
     : `2.1 No guardian is appointed as no minor children are named in this will.`
 
   // ── funeral

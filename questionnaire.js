@@ -84,12 +84,8 @@ const MIRROR_STEPS = [
     icon: '&#128737;',
     title: 'Appointing guardians',
     subtitle: 'If you both passed away, who would you trust to care for your children? Guardians must be over 18.',
-    type: 'fields',
+    type: 'guardians',
     showIf: (r) => parseInt(r.children_count || 0) > 0,
-    fields: [
-      { key: 'guardian_name',    label: "Guardian's full name", type: 'text',     placeholder: 'e.g. Sarah Louise Jones',        required: true },
-      { key: 'guardian_address', label: "Guardian's address",   type: 'textarea', placeholder: 'Full address including postcode', required: true },
-    ],
   },
   // ── SECTION 3: Your Wishes ───────────────────────────────────
   {
@@ -289,12 +285,8 @@ const SINGLE_STEPS = [
     icon: '&#128737;',
     title: 'Appointing guardians',
     subtitle: 'If you passed away, who would you trust to care for your children? Guardians must be over 18.',
-    type: 'fields',
+    type: 'guardians',
     showIf: (r) => parseInt(r.children_count || 0) > 0,
-    fields: [
-      { key: 'guardian_name',    label: "Guardian's full name", type: 'text',     placeholder: 'e.g. Sarah Louise Jones',        required: true },
-      { key: 'guardian_address', label: "Guardian's address",   type: 'textarea', placeholder: 'Full address including postcode', required: true },
-    ],
   },
   // ── SECTION 3: Your Wishes ───────────────────────────────────
   {
@@ -555,6 +547,33 @@ function renderStep() {
   attachListeners(step);
 }
 
+function renderGuardians() {
+  const hasSecondary = responses.secondary_guardian_name || responses.show_secondary_guardian === 'yes';
+  return `
+    <div class="quest-field">
+      <label class="quest-label">Guardian's full name</label>
+      <input class="quest-input" type="text" name="guardian_name" placeholder="e.g. Sarah Louise Jones" value="${esc(responses.guardian_name || '')}" required />
+    </div>
+    <div class="quest-field" style="margin-top:12px;">
+      <label class="quest-label">Guardian's address</label>
+      <textarea class="quest-input quest-textarea" name="guardian_address" placeholder="Full address including postcode" rows="3" required>${esc(responses.guardian_address || '')}</textarea>
+    </div>
+    <button type="button" id="addSecondaryGuardianBtn" class="btn btn-ghost" style="margin-top:14px;font-size:0.88rem;padding:8px 14px;">
+      ${hasSecondary ? '&#9660; Secondary guardian added' : '&#43; Add a secondary guardian'}
+    </button>
+    <div id="secondaryGuardianPanel" class="quest-conditional${hasSecondary ? ' visible' : ''}" style="margin-top:10px;">
+      <p class="quest-hint" style="margin-bottom:10px;">If the primary guardian is unable or unwilling to act, this person will be appointed instead.</p>
+      <div class="quest-field">
+        <label class="quest-label">Secondary guardian's full name</label>
+        <input class="quest-input" type="text" name="secondary_guardian_name" placeholder="e.g. Michael James Brown" value="${esc(responses.secondary_guardian_name || '')}" />
+      </div>
+      <div class="quest-field" style="margin-top:12px;">
+        <label class="quest-label">Secondary guardian's address</label>
+        <textarea class="quest-input quest-textarea" name="secondary_guardian_address" placeholder="Full address including postcode" rows="3">${esc(responses.secondary_guardian_address || '')}</textarea>
+      </div>
+    </div>`;
+}
+
 function buildStepHTML(step) {
   switch (step.type) {
     case 'fields':          return step.fields.map(renderField).join('');
@@ -563,6 +582,7 @@ function buildStepHTML(step) {
     case 'yesno':           return renderYesNo(step);
     case 'yesno_with_text': return renderYesNoWithText(step);
     case 'children':        return renderChildren();
+    case 'guardians':             return renderGuardians();
     case 'secondary_wish':        return renderSecondaryWish();
     case 'single_secondary_wish': return renderSingleSecondaryWish();
     case 'executors':       return renderExecutors();
@@ -870,6 +890,20 @@ function attachListeners(step) {
     document.getElementById('childCount').textContent = n;
     document.getElementById('childrenFields').innerHTML = buildChildFields(n);
     bindInputListeners();
+  });
+
+  // Secondary guardian toggle
+  document.getElementById('addSecondaryGuardianBtn')?.addEventListener('click', () => {
+    const panel = document.getElementById('secondaryGuardianPanel');
+    const btn   = document.getElementById('addSecondaryGuardianBtn');
+    const opening = !panel.classList.contains('visible');
+    panel.classList.toggle('visible', opening);
+    responses.show_secondary_guardian = opening ? 'yes' : 'no';
+    btn.textContent = opening ? '▼ Secondary guardian added' : '+ Add a secondary guardian';
+    if (!opening) {
+      responses.secondary_guardian_name    = '';
+      responses.secondary_guardian_address = '';
+    }
   });
 
   // Info icon tooltip
