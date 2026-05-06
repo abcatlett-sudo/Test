@@ -536,7 +536,7 @@ function renderStep() {
             ? '<button class="btn btn-ghost" id="questBack">&#8592; Back</button>'
             : '<span></span>'}
           ${currentStep > 0
-            ? '<button class="btn btn-teal" id="questRestart" style="margin-top:8px;">&#8635; Start Over</button>'
+            ? '<button class="btn btn-teal" id="questRestart" style="margin-top:8px;">&#8592; Back to the Beginning</button>'
             : '<span></span>'}
         </div>
         <button class="btn btn-primary" id="questNext">
