@@ -531,9 +531,14 @@ function renderStep() {
       <p class="quest-subtitle">${step.subtitle}</p>
       <div class="quest-fields">${fieldHTML}</div>
       <div class="quest-nav-btns">
-        ${currentStep > 0
-          ? '<button class="btn btn-ghost" id="questBack">&#8592; Back</button>'
-          : '<span></span>'}
+        <div class="quest-nav-left">
+          ${currentStep > 0
+            ? '<button class="btn btn-ghost" id="questBack">&#8592; Back</button>'
+            : '<span></span>'}
+          ${currentStep > 0
+            ? '<button class="btn btn-teal" id="questRestart" style="margin-top:8px;">&#8635; Start Over</button>'
+            : '<span></span>'}
+        </div>
         <button class="btn btn-primary" id="questNext">
           ${isLast ? 'Complete &#10003;' : 'Continue &#8594;'}
         </button>
@@ -831,6 +836,16 @@ function attachListeners(step) {
     currentStep--;
     renderStep();
     window.scrollTo(0, 0);
+  });
+
+  // Start Over
+  document.getElementById('questRestart')?.addEventListener('click', () => {
+    if (confirm('Are you sure you want to go back to the first step?')) {
+      collectInputValues();
+      currentStep = 0;
+      renderStep();
+      window.scrollTo(0, 0);
+    }
   });
 
   // Next / Complete
