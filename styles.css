@@ -1996,13 +1996,6 @@ img { max-width: 100%; display: block; }
   border-top: 1px solid var(--glass-border);
 }
 .quest-nav-left { display: flex; flex-direction: column; align-items: flex-start; gap: 4px; }
-.btn-teal {
-  background: var(--teal); color: var(--dark);
-  border: none; border-radius: var(--radius);
-  padding: 10px 20px; font-size: 0.85rem; font-weight: 600;
-  cursor: pointer; transition: opacity var(--transition);
-}
-.btn-teal:hover { opacity: 0.85; }
 
 /* Shake on validation fail */
 @keyframes quest-shake {
