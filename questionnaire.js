@@ -675,6 +675,37 @@ function renderSecondaryWish() {
   const count    = parseInt(responses.children_count || 0);
   const isCustom = responses.secondary_equal === 'no';
 
+  // No children — ask for beneficiaries and percentages directly
+  if (count === 0) {
+    const numBeneficiaries = parseInt(responses.secondary_beneficiary_count || 1);
+    let beneficiaryFields = '';
+    for (let i = 0; i < numBeneficiaries; i++) {
+      const defaultPct = Math.floor(100 / numBeneficiaries);
+      beneficiaryFields += `
+        <div class="quest-field" style="margin-top:14px;">
+          <label class="quest-label">Beneficiary ${i + 1}</label>
+          <input class="quest-input" type="text" name="secondary_ben_${i}_name" placeholder="Full name, address and relationship (e.g. Jane Smith, 14 High Street, Leeds LS1 1AA — Sister)" value="${esc(responses[`secondary_ben_${i}_name`] || '')}" style="margin-bottom:8px;" />
+          <div class="quest-pct-input-wrap">
+            <input class="quest-input quest-pct-input" type="number" name="secondary_ben_${i}_pct" min="0" max="100" value="${esc(String(responses[`secondary_ben_${i}_pct`] ?? defaultPct))}" />
+            <span class="quest-pct-symbol">%</span>
+          </div>
+        </div>`;
+    }
+    return `
+      <div class="quest-field">
+        <label class="quest-label">How many beneficiaries would you like?</label>
+        <div class="quest-options-grid" style="grid-template-columns:repeat(4,1fr);gap:8px;margin-top:8px;">
+          ${[1,2,3,4].map(n => `
+            <button class="quest-option${numBeneficiaries === n ? ' selected' : ''}" data-key="secondary_beneficiary_count" data-value="${n}" style="padding:10px;">
+              <strong>${n}</strong>
+            </button>`).join('')}
+        </div>
+      </div>
+      <p class="quest-hint" style="margin-top:16px;">Percentages must add up to 100%</p>
+      ${beneficiaryFields}`;
+  }
+
+  // Has children — offer equal split or custom percentages
   const btns = `
     <div class="quest-options-grid quest-yesno">
       <button class="quest-option${!isCustom ? ' selected' : ''}" data-key="secondary_equal" data-value="yes">
@@ -686,21 +717,17 @@ function renderSecondaryWish() {
     </div>`;
 
   let pctFields = '';
-  if (count > 0) {
-    for (let i = 0; i < count; i++) {
-      const name = esc(responses[`child_${i}_name`] || `Child ${i + 1}`);
-      const defaultPct = Math.floor(100 / count);
-      pctFields += `
-        <div class="quest-pct-row">
-          <span class="quest-label">${name}</span>
-          <div class="quest-pct-input-wrap">
-            <input class="quest-input quest-pct-input" type="number" name="child_${i}_pct" min="0" max="100" value="${esc(String(responses[`child_${i}_pct`] ?? defaultPct))}" />
-            <span class="quest-pct-symbol">%</span>
-          </div>
-        </div>`;
-    }
-  } else {
-    pctFields = `<textarea class="quest-input quest-textarea" name="secondary_custom" placeholder="Describe how you'd like your estate divided if you both pass away..." rows="4">${esc(responses.secondary_custom || '')}</textarea>`;
+  for (let i = 0; i < count; i++) {
+    const name = esc(responses[`child_${i}_name`] || `Child ${i + 1}`);
+    const defaultPct = Math.floor(100 / count);
+    pctFields += `
+      <div class="quest-pct-row">
+        <span class="quest-label">${name}</span>
+        <div class="quest-pct-input-wrap">
+          <input class="quest-input quest-pct-input" type="number" name="child_${i}_pct" min="0" max="100" value="${esc(String(responses[`child_${i}_pct`] ?? defaultPct))}" />
+          <span class="quest-pct-symbol">%</span>
+        </div>
+      </div>`;
   }
 
   return `${btns}
