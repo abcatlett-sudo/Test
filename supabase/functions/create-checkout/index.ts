@@ -25,8 +25,7 @@ Deno.serve(async (req) => {
     const price = PRICES[productId]
     if (!price) throw new Error(`Invalid product ID: ${productId}`)
 
-    const origin = req.headers.get('origin') ?? 'https://www.willsassured.co.uk'
-    const base   = origin.includes('github.io') ? `${origin}/Test` : origin
+    const base = 'https://www.willsassured.co.uk'
 
     const session = await stripe.checkout.sessions.create({
       payment_method_types: ['card'],
