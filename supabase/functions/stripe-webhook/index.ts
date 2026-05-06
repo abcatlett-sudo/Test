@@ -28,7 +28,7 @@ async function sendVoucherEmail(to: string, code: string, productType: string, e
 
   const productLabel = productType === 'mirror' ? 'Mirror Wills Voucher' : 'Single Will Voucher'
   const expiryStr    = expiresAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
-  const redeemUrl    = `https://abcatlett-sudo.github.io/Test/redeem.html?code=${code}`
+  const redeemUrl    = `https://www.willsassured.co.uk/redeem.html?code=${code}`
 
   await fetch('https://api.resend.com/emails', {
     method:  'POST',
