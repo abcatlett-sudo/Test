@@ -58,7 +58,7 @@ async function sendVoucherEmail(to: string, code: string, productType: string, e
           </a>
 
           <p style="color:#6B6880;font-size:0.85rem;">The recipient will need to create a free account at willsassured.co.uk to redeem this code.</p>
-          <p style="color:#6B6880;font-size:0.85rem;">If you have any questions, contact us at info@willsassured.co.uk</p>
+          <p style="color:#6B6880;font-size:0.85rem;">If you have any questions, contact us at hello@willsassured.co.uk</p>
         </div>
       `,
     }),
