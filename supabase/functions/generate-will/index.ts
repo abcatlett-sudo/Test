@@ -308,7 +308,37 @@ Date: _________________________________
 
 ---
 
-Now produce the complete will above, replacing all [NEXT_CLAUSE] placeholders with correct sequential clause numbers, and inserting all customer data exactly as provided. Return only the finished document.`
+Now produce the complete will above, replacing all [NEXT_CLAUSE] placeholders with correct sequential clause numbers, and inserting all customer data exactly as provided. Return only the finished document, followed exactly by this next steps page word for word:
+
+---
+
+IMPORTANT — NEXT STEPS TO MAKE YOUR WILL LEGAL
+
+Your will has been prepared in accordance with the Wills Act 1837. However, it is not yet legally valid. You must complete the following steps before this document takes effect.
+
+STEP 1 — PRINT YOUR WILL
+Print all pages of this document. Do not alter or annotate any part of the will after printing.
+
+STEP 2 — SIGN YOUR WILL
+Sign at the bottom of the last page in the presence of both witnesses at the same time. Use your usual signature.
+
+STEP 3 — YOUR WITNESSES MUST SIGN
+Both witnesses must sign the will in your presence and in the presence of each other. They must be:
+- Aged 18 or over
+- Not named as a beneficiary in the will
+- Not married to or in a civil partnership with a beneficiary
+
+STEP 4 — STORE YOUR WILL SAFELY
+Keep the original in a secure location — a fireproof safe, solicitor's storage, or the Probate Registry. Tell your executor where it is kept.
+
+STEP 5 — TELL YOUR EXECUTOR
+Inform your appointed executor that they are named in your will and where the document is stored.
+
+---
+
+Wills Assured provides a guided will writing service. This document has been prepared based on the information you provided. We recommend reviewing your will every 3–5 years or following any significant life event such as marriage, divorce, birth of a child, or a significant change in assets.
+
+For support, contact us at info@willsassured.co.uk`
 }
 
 // ─── main handler ────────────────────────────────────────────────
