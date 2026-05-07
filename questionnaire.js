@@ -918,6 +918,10 @@ function attachListeners(step) {
     if (!opening) {
       responses.secondary_guardian_name    = '';
       responses.secondary_guardian_address = '';
+      const nameInput    = document.querySelector('[name="secondary_guardian_name"]');
+      const addressInput = document.querySelector('[name="secondary_guardian_address"]');
+      if (nameInput)    nameInput.value    = '';
+      if (addressInput) addressInput.value = '';
     }
   });
 
