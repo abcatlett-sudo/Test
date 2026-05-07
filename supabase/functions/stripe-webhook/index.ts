@@ -41,26 +41,85 @@ async function sendVoucherEmail(to: string, code: string, productType: string, e
       to:      [to],
       subject: `Your Wills Assured Voucher — ${code}`,
       html: `
-        <div style="font-family:Inter,sans-serif;max-width:560px;margin:0 auto;padding:40px 20px;">
-          <h1 style="font-size:1.4rem;color:#7C4DFF;margin-bottom:4px;">Wills Assured</h1>
-          <h2 style="font-size:1.2rem;color:#0F0E17;margin-top:24px;">Your ${productLabel}</h2>
-          <p style="color:#6B6880;">Thank you for your purchase. Here is your voucher code:</p>
+<!DOCTYPE html>
+<html lang="en">
+<head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/></head>
+<body style="margin:0;padding:0;background-color:#F4F3FF;font-family:Inter,Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F4F3FF;padding:40px 20px;">
+    <tr>
+      <td align="center">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:12px;overflow:hidden;box-shadow:0 4px 24px rgba(108,71,255,0.10);">
 
-          <div style="background:#F4F3FF;border:2px solid #7C4DFF;border-radius:12px;padding:24px;text-align:center;margin:28px 0;">
-            <p style="margin:0 0 8px;font-size:0.85rem;color:#6B6880;letter-spacing:0.05em;">VOUCHER CODE</p>
-            <p style="margin:0;font-size:2rem;font-weight:800;letter-spacing:0.12em;color:#7C4DFF;">${code}</p>
-          </div>
+          <!-- Header -->
+          <tr>
+            <td style="background:linear-gradient(135deg,#7C4DFF,#00C4A7);padding:32px 40px;">
+              <p style="margin:0;font-size:1.4rem;font-weight:800;color:#ffffff;letter-spacing:-0.5px;">Wills Assured</p>
+              <p style="margin:6px 0 0;font-size:0.85rem;color:rgba(255,255,255,0.75);">Removing the barriers to will writing for everyone</p>
+            </td>
+          </tr>
 
-          <p style="color:#6B6880;">This voucher covers one <strong>${productLabel}</strong> and is valid until <strong>${expiryStr}</strong>.</p>
+          <!-- Body -->
+          <tr>
+            <td style="padding:40px 40px 32px;">
+              <h1 style="margin:0 0 8px;font-size:1.3rem;font-weight:700;color:#0F0E17;">Your ${productLabel}</h1>
+              <p style="margin:0 0 24px;font-size:0.95rem;color:#6B6880;line-height:1.6;">
+                Thank you for your purchase. Your voucher code is below — share it with the recipient so they can create their will at <strong>willsassured.co.uk</strong>.
+              </p>
 
-          <a href="${redeemUrl}" style="display:inline-block;background:#7C4DFF;color:#fff;text-decoration:none;padding:14px 28px;border-radius:8px;font-weight:600;margin:8px 0 24px;">
-            Redeem Your Voucher &rarr;
-          </a>
+              <!-- Voucher code box -->
+              <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
+                <tr>
+                  <td style="background:#F4F3FF;border:2px solid #7C4DFF;border-radius:12px;padding:24px;text-align:center;">
+                    <p style="margin:0 0 8px;font-size:0.8rem;color:#6B6880;letter-spacing:0.08em;text-transform:uppercase;">Voucher Code</p>
+                    <p style="margin:0;font-size:2rem;font-weight:800;letter-spacing:0.12em;color:#7C4DFF;">${code}</p>
+                  </td>
+                </tr>
+              </table>
 
-          <p style="color:#6B6880;font-size:0.85rem;">The recipient will need to create a free account at willsassured.co.uk to redeem this code.</p>
-          <p style="color:#6B6880;font-size:0.85rem;">If you have any questions, contact us at hello@willsassured.co.uk</p>
-        </div>
-      `,
+              <p style="margin:0 0 24px;font-size:0.9rem;color:#6B6880;line-height:1.6;">
+                This voucher covers one <strong>${productLabel}</strong> and is valid until <strong>${expiryStr}</strong>.
+              </p>
+
+              <!-- CTA button -->
+              <table cellpadding="0" cellspacing="0">
+                <tr>
+                  <td style="border-radius:50px;background:#7C4DFF;">
+                    <a href="${redeemUrl}" style="display:inline-block;padding:14px 32px;font-size:0.95rem;font-weight:600;color:#ffffff;text-decoration:none;border-radius:50px;">
+                      Redeem Your Voucher &rarr;
+                    </a>
+                  </td>
+                </tr>
+              </table>
+
+              <p style="margin:24px 0 0;font-size:0.82rem;color:#6B6880;line-height:1.6;">
+                The recipient will need to create a free account at willsassured.co.uk, then enter the voucher code to unlock their will.
+              </p>
+            </td>
+          </tr>
+
+          <!-- Divider -->
+          <tr>
+            <td style="padding:0 40px;">
+              <hr style="border:none;border-top:1px solid #E8E7F5;margin:0;"/>
+            </td>
+          </tr>
+
+          <!-- Footer -->
+          <tr>
+            <td style="padding:24px 40px 32px;">
+              <p style="margin:0;font-size:0.8rem;color:#6B6880;line-height:1.6;">
+                &copy; 2026 Wills Assured. All rights reserved.<br/>
+                Questions? Contact us at <a href="mailto:hello@willsassured.co.uk" style="color:#7C4DFF;">hello@willsassured.co.uk</a>
+              </p>
+            </td>
+          </tr>
+
+        </table>
+      </td>
+    </tr>
+  </table>
+</body>
+</html>`,
     }),
   })
 }
