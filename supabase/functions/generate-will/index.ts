@@ -338,7 +338,7 @@ Inform your appointed executor that they are named in your will and where the do
 
 Wills Assured provides a guided will writing service. This document has been prepared based on the information you provided. We recommend reviewing your will every 3–5 years or following any significant life event such as marriage, divorce, birth of a child, or a significant change in assets.
 
-For support, contact us at info@willsassured.co.uk`
+For support, contact us at hello@willsassured.co.uk`
 }
 
 // ─── main handler ────────────────────────────────────────────────
