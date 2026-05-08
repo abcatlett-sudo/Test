@@ -85,7 +85,20 @@ const MIRROR_STEPS = [
     title: 'Appointing guardians',
     subtitle: 'If you both passed away, who would you trust to care for your children? Guardians must be over 18.',
     type: 'guardians',
-    showIf: (r) => parseInt(r.children_count || 0) > 0,
+    showIf: (r) => {
+      const count = parseInt(r.children_count || 0)
+      if (count === 0) return false
+      const today = new Date()
+      for (let i = 0; i < count; i++) {
+        const dob = r[`child_${i}_dob`]
+        if (!dob) return true
+        const birth = new Date(dob)
+        const age = today.getFullYear() - birth.getFullYear() -
+          (today < new Date(today.getFullYear(), birth.getMonth(), birth.getDate()) ? 1 : 0)
+        if (age < 18) return true
+      }
+      return false
+    },
   },
   // ── SECTION 3: Your Wishes ───────────────────────────────────
   {
@@ -286,7 +299,20 @@ const SINGLE_STEPS = [
     title: 'Appointing guardians',
     subtitle: 'If you passed away, who would you trust to care for your children? Guardians must be over 18.',
     type: 'guardians',
-    showIf: (r) => parseInt(r.children_count || 0) > 0,
+    showIf: (r) => {
+      const count = parseInt(r.children_count || 0)
+      if (count === 0) return false
+      const today = new Date()
+      for (let i = 0; i < count; i++) {
+        const dob = r[`child_${i}_dob`]
+        if (!dob) return true
+        const birth = new Date(dob)
+        const age = today.getFullYear() - birth.getFullYear() -
+          (today < new Date(today.getFullYear(), birth.getMonth(), birth.getDate()) ? 1 : 0)
+        if (age < 18) return true
+      }
+      return false
+    },
   },
   // ── SECTION 3: Your Wishes ───────────────────────────────────
   {
