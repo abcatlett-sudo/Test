@@ -991,6 +991,22 @@ function collectInputValues() {
 function validateStep(step) {
   const nextBtn = document.getElementById('questNext');
 
+  if (step.type === 'children') {
+    const count = parseInt(responses.children_count || 0)
+    for (let i = 0; i < count; i++) {
+      if (!String(responses[`child_${i}_name`] || '').trim()) {
+        showFieldError(`child_${i}_name`, 'Please enter the full name for this child')
+        shakeBtn(nextBtn)
+        return false
+      }
+      if (!String(responses[`child_${i}_dob`] || '').trim()) {
+        showFieldError(`child_${i}_dob`, 'Please enter the date of birth for this child')
+        shakeBtn(nextBtn)
+        return false
+      }
+    }
+  }
+
   if (step.type === 'fields') {
     for (const f of step.fields) {
       if (f.required && !String(responses[f.key] || '').trim()) {
