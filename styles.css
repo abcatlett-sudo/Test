@@ -2054,7 +2054,7 @@ img { max-width: 100%; display: block; }
    FAQ PAGE
    --------------------------------------------------------- */
 .faq-hero { padding: 80px 0 40px; text-align: center; }
-.faq-hero h1 { font-size: 2.4rem; font-weight: 800; color: var(--white); margin-bottom: 12px; }
+.faq-hero h1 { font-size: 2.4rem; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
 .faq-hero p  { color: var(--muted); font-size: 1.05rem; }
 
 .faq-section { padding: 20px 0 80px; }
