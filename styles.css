@@ -2325,6 +2325,58 @@ img { max-width: 100%; display: block; }
 }
 
 /* ---------------------------------------------------------
+   NEXT STEPS PAGE (will-preview.html)
+   --------------------------------------------------------- */
+.will-next-steps-page {
+  page-break-before: always;
+  break-before: always;
+  margin-top: 80px;
+  padding-top: 60px;
+  border-top: 3px solid #7C4DFF;
+}
+.will-next-steps-inner { max-width: 680px; margin: 0 auto; }
+.will-next-steps-title {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #0F0E17;
+  margin: 0 0 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #E8E7F5;
+}
+.will-next-steps-step {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #7C4DFF;
+  margin: 24px 0 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.will-next-steps-para {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1rem;
+  color: #2E2C3F;
+  line-height: 1.7;
+  margin: 0 0 10px;
+}
+.will-next-steps-bullet {
+  font-family: 'EB Garamond', Georgia, serif;
+  font-size: 1rem;
+  color: #2E2C3F;
+  line-height: 1.7;
+  margin: 4px 0 4px 16px;
+}
+.will-next-steps-rule { border: none; border-top: 1px solid #E8E7F5; margin: 24px 0; }
+.will-next-steps-footer {
+  font-family: 'Inter', sans-serif;
+  font-size: 0.82rem;
+  color: #6B6880;
+  line-height: 1.6;
+  margin: 8px 0;
+}
+
+/* ---------------------------------------------------------
    PRINT STYLES (will-preview.html only)
    --------------------------------------------------------- */
 @media print {

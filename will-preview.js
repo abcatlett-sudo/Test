@@ -46,7 +46,44 @@ async function initWillPreview() {
 function formatWillText(text) {
   if (!text) return ''
 
-  const lines = text.split('\n')
+  // Split into will body and next steps page
+  const parts       = text.split('=== NEXT STEPS PAGE ===')
+  const willBody    = parts[0]
+  const nextSteps   = parts[1] || ''
+
+  return formatWillBody(willBody) + (nextSteps ? formatNextSteps(nextSteps) : '')
+}
+
+function formatNextSteps(text) {
+  const lines = text.trim().split('\n')
+  let html = '<div class="will-next-steps-page">'
+  html += '<div class="will-next-steps-inner">'
+
+  for (const line of lines) {
+    const trimmed = line.trim()
+    if (!trimmed) { html += '<div class="will-spacer"></div>'; continue }
+    if (trimmed.startsWith('IMPORTANT —') || trimmed.startsWith('IMPORTANT-')) {
+      html += `<h2 class="will-next-steps-title">${trimmed}</h2>`
+    } else if (trimmed.startsWith('STEP ')) {
+      html += `<h3 class="will-next-steps-step">${trimmed}</h3>`
+    } else if (trimmed.startsWith('- ')) {
+      html += `<p class="will-next-steps-bullet">&#8226; ${trimmed.slice(2)}</p>`
+    } else if (trimmed === '---') {
+      html += '<hr class="will-next-steps-rule"/>'
+    } else if (trimmed.startsWith('Wills Assured provides')) {
+      html += `<p class="will-next-steps-footer">${trimmed}</p>`
+    } else if (trimmed.startsWith('For support')) {
+      html += `<p class="will-next-steps-footer">${trimmed}</p>`
+    } else {
+      html += `<p class="will-next-steps-para">${trimmed}</p>`
+    }
+  }
+
+  html += '</div></div>'
+  return html
+}
+
+function formatWillBody(text) {
   let html     = ''
   let inAttest = false
   let firstClause = true

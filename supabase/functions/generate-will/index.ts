@@ -310,7 +310,7 @@ Date: _________________________________
 
 Now produce the complete will above, replacing all [NEXT_CLAUSE] placeholders with correct sequential clause numbers, and inserting all customer data exactly as provided. Return only the finished document, followed exactly by this next steps page word for word:
 
----
+=== NEXT STEPS PAGE ===
 
 IMPORTANT — NEXT STEPS TO MAKE YOUR WILL LEGAL
 
