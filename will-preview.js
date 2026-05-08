@@ -84,6 +84,7 @@ function formatNextSteps(text) {
 }
 
 function formatWillBody(text) {
+  const lines  = text.split('\n')
   let html     = ''
   let inAttest = false
   let firstClause = true
