@@ -2298,6 +2298,8 @@ img { max-width: 100%; display: block; }
   letter-spacing: 0.06em;
   margin: 0 0 4px;
   font-family: 'EB Garamond', Georgia, serif;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .will-title-rule {

@@ -193,7 +193,7 @@ RULES:
 - Keep all boilerplate text EXACTLY word for word — do not paraphrase
 - Insert the customer data exactly where shown
 - Number all clauses sequentially — if a clause is omitted, renumber all following clauses
-- Format names of named parties in CAPITALS throughout
+- Format names of named parties in CAPITALS throughout — always use the full name exactly as provided, never shorten, abbreviate, or omit any part of it
 - Use "their/them" as gender-neutral pronouns for the testator
 - Wrap every piece of customer-specific data in **double asterisks**: full names, dates of birth, addresses, specific gift details, business interests, exclusion details, and any other data taken from the questionnaire
 - Return ONLY the completed will document — no commentary, no preamble
