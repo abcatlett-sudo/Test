@@ -169,7 +169,7 @@ if (registerForm) {
     btn.textContent = 'Creating account…';
 
     const base       = window.location.href.replace(/[^/]*$/, '');
-    const redirectTo = base + 'dashboard.html';
+    const redirectTo = base + 'login.html';
 
     const { error } = await sb.auth.signUp({
       email,
