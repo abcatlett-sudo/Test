@@ -221,6 +221,74 @@ if (loginForm) {
   });
 }
 
+// ----------------------------------------------------------------
+// FORGOT PASSWORD — inline reset flow on login page
+// ----------------------------------------------------------------
+const forgotLink = document.getElementById('forgotLink');
+if (forgotLink) {
+  forgotLink.addEventListener('click', (e) => {
+    e.preventDefault();
+
+    const card = forgotLink.closest('.auth-card');
+    card.innerHTML = `
+      <a href="index.html" class="auth-logo">Wills Assured</a>
+      <div class="auth-header">
+        <h1>Reset your password</h1>
+        <p>Enter your email address and we'll send you a link to reset your password.</p>
+      </div>
+      <form class="auth-form" id="resetForm" novalidate>
+        <div class="form-group">
+          <label for="resetEmail">Email address</label>
+          <input
+            type="email"
+            id="resetEmail"
+            name="email"
+            placeholder="jane@example.com"
+            required
+            autocomplete="email"
+          />
+        </div>
+        <button type="submit" class="btn btn-full">Send Reset Link</button>
+        <p class="form-note" id="resetNote"></p>
+      </form>
+      <p class="auth-footer"><a href="login.html">&larr; Back to Sign In</a></p>
+    `;
+
+    document.getElementById('resetForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+
+      const email = document.getElementById('resetEmail').value.trim();
+      const note  = document.getElementById('resetNote');
+      const btn   = document.querySelector('#resetForm button[type="submit"]');
+
+      if (!email) {
+        note.style.color = 'var(--accent)';
+        note.textContent = 'Please enter your email address.';
+        return;
+      }
+
+      btn.disabled    = true;
+      btn.textContent = 'Sending…';
+
+      const { error } = await sb.auth.resetPasswordForEmail(email, {
+        redirectTo: window.location.origin + '/dashboard.html',
+      });
+
+      if (error) {
+        note.style.color = 'var(--accent)';
+        note.textContent = error.message;
+        btn.disabled    = false;
+        btn.textContent = 'Send Reset Link';
+      } else {
+        note.style.color = 'var(--teal)';
+        note.textContent = '✓ Reset link sent — please check your email.';
+        btn.disabled    = true;
+        btn.textContent = 'Email Sent';
+      }
+    });
+  });
+}
+
 
 // ----------------------------------------------------------------
 // DASHBOARD PAGE (#dashboardContent)
