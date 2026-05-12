@@ -355,7 +355,7 @@ img { max-width: 100%; display: block; }
 
 .hero-actions {
   display: flex;
-  gap: 4px;
+  gap: 16px;
   flex-wrap: wrap;
   align-items: center;
 }
