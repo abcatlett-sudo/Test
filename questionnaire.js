@@ -1125,7 +1125,7 @@ async function completeQuestionnaire() {
     <div class="quest-card quest-complete quest-card-enter">
       <div class="quest-complete-icon">&#127881;</div>
       <h2>Your questionnaire is complete!</h2>
-      <p>Thank you. Our team will now use your answers to prepare your mirror wills. We'll be in touch within 2 working days to confirm everything and arrange signing.</p>
+      <p>Great news — your answers are complete. Visit your dashboard to generate your will instantly.</p>
       <a href="dashboard.html" class="btn btn-primary" style="margin-top:32px;">Return to Dashboard &rarr;</a>
     </div>`;
 
