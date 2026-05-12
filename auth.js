@@ -271,7 +271,7 @@ if (forgotLink) {
       btn.textContent = 'Sending…';
 
       const { error } = await sb.auth.resetPasswordForEmail(email, {
-        redirectTo: window.location.origin + '/dashboard.html',
+        redirectTo: window.location.origin + '/reset-password.html',
       });
 
       if (error) {
@@ -524,4 +524,48 @@ if (dashboardContent) {
     const regenBtn = document.getElementById('regenWillBtn');
     if (regenBtn) regenBtn.addEventListener('click', () => triggerWillGeneration(regenBtn));
   })();
+}
+
+// ----------------------------------------------------------------
+// RESET PASSWORD PAGE (#resetPasswordForm)
+// Supabase lands the user here after they click the email link.
+// The session is automatically set from the URL token.
+// ----------------------------------------------------------------
+const resetPasswordForm = document.getElementById('resetPasswordForm');
+if (resetPasswordForm) {
+  resetPasswordForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+
+    const newPassword     = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmNewPassword').value;
+    const note            = document.getElementById('resetPasswordNote');
+    const btn             = resetPasswordForm.querySelector('button[type="submit"]');
+
+    if (newPassword.length < 8) {
+      note.style.color = 'var(--accent)';
+      note.textContent = 'Password must be at least 8 characters.';
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      note.style.color = 'var(--accent)';
+      note.textContent = 'Passwords do not match.';
+      return;
+    }
+
+    btn.disabled    = true;
+    btn.textContent = 'Updating…';
+
+    const { error } = await sb.auth.updateUser({ password: newPassword });
+
+    if (error) {
+      note.style.color = 'var(--accent)';
+      note.textContent = error.message;
+      btn.disabled    = false;
+      btn.textContent = 'Update Password';
+    } else {
+      note.style.color = 'var(--teal)';
+      note.textContent = '✓ Password updated! Redirecting…';
+      setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
+    }
+  });
 }
