@@ -5,7 +5,12 @@
 const SUPABASE_URL      = 'https://fgyqumgvmllhiqdmgrfc.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZneXF1bWd2bWxsaGlxZG1ncmZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzQ1NDYsImV4cCI6MjA5MjUxMDU0Nn0.GwQsnXsraNegEqdYASRwagOxMgyAZg2iNXzP3Syqii8';
 
-const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
+  auth: {
+    persistSession: true,
+    autoRefreshToken: true,
+  }
+});
 
 
 // ----------------------------------------------------------------
@@ -29,9 +34,9 @@ sb.auth.onAuthStateChange((_event, session) => {
 // HELPER — redirect to login if no active session
 // ----------------------------------------------------------------
 async function requireAuth() {
-  const { data: { user } } = await sb.auth.getUser();
-  if (!user) { window.location.href = 'login.html'; return null; }
-  return user;
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'login.html'; return null; }
+  return session.user;
 }
 
 
