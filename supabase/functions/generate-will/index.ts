@@ -97,9 +97,12 @@ function buildPrompt(
         : `2.2 If ${caps(r.guardian_name)} is unable or unwilling to act as guardian, the guardianship shall be determined by the court.`)
     : `2.1 No guardian is appointed as no minor children are named in this will.`
 
-  // ── funeral
-  const funeral = r.funeral_wishes
-    ? r.funeral_wishes
+  // ── funeral (mirror wills use separate keys per testator)
+  const funeralKey = (!isPrimary && r.partner_funeral_wishes !== undefined)
+    ? 'partner_funeral_wishes'
+    : 'funeral_wishes'
+  const funeral = r[funeralKey]
+    ? r[funeralKey]
     : 'I have no specific funeral wishes.'
 
   // ── specific gifts
