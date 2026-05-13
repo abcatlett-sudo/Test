@@ -548,7 +548,7 @@ function renderStep() {
 
   document.getElementById('questProgressBar').style.width = pct + '%';
   document.getElementById('questProgressLabel').textContent =
-    `${sectionLabel()} — Step ${currentStep + 1} of ${steps.length}`;
+    `Step ${currentStep + 1} of ${steps.length}`;
 
   const fieldHTML = buildStepHTML(step);
 
