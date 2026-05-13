@@ -235,21 +235,13 @@ const MIRROR_STEPS = [
     id: 'funeral_wishes',
     section: 'final',
     icon: '&#128538;',
-    title: 'Your funeral wishes',
-    subtitle: 'Optional, but many people find it a comfort to leave clear guidance for their loved ones.',
-    type: 'textarea_optional',
+    title: 'Funeral wishes',
+    subtitle: 'Optional, but many people find it a comfort to leave clear guidance for their loved ones. Each set of wishes will only appear on the relevant will.',
+    type: 'dual_textarea_optional',
     key: 'funeral_wishes',
+    key2: 'partner_funeral_wishes',
     placeholder: 'e.g. I would prefer cremation, with a small family gathering at a location of their choosing...',
-  },
-  {
-    id: 'partner_funeral_wishes',
-    section: 'final',
-    icon: '&#128538;',
-    title: "Your partner's funeral wishes",
-    subtitle: "Optional. These will only appear on your partner's will, not yours.",
-    type: 'textarea_optional',
-    key: 'partner_funeral_wishes',
-    placeholder: 'e.g. They would prefer a burial, with a service at their local church...',
+    placeholder2: 'e.g. They would prefer a burial, with a service at their local church...',
   },
   {
     id: 'witnesses',
@@ -627,7 +619,8 @@ function buildStepHTML(step) {
     case 'secondary_wish':        return renderSecondaryWish();
     case 'single_secondary_wish': return renderSingleSecondaryWish();
     case 'executors':       return renderExecutors();
-    case 'checkbox_confirm':return renderCheckboxConfirm(step);
+    case 'checkbox_confirm':      return renderCheckboxConfirm(step);
+    case 'dual_textarea_optional': return renderDualTextareaOptional(step);
     case 'textarea_optional':return renderTextareaOptional(step);
     default:                return '';
   }
@@ -857,6 +850,18 @@ function renderTextareaOptional(step) {
     <div class="quest-field">
       <label class="quest-label">Your wishes <span class="quest-optional">Optional</span></label>
       <textarea class="quest-input quest-textarea" name="${step.key}" placeholder="${esc(step.placeholder)}" rows="5">${esc(responses[step.key] || '')}</textarea>
+    </div>`;
+}
+
+function renderDualTextareaOptional(step) {
+  return `
+    <div class="quest-field">
+      <label class="quest-label">Your wishes <span class="quest-optional">Optional</span></label>
+      <textarea class="quest-input quest-textarea" name="${step.key}" placeholder="${esc(step.placeholder)}" rows="4">${esc(responses[step.key] || '')}</textarea>
+    </div>
+    <div class="quest-field" style="margin-top:20px;">
+      <label class="quest-label">Your partner's wishes <span class="quest-optional">Optional</span></label>
+      <textarea class="quest-input quest-textarea" name="${step.key2}" placeholder="${esc(step.placeholder2)}" rows="4">${esc(responses[step.key2] || '')}</textarea>
     </div>`;
 }
 
