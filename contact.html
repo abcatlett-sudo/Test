@@ -104,6 +104,7 @@
           novalidate
         >
           <input type="hidden" name="form-name" value="contact" />
+          <input type="hidden" name="_replyto" id="replyToField" value="" />
           <p class="contact-honeypot" aria-hidden="true">
             <label>Don't fill this in: <input name="bot-field" /></label>
           </p>
@@ -179,6 +180,8 @@
           contactNote.textContent = 'Please fill in all fields.';
           return;
         }
+
+        document.getElementById('replyToField').value = email;
 
         const submitBtn = contactPageForm.querySelector('[type="submit"]');
         submitBtn.disabled    = true;
