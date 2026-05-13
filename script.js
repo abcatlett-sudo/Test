@@ -186,7 +186,30 @@ function renderBasket() {
 
   content.innerHTML = `
     <div class="basket-layout">
-      <div class="basket-items">${rows}</div>
+      <div class="basket-items">
+        ${rows}
+        <div class="basket-progress">
+          <div class="bp-step bp-done">
+            <div class="bp-circle">&#10003;</div>
+            <div class="bp-label">Choose a Will</div>
+          </div>
+          <div class="bp-connector bp-connector-done"></div>
+          <div class="bp-step bp-active">
+            <div class="bp-circle">2</div>
+            <div class="bp-label">Checkout &amp; Pay</div>
+          </div>
+          <div class="bp-connector"></div>
+          <div class="bp-step">
+            <div class="bp-circle">3</div>
+            <div class="bp-label">Create Account</div>
+          </div>
+          <div class="bp-connector"></div>
+          <div class="bp-step">
+            <div class="bp-circle">4</div>
+            <div class="bp-label">Answer Questions</div>
+          </div>
+        </div>
+      </div>
       <aside class="basket-summary">
         <h3>Order summary</h3>
         ${summaryRows}
