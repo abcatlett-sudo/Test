@@ -114,9 +114,15 @@ function formatWillBody(text) {
       continue
     }
 
-    // Opening paragraph (I, NAME, of...)
-    if (trimmed.startsWith('I, ') && trimmed.includes('hereby revoke')) {
-      html += `<p class="will-opening">${applyBold(trimmed)}</p>`
+    // Opening paragraph (I, NAME, of...) — may span multiple lines if address is multi-line
+    if (trimmed.startsWith('I, ')) {
+      let para = trimmed
+      while (i + 1 < lines.length && !lines[i + 1].trim().startsWith('1.') && !lines[i + 1].trim().startsWith('I,') && lines[i + 1].trim() !== '') {
+        if (para.includes('hereby revoke')) break
+        i++
+        para += ' ' + lines[i].trim()
+      }
+      html += `<p class="will-opening">${applyBold(para)}</p>`
       continue
     }
 
