@@ -1897,9 +1897,10 @@ img { max-width: 100%; display: block; }
 }
 
 @media (max-width: 768px) {
-  .basket-progress { padding: 16px 12px; }
-  .bp-label { font-size: 0.65rem; }
-  .bp-circle { width: 30px; height: 30px; font-size: 0.78rem; }
+  .basket-progress { padding: 16px 8px; }
+  .bp-label { font-size: 0.6rem; white-space: normal; max-width: 52px; }
+  .bp-circle { width: 28px; height: 28px; font-size: 0.75rem; }
+  .bp-connector { min-width: 12px; margin: 0 2px; margin-bottom: 22px; }
 }
 
 .basket-tc-check {
