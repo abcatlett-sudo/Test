@@ -4,10 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Blog — Wills Assured</title>
+  <meta name="description" content="Plain-English guides, legal insights, and practical advice on will writing, intestacy, and estate planning in the UK." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="styles.css" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YEW9B8CT2Y"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YEW9B8CT2Y');
+  </script>
 </head>
 <body>
 
@@ -18,13 +28,26 @@
     <div class="container nav-inner">
       <a href="index.html" class="logo">Wills Assured</a>
       <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="choose-a-will.html">Choose a Will</a></li>
-        <li><a href="blog.html">Blog</a></li>
+        <li><a href="index.html" data-mobile-hide>Home</a></li>
+        <li><a href="about.html" data-mobile-hide>About</a></li>
+        <li><a href="choose-a-will.html" data-mobile-hide>Choose a Will</a></li>
+        <li><a href="faq.html" data-mobile-hide>FAQs</a></li>
+        <li><a href="blog.html" data-mobile-hide>Blog</a></li>
+        <li class="nav-mobile-signin"><a href="login.html" class="nav-cta nav-cta-mobile">Sign In</a></li>
       </ul>
+      <a href="basket.html" class="nav-basket" aria-label="View basket">&#128722;<span class="basket-count" id="basketCount"></span></a>
       <a href="login.html" class="btn btn-primary nav-cta">Sign In</a>
       <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+    <div class="nav-trustpilot">
+      <div class="tp-stars">
+        <span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star tp-star-half">&#9733;</span>
+      </div>
+      <span class="tp-label">Excellent</span>
+      <span class="tp-divider">|</span>
+      <span class="tp-score"><strong>4.8</strong> out of 5</span>
+      <span class="tp-divider">|</span>
+      <span class="tp-brand">&#11088; Trustpilot</span>
     </div>
   </nav>
 
@@ -43,129 +66,104 @@
   </section>
 
   <!-- =====================
-       BLOG POSTS
+       BLOG INDEX
   ======================== -->
   <section class="blog-section">
     <div class="container">
-      <div class="blog-grid">
+      <div class="blog-index-grid">
 
-        <!-- Featured post — spans 2 columns -->
+        <!-- Article 1 -->
         <article class="blog-card">
-          <div class="blog-card-thumb">&#128221;</div>
+          <div class="blog-card-thumb" style="background: linear-gradient(135deg, #06051A 0%, rgba(124, 77, 255, 0.40) 100%);">&#9878;&#65039;</div>
           <div class="blog-card-body">
-            <span class="blog-card-tag">Advice</span>
+            <span class="blog-card-tag">UK Will Law</span>
             <h2 class="blog-card-title">
-              <a href="#">Why everyone in their 30s needs a will right now</a>
+              <a href="blog-legal-elements.html">What Makes a Will Legally Valid in the UK? The Essential Elements Explained</a>
             </h2>
             <p class="blog-card-excerpt">
-              Only 1 in 3 adults has a will. If you're in your 30s, this is the
-              single most important financial document you're not yet thinking
-              about — and writing one takes less time than you think.
+              A will is only as good as its legal standing. Here is exactly what the Wills Act 1837 requires — and what your will must contain to ensure your wishes are protected.
             </p>
             <div class="blog-card-meta">
-              <span>12 Feb 2026</span>
-              <span>&middot;</span>
-              <span>5 min read</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Post 2 -->
-        <article class="blog-card">
-          <div class="blog-card-thumb">&#128145;</div>
-          <div class="blog-card-body">
-            <span class="blog-card-tag">Guides</span>
-            <h2 class="blog-card-title">
-              <a href="#">Understanding mirror wills for couples</a>
-            </h2>
-            <p class="blog-card-excerpt">
-              Mirror wills let you and your partner protect each other's futures
-              with two complementary, legally binding documents.
-            </p>
-            <div class="blog-card-meta">
-              <span>5 Feb 2026</span>
+              <span>7 May 2026</span>
               <span>&middot;</span>
               <span>4 min read</span>
             </div>
+            <a href="blog-legal-elements.html" class="blog-card-link">Read article &rarr;</a>
           </div>
         </article>
 
-        <!-- Post 3 -->
+        <!-- Article 2 -->
         <article class="blog-card">
-          <div class="blog-card-thumb">&#9878;</div>
+          <div class="blog-card-thumb" style="background: linear-gradient(135deg, #06051A 0%, rgba(0, 196, 167, 0.40) 100%);">&#9878;</div>
           <div class="blog-card-body">
-            <span class="blog-card-tag">Legal</span>
+            <span class="blog-card-tag">Will Writing</span>
             <h2 class="blog-card-title">
-              <a href="#">What happens if you die without a will?</a>
+              <a href="blog-no-solicitor.html">Do You Need a Solicitor to Write a Will? The Legal Truth — and Why So Many People Get It Wrong</a>
             </h2>
             <p class="blog-card-excerpt">
-              Dying intestate means the law — not you — decides who gets your
-              estate. Here's what that looks like in practice.
+              The biggest myth in UK estate planning is that you need a solicitor for a valid will. You don't. The law has always been clear — here's why the misconception persists and what it's cost millions of families.
             </p>
             <div class="blog-card-meta">
-              <span>29 Jan 2026</span>
+              <span>1 May 2026</span>
+              <span>&middot;</span>
+              <span>7 min read</span>
+            </div>
+          </div>
+        </article>
+
+        <!-- Article 2 -->
+        <article class="blog-card">
+          <div class="blog-card-thumb" style="background: linear-gradient(135deg, #1E1B3D 0%, rgba(124, 77, 255, 0.45) 100%);">&#9203;</div>
+          <div class="blog-card-body">
+            <span class="blog-card-tag">Estate Planning</span>
+            <h2 class="blog-card-title">
+              <a href="blog-barriers.html">The Five Reasons Brits Have Always Put Off Writing a Will — And Why None of Them Hold Up</a>
+            </h2>
+            <p class="blog-card-excerpt">
+              59% of UK adults don't have a will. It's not laziness — it's a system that was never designed to make things easy. We break down the five real barriers and why they no longer need to stop you.
+            </p>
+            <div class="blog-card-meta">
+              <span>22 Apr 2026</span>
               <span>&middot;</span>
               <span>6 min read</span>
             </div>
           </div>
         </article>
 
-        <!-- Post 4 -->
+        <!-- Article 3 -->
         <article class="blog-card">
-          <div class="blog-card-thumb">&#128187;</div>
+          <div class="blog-card-thumb" style="background: linear-gradient(135deg, #06051A 0%, #3A3760 100%);"><span style="background: linear-gradient(135deg, #7C4DFF, #00C4A7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">&#9878;</span></div>
           <div class="blog-card-body">
-            <span class="blog-card-tag">Advice</span>
+            <span class="blog-card-tag">Inheritance Law</span>
             <h2 class="blog-card-title">
-              <a href="#">How to include your digital assets in your will</a>
+              <a href="blog-intestacy.html">What Really Happens When You Die Without a Will in the UK — And It's Not Pretty</a>
             </h2>
             <p class="blog-card-excerpt">
-              Crypto, cloud storage, social media accounts — your digital life
-              has real value. Here's how to protect it.
+              Dying without a will means the rules of intestacy decide everything. Your partner may inherit nothing. Your estate could pass to the Crown. Here's exactly what that looks like for real families.
             </p>
             <div class="blog-card-meta">
-              <span>20 Jan 2026</span>
+              <span>22 Apr 2026</span>
               <span>&middot;</span>
-              <span>5 min read</span>
+              <span>7 min read</span>
             </div>
           </div>
         </article>
 
-        <!-- Post 5 -->
+        <!-- Article 4 -->
         <article class="blog-card">
-          <div class="blog-card-thumb">&#129309;</div>
+          <div class="blog-card-thumb" style="background: linear-gradient(135deg, rgba(124, 77, 255, 0.35) 0%, rgba(0, 196, 167, 0.35) 100%);">&#128640;</div>
           <div class="blog-card-body">
-            <span class="blog-card-tag">Guides</span>
+            <span class="blog-card-tag">Online Wills</span>
             <h2 class="blog-card-title">
-              <a href="#">How to choose the right executor for your will</a>
+              <a href="blog-online-wills.html">The Online Will Revolution: Why Millions of Brits Are Finally Getting a Will — and You Should Too</a>
             </h2>
             <p class="blog-card-excerpt">
-              Your executor carries out your final wishes — choosing the right
-              person (or people) is one of the most important decisions you'll make.
+              For the first time in a generation, the number of UK adults with a valid will is rising. Here's what online will writing actually delivers and why there has never been a better time to act.
             </p>
             <div class="blog-card-meta">
-              <span>14 Jan 2026</span>
+              <span>22 Apr 2026</span>
               <span>&middot;</span>
-              <span>4 min read</span>
-            </div>
-          </div>
-        </article>
-
-        <!-- Post 6 -->
-        <article class="blog-card">
-          <div class="blog-card-thumb">&#128260;</div>
-          <div class="blog-card-body">
-            <span class="blog-card-tag">Legal</span>
-            <h2 class="blog-card-title">
-              <a href="#">When should you update your will?</a>
-            </h2>
-            <p class="blog-card-excerpt">
-              Marriage, divorce, a new baby, moving house — life changes fast.
-              Here are the key moments that should trigger a will review.
-            </p>
-            <div class="blog-card-meta">
-              <span>7 Jan 2026</span>
-              <span>&middot;</span>
-              <span>3 min read</span>
+              <span>7 min read</span>
             </div>
           </div>
         </article>
@@ -182,15 +180,21 @@
       <a href="index.html" class="logo">Wills Assured</a>
       <p class="footer-copy">&copy; 2026 Wills Assured. All rights reserved.</p>
       <nav class="footer-nav">
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="choose-a-will.html">Choose a Will</a>
-        <a href="blog.html">Blog</a>
-        <a href="login.html">Sign In</a>
+        <a href="index.html" data-mobile-hide>Home</a>
+        <a href="about.html" data-mobile-hide>About</a>
+        <a href="choose-a-will.html" data-mobile-hide>Choose a Will</a>
+        <a href="faq.html" data-mobile-hide>FAQs</a>
+        <a href="blog.html" data-mobile-hide>Blog</a>
+        <a href="login.html" data-mobile-hide>Sign In</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms.html">Terms &amp; Conditions</a>
       </nav>
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
+  <script src="auth.js"></script>
 </body>
 </html>

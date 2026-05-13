@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Complete your guided will questionnaire. Answer simple questions about your wishes, beneficiaries, guardians and executors to generate your will." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Will Questionnaire — Wills Assured</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YEW9B8CT2Y"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YEW9B8CT2Y');
+  </script>
+</head>
+<body class="quest-body">
+
+  <header class="quest-header">
+    <a href="index.html" class="logo">Wills Assured</a>
+    <div class="quest-header-right">
+      <span class="quest-save-status" id="questSaveStatus"></span>
+      <a href="dashboard.html" class="btn btn-ghost">Save &amp; Exit</a>
+    </div>
+  </header>
+
+  <div class="quest-progress-wrap">
+    <div class="quest-progress-bar" id="questProgressBar"></div>
+  </div>
+  <p class="quest-progress-label" id="questProgressLabel"></p>
+
+  <main class="quest-main" id="questMain">
+    <div class="quest-card" style="text-align:center;padding:80px 48px;">
+      <p style="color:var(--muted)">Loading your questionnaire&hellip;</p>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script src="auth.js"></script>
+  <script src="questionnaire.js"></script>
+</body>
+</html>

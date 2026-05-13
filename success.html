@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Payment confirmed. Create your Wills Assured account to begin your guided will questionnaire and generate your legally binding will." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Payment Confirmed — Wills Assured</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YEW9B8CT2Y"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YEW9B8CT2Y');
+  </script>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">Wills Assured</a>
+      <ul class="nav-links">
+        <li><a href="index.html" data-mobile-hide>Home</a></li>
+        <li><a href="about.html" data-mobile-hide>About</a></li>
+        <li><a href="choose-a-will.html" data-mobile-hide>Choose a Will</a></li>
+        <li><a href="faq.html" data-mobile-hide>FAQs</a></li>
+        <li><a href="blog.html" data-mobile-hide>Blog</a></li>
+        <li class="nav-mobile-signin"><a href="login.html" class="nav-cta nav-cta-mobile">Sign In</a></li>
+      </ul>
+      <a href="basket.html" class="nav-basket" aria-label="View basket">&#128722;<span class="basket-count" id="basketCount"></span></a>
+      <a href="login.html" class="btn btn-primary nav-cta">Sign In</a>
+      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+    <div class="nav-trustpilot">
+      <div class="tp-stars">
+        <span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star tp-star-half">&#9733;</span>
+      </div>
+      <span class="tp-label">Excellent</span>
+      <span class="tp-divider">|</span>
+      <span class="tp-score"><strong>4.8</strong> out of 5</span>
+      <span class="tp-divider">|</span>
+      <span class="tp-brand">&#11088; Trustpilot</span>
+    </div>
+  </nav>
+
+  <!-- =====================
+       SUCCESS CONTENT
+  ======================== -->
+  <section class="auth-section">
+
+    <!-- Regular will purchase -->
+    <div class="auth-card success-card" id="regularSuccess">
+      <div class="success-icon">&#10003;</div>
+      <div class="auth-header">
+        <h1>Payment confirmed</h1>
+        <p>Your will is secured. Now create your account to get started.</p>
+      </div>
+      <div class="success-steps">
+        <div class="success-step">
+          <span class="success-step-num done">&#10003;</span>
+          <span>Choose a will</span>
+        </div>
+        <div class="success-step">
+          <span class="success-step-num done">&#10003;</span>
+          <span>Payment complete</span>
+        </div>
+        <div class="success-step">
+          <span class="success-step-num active">3</span>
+          <span>Create your account</span>
+        </div>
+        <div class="success-step">
+          <span class="success-step-num">4</span>
+          <span>Answer questions &amp; get your will</span>
+        </div>
+      </div>
+      <a href="register.html" class="btn btn-full" style="margin-top: 8px;">
+        Create Your Account &rarr;
+      </a>
+      <p class="auth-footer" style="margin-top: 20px;">
+        Already have an account? <a href="login.html">Sign in &rarr;</a>
+      </p>
+    </div>
+
+    <!-- Voucher purchase -->
+    <div class="auth-card success-card" id="voucherSuccess" style="display:none;">
+      <div class="success-icon" style="background: linear-gradient(135deg, var(--primary), var(--teal)); font-size: 2rem;">&#127873;</div>
+      <div class="auth-header">
+        <h1>Your voucher is on its way!</h1>
+        <p>Payment confirmed. We've emailed your voucher code — check your inbox.</p>
+      </div>
+
+      <div class="voucher-success-box">
+        <p class="voucher-success-label">What happens next</p>
+        <div class="success-steps" style="margin-top: 12px;">
+          <div class="success-step">
+            <span class="success-step-num done">&#10003;</span>
+            <span>Payment complete</span>
+          </div>
+          <div class="success-step">
+            <span class="success-step-num done">&#10003;</span>
+            <span>Voucher code emailed to you</span>
+          </div>
+          <div class="success-step">
+            <span class="success-step-num active">3</span>
+            <span>Share the code with your recipient</span>
+          </div>
+          <div class="success-step">
+            <span class="success-step-num">4</span>
+            <span>They redeem it at willsassured.co.uk and create their will</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="voucher-success-note">
+        <p>The recipient will need to create a free account at <strong>willsassured.co.uk</strong>, then enter the voucher code on their dashboard to unlock their will.</p>
+      </div>
+
+      <a href="index.html" class="btn btn-full" style="margin-top: 8px;">
+        Return to Home &rarr;
+      </a>
+    </div>
+
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="index.html" class="logo">Wills Assured</a>
+      <p class="footer-copy">&copy; 2026 Wills Assured. All rights reserved.</p>
+      <nav class="footer-nav">
+        <a href="index.html" data-mobile-hide>Home</a>
+        <a href="about.html" data-mobile-hide>About</a>
+        <a href="choose-a-will.html" data-mobile-hide>Choose a Will</a>
+        <a href="faq.html" data-mobile-hide>FAQs</a>
+        <a href="blog.html" data-mobile-hide>Blog</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms.html">Terms &amp; Conditions</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const type   = params.get('type') || '';
+    if (type.startsWith('voucher')) {
+      document.getElementById('regularSuccess').style.display = 'none';
+      document.getElementById('voucherSuccess').style.display = '';
+    }
+  </script>
+</body>
+</html>

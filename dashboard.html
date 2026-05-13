@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="description" content="Learn about Wills Assured — our mission to make will writing accessible and affordable for every UK adult, removing the barriers of cost, time and complexity." />
+  <meta name="description" content="Manage your Wills Assured account, complete your will questionnaire and access your legally binding will document." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About — Wills Assured</title>
+  <title>Dashboard — Wills Assured</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -54,17 +54,22 @@
   <!-- =====================
        PAGE HERO
   ======================== -->
-  <section class="about-story">
-    <div class="container">
-      <div class="story-block">
-        <p class="story-text">
-          Wills Assured was founded on an honest reality &mdash; most people know they need a will, yet the barriers of cost, time and complexity make it easy to put off. We believe that protecting the people who matter most should be straightforward and affordable for every UK adult.
-        </p>
-        <p class="story-text">
-          Using <span class="story-highlight">innovative technology</span> and a
-          <span class="story-highlight">guided online experience</span>, we&rsquo;ve
-          made it possible to create a legally binding will effortlessly &mdash; for a fraction of what a traditional solicitor would charge. No jargon, no unnecessary delay, no excuse not to.
-        </p>
+  <section class="page-hero">
+    <div class="container page-hero-inner">
+      <span class="section-tag">My Account</span>
+      <h1>Your <span class="highlight">Dashboard</span></h1>
+      <p>Everything you need to manage your will and account in one place.</p>
+    </div>
+  </section>
+
+  <!-- =====================
+       DASHBOARD CONTENT
+       Populated by auth.js once session is confirmed
+  ======================== -->
+  <section class="dashboard-section">
+    <div class="container" id="dashboardContent">
+      <div class="dashboard-loading">
+        <p>Loading your account&hellip;</p>
       </div>
     </div>
   </section>
@@ -82,7 +87,6 @@
         <a href="choose-a-will.html" data-mobile-hide>Choose a Will</a>
         <a href="faq.html" data-mobile-hide>FAQs</a>
         <a href="blog.html" data-mobile-hide>Blog</a>
-        <a href="login.html" data-mobile-hide>Sign In</a>
         <a href="contact.html">Contact</a>
         <a href="privacy-policy.html">Privacy Policy</a>
         <a href="terms.html">Terms &amp; Conditions</a>

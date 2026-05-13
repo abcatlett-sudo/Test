@@ -2,9 +2,9 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="description" content="Learn about Wills Assured — our mission to make will writing accessible and affordable for every UK adult, removing the barriers of cost, time and complexity." />
+  <meta name="description" content="Review your will order and proceed to secure checkout. Single Wills from £19.99, Mirror Wills from £29.99." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>About — Wills Assured</title>
+  <title>Basket — Wills Assured</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
@@ -54,17 +54,64 @@
   <!-- =====================
        PAGE HERO
   ======================== -->
-  <section class="about-story">
+  <section class="page-hero">
+    <div class="container page-hero-inner">
+      <span class="section-tag">Your Order</span>
+      <h1>Your <span class="highlight">basket</span></h1>
+      <p>Review your selected will before proceeding to checkout.</p>
+    </div>
+  </section>
+
+  <!-- =====================
+       BASKET CONTENT
+  ======================== -->
+  <section class="basket-section">
+    <div class="container" id="basketContent">
+      <!-- Populated by script.js renderBasket() -->
+    </div>
+  </section>
+
+  <!-- =====================
+       PROCESS REMINDER
+  ======================== -->
+  <section class="basket-process">
     <div class="container">
-      <div class="story-block">
-        <p class="story-text">
-          Wills Assured was founded on an honest reality &mdash; most people know they need a will, yet the barriers of cost, time and complexity make it easy to put off. We believe that protecting the people who matter most should be straightforward and affordable for every UK adult.
-        </p>
-        <p class="story-text">
-          Using <span class="story-highlight">innovative technology</span> and a
-          <span class="story-highlight">guided online experience</span>, we&rsquo;ve
-          made it possible to create a legally binding will effortlessly &mdash; for a fraction of what a traditional solicitor would charge. No jargon, no unnecessary delay, no excuse not to.
-        </p>
+      <div class="section-header">
+        <span class="section-tag">A Reminder of How It Works</span>
+        <h2>Your will, done in four simple steps</h2>
+      </div>
+      <div class="process-flow">
+
+        <div class="process-step">
+          <div class="step-num">1</div>
+          <div class="step-icon">&#128203;</div>
+          <h3>Choose a Will</h3>
+        </div>
+
+        <div class="process-connector" aria-hidden="true"></div>
+
+        <div class="process-step">
+          <div class="step-num">2</div>
+          <div class="step-icon">&#128179;</div>
+          <h3>Checkout &amp; Pay</h3>
+        </div>
+
+        <div class="process-connector" aria-hidden="true"></div>
+
+        <div class="process-step">
+          <div class="step-num">3</div>
+          <div class="step-icon">&#128100;</div>
+          <h3>Create an Account</h3>
+        </div>
+
+        <div class="process-connector" aria-hidden="true"></div>
+
+        <div class="process-step">
+          <div class="step-num">4</div>
+          <div class="step-icon">&#9998;</div>
+          <h3>Answer Simple Questions</h3>
+        </div>
+
       </div>
     </div>
   </section>

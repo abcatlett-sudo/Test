@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="Get in touch with Wills Assured. We aim to respond within 1 business day." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Contact Us — Wills Assured</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <link rel="stylesheet" href="styles.css" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YEW9B8CT2Y"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YEW9B8CT2Y');
+  </script>
+</head>
+<body>
+
+  <!-- =====================
+       NAVIGATION
+  ======================== -->
+  <nav class="navbar">
+    <div class="container nav-inner">
+      <a href="index.html" class="logo">Wills Assured</a>
+      <ul class="nav-links">
+        <li><a href="index.html" data-mobile-hide>Home</a></li>
+        <li><a href="about.html" data-mobile-hide>About</a></li>
+        <li><a href="choose-a-will.html" data-mobile-hide>Choose a Will</a></li>
+        <li><a href="faq.html" data-mobile-hide>FAQs</a></li>
+        <li><a href="blog.html" data-mobile-hide>Blog</a></li>
+        <li class="nav-mobile-signin"><a href="login.html" class="nav-cta nav-cta-mobile">Sign In</a></li>
+      </ul>
+      <a href="basket.html" class="nav-basket" aria-label="View basket">&#128722;<span class="basket-count" id="basketCount"></span></a>
+      <a href="login.html" class="btn btn-primary nav-cta">Sign In</a>
+      <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+    <div class="nav-trustpilot">
+      <div class="tp-stars">
+        <span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star tp-star-half">&#9733;</span>
+      </div>
+      <span class="tp-label">Excellent</span>
+      <span class="tp-divider">|</span>
+      <span class="tp-score"><strong>4.8</strong> out of 5</span>
+      <span class="tp-divider">|</span>
+      <span class="tp-brand">&#11088; Trustpilot</span>
+    </div>
+  </nav>
+
+  <!-- =====================
+       PAGE HERO
+  ======================== -->
+  <section class="page-hero">
+    <div class="container page-hero-inner">
+      <span class="section-tag">Get in Touch</span>
+      <h1>Contact <span class="highlight">Us</span></h1>
+      <p>We aim to respond within 1 business day.</p>
+    </div>
+  </section>
+
+  <!-- =====================
+       CONTACT CONTENT
+  ======================== -->
+  <section class="contact-section">
+    <div class="container contact-layout">
+
+      <!-- Left: info -->
+      <div class="contact-info">
+
+        <div class="contact-info-block">
+          <div class="contact-info-icon">&#9993;</div>
+          <h3>Email us directly</h3>
+          <p>For any question about your will, your account, or our service.</p>
+          <a href="mailto:hello@willsassured.co.uk" class="contact-email-link">hello@willsassured.co.uk</a>
+        </div>
+
+        <div class="contact-info-block">
+          <div class="contact-info-icon">&#128338;</div>
+          <h3>Response time</h3>
+          <p>We aim to respond to all enquiries within <strong>1 business day</strong>, Monday to Friday.</p>
+        </div>
+
+        <div class="contact-info-block contact-faq-nudge">
+          <div class="contact-info-icon">&#128220;</div>
+          <h3>Looking for a quick answer?</h3>
+          <p>Many common questions are already covered in our FAQs.</p>
+          <a href="faq.html" class="btn btn-ghost" style="margin-top:12px;display:inline-block;">Browse FAQs &rarr;</a>
+        </div>
+
+      </div>
+
+      <!-- Right: form -->
+      <div class="contact-form-wrap">
+        <form
+          name="contact"
+          method="POST"
+          data-netlify="true"
+          netlify-honeypot="bot-field"
+          id="contactPageForm"
+          novalidate
+        >
+          <input type="hidden" name="form-name" value="contact" />
+          <input type="hidden" name="_replyto" id="replyToField" value="" />
+          <p class="contact-honeypot" aria-hidden="true">
+            <label>Don't fill this in: <input name="bot-field" /></label>
+          </p>
+
+          <div class="form-group">
+            <label for="contactName">Your name</label>
+            <input type="text" id="contactName" name="name" placeholder="Jane Smith" required autocomplete="name" />
+          </div>
+
+          <div class="form-group">
+            <label for="contactEmail">Email address</label>
+            <input type="email" id="contactEmail" name="email" placeholder="jane@example.com" required autocomplete="email" />
+          </div>
+
+          <div class="form-group">
+            <label for="contactSubject">Subject</label>
+            <input type="text" id="contactSubject" name="subject" placeholder="e.g. Question about my will" required />
+          </div>
+
+          <div class="form-group">
+            <label for="contactMessage">Message</label>
+            <textarea id="contactMessage" name="message" rows="5" placeholder="How can we help?" required></textarea>
+          </div>
+
+          <button type="submit" class="btn btn-primary btn-full">Send Message &rarr;</button>
+          <p class="form-note" id="contactNote"></p>
+
+        </form>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- =====================
+       FOOTER
+  ======================== -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <a href="index.html" class="logo">Wills Assured</a>
+      <p class="footer-copy">&copy; 2026 Wills Assured. All rights reserved.</p>
+      <nav class="footer-nav">
+        <a href="index.html" data-mobile-hide>Home</a>
+        <a href="about.html" data-mobile-hide>About</a>
+        <a href="choose-a-will.html" data-mobile-hide>Choose a Will</a>
+        <a href="faq.html" data-mobile-hide>FAQs</a>
+        <a href="blog.html" data-mobile-hide>Blog</a>
+        <a href="login.html" data-mobile-hide>Sign In</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms.html">Terms &amp; Conditions</a>
+      </nav>
+    </div>
+  </footer>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="script.js"></script>
+  <script src="auth.js"></script>
+  <script>
+    const contactPageForm = document.getElementById('contactPageForm');
+    const contactNote     = document.getElementById('contactNote');
+
+    if (contactPageForm) {
+      contactPageForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+
+        const name    = document.getElementById('contactName').value.trim();
+        const email   = document.getElementById('contactEmail').value.trim();
+        const subject = document.getElementById('contactSubject').value.trim();
+        const message = document.getElementById('contactMessage').value.trim();
+
+        if (!name || !email || !subject || !message) {
+          contactNote.style.color = 'var(--accent)';
+          contactNote.textContent = 'Please fill in all fields.';
+          return;
+        }
+
+        document.getElementById('replyToField').value = email;
+
+        const submitBtn = contactPageForm.querySelector('[type="submit"]');
+        submitBtn.disabled    = true;
+        submitBtn.textContent = 'Sending…';
+
+        try {
+          const formData = new FormData(contactPageForm);
+          await fetch('/', { method: 'POST', body: formData });
+          contactPageForm.reset();
+          contactNote.style.color = 'var(--primary)';
+          contactNote.textContent = 'Message sent — we\'ll be in touch within 1 business day.';
+        } catch {
+          contactNote.style.color = 'var(--accent)';
+          contactNote.textContent = 'Something went wrong. Please email us directly at hello@willsassured.co.uk';
+        } finally {
+          submitBtn.disabled    = false;
+          submitBtn.textContent = 'Send Message →';
+        }
+      });
+    }
+  </script>
+</body>
+</html>

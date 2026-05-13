@@ -2,12 +2,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
+  <meta name="description" content="Choose a Single Will from £19.99 or Mirror Wills for couples from £29.99. Legally binding wills created online in just minutes — no solicitor needed." />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Choose a Will — Wills Assured</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
   <link rel="stylesheet" href="styles.css" />
+  <!-- Google Analytics -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-YEW9B8CT2Y"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-YEW9B8CT2Y');
+  </script>
 </head>
 <body>
 
@@ -18,13 +28,26 @@
     <div class="container nav-inner">
       <a href="index.html" class="logo">Wills Assured</a>
       <ul class="nav-links">
-        <li><a href="index.html">Home</a></li>
-        <li><a href="about.html">About</a></li>
-        <li><a href="choose-a-will.html">Choose a Will</a></li>
-        <li><a href="blog.html">Blog</a></li>
+        <li><a href="index.html" data-mobile-hide>Home</a></li>
+        <li><a href="about.html" data-mobile-hide>About</a></li>
+        <li><a href="choose-a-will.html" data-mobile-hide>Choose a Will</a></li>
+        <li><a href="faq.html" data-mobile-hide>FAQs</a></li>
+        <li><a href="blog.html" data-mobile-hide>Blog</a></li>
+        <li class="nav-mobile-signin"><a href="login.html" class="nav-cta nav-cta-mobile">Sign In</a></li>
       </ul>
+      <a href="basket.html" class="nav-basket" aria-label="View basket">&#128722;<span class="basket-count" id="basketCount"></span></a>
       <a href="login.html" class="btn btn-primary nav-cta">Sign In</a>
       <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
+    </div>
+    <div class="nav-trustpilot">
+      <div class="tp-stars">
+        <span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star tp-star-half">&#9733;</span>
+      </div>
+      <span class="tp-label">Excellent</span>
+      <span class="tp-divider">|</span>
+      <span class="tp-score"><strong>4.8</strong> out of 5</span>
+      <span class="tp-divider">|</span>
+      <span class="tp-brand">&#11088; Trustpilot</span>
     </div>
   </nav>
 
@@ -33,11 +56,10 @@
   ======================== -->
   <section class="page-hero">
     <div class="container page-hero-inner">
-      <span class="section-tag">Our Plans</span>
+      <span class="section-tag">Our Wills</span>
       <h1>Choose the right will <span class="highlight">for you</span></h1>
       <p>
-        Simple, affordable, and legally binding wills — written by qualified
-        solicitors and stored securely online. No jargon, no hidden fees.
+        Simple, affordable, and legally binding wills &mdash; No jargon, no hidden fees.
       </p>
     </div>
   </section>
@@ -53,21 +75,19 @@
         <div class="will-card">
           <p class="will-name">Single Will</p>
           <div class="will-price">
-            <strong>£99</strong><span>one-off fee</span>
+            <strong>£19.99</strong><span>one-off fee</span>
           </div>
           <p class="will-desc">
-            A legally binding will that protects your wishes and ensures your
-            assets go to exactly the people and causes you choose.
+            A single will sets out your wishes for how your estate should be distributed after your death. It is ideal for individuals who are single, divorced, or those who simply prefer to make their own independent arrangements.
           </p>
           <ul class="will-features">
             <li>Appoint an executor of your choice</li>
             <li>Name beneficiaries for all assets</li>
             <li>Guardianship wishes for children</li>
             <li>Funeral and care preferences</li>
-            <li>Secure encrypted digital storage</li>
             <li>Unlimited amendments for 12 months</li>
           </ul>
-          <a href="login.html" class="btn btn-primary will-cta">Get Started &rarr;</a>
+          <button class="btn btn-primary will-cta add-to-basket" data-id="single" data-name="Single Will" data-price="19.99">Add to Basket &rarr;</button>
         </div>
 
         <!-- Mirror Wills — featured -->
@@ -75,42 +95,44 @@
           <span class="will-badge">Most Popular</span>
           <p class="will-name">Mirror Wills</p>
           <div class="will-price">
-            <strong>£149</strong><span>for two wills</span>
+            <strong>£29.99</strong><span>for two wills</span>
           </div>
           <p class="will-desc">
-            Two complementary wills for you and your partner — the most popular
-            choice for couples who want mutual peace of mind.
+            Mirror wills are two complementary wills made by couples, each leaving their estate to the other and then to the same beneficiaries. The most popular choice for married couples and civil partners who share the same wishes.
           </p>
           <ul class="will-features">
             <li>Everything in Single Will &times; 2</li>
             <li>Automatically mirrors your partner's wishes</li>
-            <li>Digital asset planning included</li>
             <li>Joint executor appointments</li>
-            <li>Priority customer support</li>
-            <li>Lifetime storage for both wills</li>
           </ul>
-          <a href="login.html" class="btn will-cta">Get Started &rarr;</a>
+          <button class="btn will-cta add-to-basket" data-id="mirror" data-name="Mirror Wills" data-price="29.99">Add to Basket &rarr;</button>
         </div>
 
-        <!-- Comprehensive Will -->
+        <!-- Will Voucher -->
         <div class="will-card">
-          <p class="will-name">Comprehensive Will</p>
-          <div class="will-price">
-            <strong>£249</strong><span>one-off fee</span>
-          </div>
+          <p class="will-name">Will Voucher</p>
+          <div class="will-price" id="voucherPrice"></div>
           <p class="will-desc">
-            For complex estates, business interests, trusts, or beneficiaries
-            who require additional legal safeguards and expert review.
+            Give the gift of peace of mind. A Wills Assured voucher lets your loved one create their will at a time that suits them.
           </p>
+          <div class="voucher-options">
+            <button class="voucher-option" data-id="voucher-single" data-name="Single Will Voucher" data-price="19.99">
+              <span class="voucher-option-label">Single Will</span>
+              <span class="voucher-option-price">&pound;19.99</span>
+            </button>
+            <button class="voucher-option" data-id="voucher-mirror" data-name="Mirror Wills Voucher" data-price="29.99">
+              <span class="voucher-option-label">Mirror Wills</span>
+              <span class="voucher-option-price">&pound;29.99</span>
+            </button>
+          </div>
           <ul class="will-features">
-            <li>Everything in Mirror Wills</li>
-            <li>Discretionary trust provisions</li>
-            <li>Business succession planning</li>
-            <li>Foreign asset guidance</li>
-            <li>Dedicated solicitor review call</li>
-            <li>Lifetime free amendments</li>
+            <li>Redeemable online at any time</li>
+            <li>Valid for 12 months from purchase</li>
+            <li>Covers the full questionnaire</li>
+            <li>Delivered by email instantly</li>
+            <li>Perfect as a thoughtful gift</li>
           </ul>
-          <a href="login.html" class="btn btn-primary will-cta">Get Started &rarr;</a>
+          <button class="btn btn-primary will-cta" id="voucherAddBtn" disabled>Select an option above</button>
         </div>
 
       </div>
@@ -125,15 +147,21 @@
       <a href="index.html" class="logo">Wills Assured</a>
       <p class="footer-copy">&copy; 2026 Wills Assured. All rights reserved.</p>
       <nav class="footer-nav">
-        <a href="index.html">Home</a>
-        <a href="about.html">About</a>
-        <a href="choose-a-will.html">Choose a Will</a>
-        <a href="blog.html">Blog</a>
-        <a href="login.html">Sign In</a>
+        <a href="index.html" data-mobile-hide>Home</a>
+        <a href="about.html" data-mobile-hide>About</a>
+        <a href="choose-a-will.html" data-mobile-hide>Choose a Will</a>
+        <a href="faq.html" data-mobile-hide>FAQs</a>
+        <a href="blog.html" data-mobile-hide>Blog</a>
+        <a href="login.html" data-mobile-hide>Sign In</a>
+        <a href="contact.html">Contact</a>
+        <a href="privacy-policy.html">Privacy Policy</a>
+        <a href="terms.html">Terms &amp; Conditions</a>
       </nav>
     </div>
   </footer>
 
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="script.js"></script>
+  <script src="auth.js"></script>
 </body>
 </html>
