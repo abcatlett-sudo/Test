@@ -98,12 +98,9 @@ function buildPrompt(
     : `2.1 No guardian is appointed as no minor children are named in this will.`
 
   // ── funeral (mirror wills use separate keys per testator)
-  const funeralKey = (!isPrimary && r.partner_funeral_wishes !== undefined)
-    ? 'partner_funeral_wishes'
-    : 'funeral_wishes'
-  const funeral = r[funeralKey]
-    ? r[funeralKey]
-    : 'I have no specific funeral wishes.'
+  const funeral = isPrimary
+    ? (r.funeral_wishes         || 'I have no specific funeral wishes.')
+    : (r.partner_funeral_wishes || 'I have no specific funeral wishes.')
 
   // ── specific gifts
   const hasGifts = r.specific_gifts_yes === 'yes' && r.specific_gifts_details
