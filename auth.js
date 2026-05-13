@@ -173,8 +173,7 @@ if (registerForm) {
     btn.disabled    = true;
     btn.textContent = 'Creating account…';
 
-    const base       = window.location.href.replace(/[^/]*$/, '');
-    const redirectTo = base + 'login.html';
+    const redirectTo = 'https://www.willsassured.co.uk/login.html';
 
     const { error } = await sb.auth.signUp({
       email,
