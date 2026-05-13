@@ -672,6 +672,19 @@ img { max-width: 100%; display: block; }
   min-height: 1.2em;
 }
 
+.form-tc-notice {
+  font-size: 0.8rem;
+  line-height: 1.5;
+  color: var(--muted);
+  text-align: center;
+  margin-bottom: 4px;
+}
+
+.form-tc-notice a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
 
 /* ---------------------------------------------------------
    8. FOOTER
@@ -1807,6 +1820,43 @@ img { max-width: 100%; display: block; }
   padding-top: 16px;
   border-top: 1px solid var(--glass-border);
   margin-bottom: 24px;
+}
+
+.basket-tc-check {
+  margin: 16px 0 14px;
+  padding: 14px;
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--glass-border);
+  border-radius: 8px;
+}
+
+.basket-tc-label {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 0.825rem;
+  line-height: 1.5;
+  color: var(--muted);
+  cursor: pointer;
+}
+
+.basket-tc-label input[type="checkbox"] {
+  margin-top: 2px;
+  flex-shrink: 0;
+  accent-color: var(--primary);
+  width: 15px;
+  height: 15px;
+  cursor: pointer;
+}
+
+.basket-tc-label a {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+#checkoutBtn:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
 }
 
 .basket-empty {

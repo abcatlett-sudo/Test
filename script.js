@@ -191,7 +191,13 @@ function renderBasket() {
         <h3>Order summary</h3>
         ${summaryRows}
         <div class="summary-row total"><span>Total</span><span>&pound;${total.toFixed(2)}</span></div>
-        <button id="checkoutBtn" class="btn btn-primary will-cta">Proceed to Checkout &rarr;</button>
+        <div class="basket-tc-check">
+          <label class="basket-tc-label">
+            <input type="checkbox" id="tcAgree" />
+            <span>I have read and agree to the <a href="terms.html" target="_blank">Terms &amp; Conditions</a>. I understand that Wills Assured is a document generation service and does not provide legal advice.</span>
+          </label>
+        </div>
+        <button id="checkoutBtn" class="btn btn-primary will-cta" disabled>Proceed to Checkout &rarr;</button>
         <button id="redeemVoucherBtn" class="btn btn-ghost will-cta" style="margin-top:10px;width:100%;text-align:center;">Have a voucher code?</button>
         <div id="voucherPanel" class="quest-conditional" style="margin-top:10px;">
           <input type="text" id="voucherCodeInput" class="quest-input" placeholder="e.g. WA-XXXX-XXXX" autocomplete="off" spellcheck="false" style="text-transform:uppercase;letter-spacing:0.06em;" />
@@ -208,6 +214,14 @@ function renderBasket() {
       renderBasket();
     });
   });
+
+  const tcAgree    = document.getElementById('tcAgree')
+  const checkoutBtn = document.getElementById('checkoutBtn')
+  if (tcAgree && checkoutBtn) {
+    tcAgree.addEventListener('change', () => {
+      checkoutBtn.disabled = !tcAgree.checked
+    })
+  }
 
   const redeemVoucherBtn = document.getElementById('redeemVoucherBtn');
   const voucherPanel     = document.getElementById('voucherPanel');
