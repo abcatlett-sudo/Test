@@ -2544,6 +2544,86 @@ img { max-width: 100%; display: block; }
    LEGAL / PRIVACY POLICY PAGE
    --------------------------------------------------------- */
 
+/* ---------------------------------------------------------------
+   CONTACT PAGE
+--------------------------------------------------------------- */
+.contact-section {
+  padding: 60px 0 100px;
+}
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 60px;
+  align-items: start;
+}
+
+.contact-info {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+.contact-info-block {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 24px;
+}
+
+.contact-info-icon {
+  font-size: 1.5rem;
+  margin-bottom: 10px;
+}
+
+.contact-info-block h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 6px;
+}
+
+.contact-info-block p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.contact-email-link {
+  display: inline-block;
+  margin-top: 10px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--primary);
+  text-decoration: none;
+}
+
+.contact-email-link:hover {
+  text-decoration: underline;
+}
+
+.contact-form-wrap {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  padding: 36px;
+}
+
+.contact-honeypot {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .contact-layout {
+    grid-template-columns: 1fr;
+    gap: 32px;
+  }
+}
+
+/* ---------------------------------------------------------------
+   LEGAL PAGES
+--------------------------------------------------------------- */
 .legal-section {
   padding: 60px 0 100px;
 }
