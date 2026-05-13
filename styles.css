@@ -2243,6 +2243,7 @@ img { max-width: 100%; display: block; }
   /* Stack footer */
   .footer-inner { flex-direction: column; text-align: center; }
   .footer-nav   { justify-content: center; }
+  .footer-nav a[data-mobile-hide] { display: none; }
 
   /* Will cards */
   .will-grid { grid-template-columns: 1fr; }
