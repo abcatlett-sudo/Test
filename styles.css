@@ -557,8 +557,16 @@ img { max-width: 100%; display: block; }
 
 .features-cta {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
   margin-top: 48px;
+  text-align: center;
+}
+
+.features-cta .btn-ghost {
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
 }
 
 .step-num {
@@ -1825,7 +1833,7 @@ img { max-width: 100%; display: block; }
 /* Basket step progress tracker */
 .basket-progress {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   margin-top: 28px;
   padding: 20px 24px;
   background: var(--glass-bg);
@@ -1853,6 +1861,7 @@ img { max-width: 100%; display: block; }
   font-weight: 700;
   color: var(--muted);
   background: transparent;
+  flex-shrink: 0;
 }
 
 .bp-label {
@@ -1866,8 +1875,7 @@ img { max-width: 100%; display: block; }
   flex: 1;
   height: 2px;
   background: var(--glass-border);
-  margin: 0 6px;
-  margin-bottom: 22px;
+  margin: 17px 6px 0;
 }
 
 .bp-connector-done {
@@ -1897,9 +1905,10 @@ img { max-width: 100%; display: block; }
 }
 
 @media (max-width: 768px) {
-  .basket-progress { padding: 16px 12px; }
-  .bp-label { font-size: 0.65rem; }
-  .bp-circle { width: 30px; height: 30px; font-size: 0.78rem; }
+  .basket-progress { padding: 16px 4px; }
+  .bp-label { font-size: 0.6rem; white-space: normal; max-width: 48px; text-align: center; }
+  .bp-circle { width: 28px; height: 28px; font-size: 0.75rem; }
+  .bp-connector { min-width: 8px; flex: none; width: 8px; margin: 13px 2px 0; }
 }
 
 .basket-tc-check {
@@ -1982,8 +1991,8 @@ img { max-width: 100%; display: block; }
   width: 0%;
 }
 .quest-progress-label {
-  text-align: center; font-size: 0.78rem; font-weight: 600;
-  letter-spacing: 0.04em; color: var(--muted);
+  text-align: center; font-size: 1rem; font-weight: 700;
+  letter-spacing: 0.04em; color: var(--white);
   margin: 0; padding: 8px 0;
   background: var(--dark);
 }

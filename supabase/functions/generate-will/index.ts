@@ -61,7 +61,7 @@ function buildPrompt(
   const isPrimary   = testatorKey === 'primary'
   const tName       = isPrimary ? r.your_full_name       : r.partner_full_name
   const tDob        = isPrimary ? r.your_dob             : r.partner_dob
-  const tAddress    = isPrimary ? r.your_address         : r.partner_address
+  const tAddress    = isPrimary ? r.your_address         : (r.partner_address || r.your_address)
   const spouseName  = isPrimary ? r.partner_full_name    : r.your_full_name
 
   // ── children
@@ -196,6 +196,7 @@ RULES:
 - Format names of named parties in CAPITALS throughout — always use the full name exactly as provided, never shorten, abbreviate, or omit any part of it
 - Use "their/them" as gender-neutral pronouns for the testator
 - Wrap every piece of customer-specific data in **double asterisks**: full names, dates of birth, addresses, specific gift details, business interests, exclusion details, and any other data taken from the questionnaire
+- ALWAYS write addresses on a single line separated by commas — NEVER break an address across multiple lines
 - Return ONLY the completed will document — no commentary, no preamble
 
 ---
