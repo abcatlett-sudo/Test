@@ -557,7 +557,9 @@ img { max-width: 100%; display: block; }
 
 .features-cta {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
   margin-top: 48px;
 }
 
