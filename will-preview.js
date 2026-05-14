@@ -84,6 +84,14 @@ function formatNextSteps(text) {
 }
 
 function formatWillBody(text) {
+  if (!text) return ''
+
+  // Collapse any **...** markers that Claude wrapped across multiple lines
+  // into a single line before splitting, so applyBold always finds a match
+  text = text.replace(/\*\*([\s\S]+?)\*\*/g, (_, inner) =>
+    `**${inner.replace(/\n/g, ' ').replace(/\s+/g, ' ').trim()}**`
+  )
+
   const lines  = text.split('\n')
   let html     = ''
   let inAttest = false
