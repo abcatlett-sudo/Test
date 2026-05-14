@@ -61,7 +61,7 @@ function buildPrompt(
   const isPrimary   = testatorKey === 'primary'
   const tName       = isPrimary ? r.your_full_name       : r.partner_full_name
   const tDob        = isPrimary ? r.your_dob             : r.partner_dob
-  const tAddress    = isPrimary ? r.your_address         : r.partner_address
+  const tAddress    = isPrimary ? r.your_address         : (r.partner_address || r.your_address)
   const spouseName  = isPrimary ? r.partner_full_name    : r.your_full_name
 
   // ── children
