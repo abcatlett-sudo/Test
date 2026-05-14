@@ -603,6 +603,30 @@ img { max-width: 100%; display: block; }
   line-height: 1.7;
 }
 
+.step-bullets {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  text-align: left;
+}
+
+.step-bullets li {
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.6;
+  padding: 4px 0 4px 18px;
+  position: relative;
+}
+
+.step-bullets li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: var(--green);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
 .process-connector {
   flex-shrink: 0;
   width: 52px;
@@ -1905,10 +1929,11 @@ img { max-width: 100%; display: block; }
 }
 
 @media (max-width: 768px) {
-  .basket-progress { padding: 16px 4px; }
+  .basket-progress { padding: 16px 8px; }
   .bp-label { font-size: 0.6rem; white-space: normal; max-width: 48px; text-align: center; }
+  .bp-step:last-child .bp-label { max-width: 72px; }
   .bp-circle { width: 28px; height: 28px; font-size: 0.75rem; }
-  .bp-connector { min-width: 8px; flex: none; width: 8px; margin: 13px 2px 0; }
+  .bp-connector { flex: 1; min-width: 0; width: auto; margin: 13px 4px 0; }
 }
 
 .basket-tc-check {
