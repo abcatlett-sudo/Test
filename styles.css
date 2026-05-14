@@ -1833,7 +1833,7 @@ img { max-width: 100%; display: block; }
 /* Basket step progress tracker */
 .basket-progress {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   margin-top: 28px;
   padding: 20px 24px;
   background: var(--glass-bg);
@@ -1861,6 +1861,7 @@ img { max-width: 100%; display: block; }
   font-weight: 700;
   color: var(--muted);
   background: transparent;
+  flex-shrink: 0;
 }
 
 .bp-label {
@@ -1874,8 +1875,7 @@ img { max-width: 100%; display: block; }
   flex: 1;
   height: 2px;
   background: var(--glass-border);
-  margin: 0 6px;
-  margin-bottom: 22px;
+  margin: 17px 6px 0;
 }
 
 .bp-connector-done {
@@ -1905,10 +1905,10 @@ img { max-width: 100%; display: block; }
 }
 
 @media (max-width: 768px) {
-  .basket-progress { padding: 16px 8px; }
-  .bp-label { font-size: 0.6rem; white-space: normal; max-width: 52px; }
+  .basket-progress { padding: 16px 4px; }
+  .bp-label { font-size: 0.6rem; white-space: normal; max-width: 48px; text-align: center; }
   .bp-circle { width: 28px; height: 28px; font-size: 0.75rem; }
-  .bp-connector { min-width: 12px; margin: 0 2px; margin-bottom: 22px; }
+  .bp-connector { min-width: 8px; flex: none; width: 8px; margin: 13px 2px 0; }
 }
 
 .basket-tc-check {
