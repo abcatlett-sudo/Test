@@ -206,7 +206,7 @@ function renderBasket() {
           <div class="bp-connector"></div>
           <div class="bp-step">
             <div class="bp-circle">4</div>
-            <div class="bp-label">Answer Questions &amp;<br>Generate Your Will</div>
+            <div class="bp-label">Answer Q's<br>Generate Will</div>
           </div>
         </div>
       </div>
