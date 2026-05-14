@@ -1905,10 +1905,10 @@ img { max-width: 100%; display: block; }
 }
 
 @media (max-width: 768px) {
-  .basket-progress { padding: 16px 4px; }
+  .basket-progress { padding: 16px 8px; }
   .bp-label { font-size: 0.6rem; white-space: normal; max-width: 48px; text-align: center; }
   .bp-circle { width: 28px; height: 28px; font-size: 0.75rem; }
-  .bp-connector { min-width: 8px; flex: none; width: 8px; margin: 13px 2px 0; }
+  .bp-connector { flex: 1; min-width: 0; width: auto; margin: 13px 4px 0; }
 }
 
 .basket-tc-check {
