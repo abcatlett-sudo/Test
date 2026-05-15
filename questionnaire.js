@@ -595,8 +595,10 @@ async function handlePostcodeLookup(widget) {
     select.onchange = () => {
       const idx = parseInt(select.value);
       if (isNaN(idx)) return;
-      const s         = suggestions[idx];
-      const formatted = s.parts ? s.parts.join('\n') + '\n' + s.postcode : s.address.split(', ').join('\n');
+      const s     = suggestions[idx];
+      const parts = s.address.split(', ').map(p => p.trim()).filter(p => p);
+      if (!parts.some(p => /^[A-Z]{1,2}\d/i.test(p))) parts.push(s.postcode);
+      const formatted = parts.join('\n');
       const target = widget.closest('.quest-field')?.querySelector(`[name="${widget.dataset.target}"]`)
         || document.querySelector(`[name="${widget.dataset.target}"]`);
       if (target) {

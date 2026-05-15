@@ -19,7 +19,7 @@ exports.handler = async (event) => {
   }
 
   const apiKey = 'acPBS3fpEkSijq1JhbnOcA52031';
-  const url    = `https://api.getaddress.io/find/${encodeURIComponent(postcode)}?api-key=${apiKey}&expand=true`;
+  const url    = `https://api.getaddress.io/autocomplete/${encodeURIComponent(postcode)}?api-key=${apiKey}`;
 
   try {
     const { status, body } = await httpsGet(url);
@@ -29,14 +29,11 @@ exports.handler = async (event) => {
     }
 
     const data        = JSON.parse(body);
-    const addresses   = data.addresses || [];
-    const postcodeFmt = data.postcode  || postcode;
-
-    const suggestions = addresses.map(a => {
-      const parts = [a.line_1, a.line_2, a.line_3, a.town_or_city, a.county]
-        .filter(p => p && p.trim());
-      return { address: [...parts, postcodeFmt].join(', '), parts, postcode: postcodeFmt };
-    });
+    const suggestions = (data.suggestions || []).map(s => ({
+      address:  s.address,
+      id:       s.id,
+      postcode: postcode,
+    }));
 
     return {
       statusCode: 200,
