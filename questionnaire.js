@@ -174,7 +174,7 @@ const MIRROR_STEPS = [
     type: 'yesno_with_text',
     key: 'net_assets_yes',
     yesLabel: 'Yes — net assets pass to each other; if we both pass, equally to our children',
-    noLabel:  'No — I have a different arrangement in mind',
+    noLabel:  'No — we have different arrangements in mind',
     textKey:        'net_assets_custom',
     textLabel:      'Please describe your wishes',
     textPlaceholder:'Describe how you\'d like your net assets distributed...',
