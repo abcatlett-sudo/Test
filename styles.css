@@ -2171,6 +2171,7 @@ img { max-width: 100%; display: block; }
 
 .pc-input {
   flex: 1;
+  font-size: 0.78rem;
   margin-bottom: 0 !important;
 }
 
