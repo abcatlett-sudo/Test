@@ -569,7 +569,14 @@ async function handlePostcodeLookup(widget) {
       `https://api.getaddress.io/find/${encodeURIComponent(postcode)}?api-key=${GA_KEY}&expand=true`
     );
     if (!res.ok) {
-      note.textContent = 'Postcode not found — please type your address below.';
+      if (res.status === 401) {
+        note.textContent = 'API key not authorised (401) — please type your address below.';
+      } else if (res.status === 404) {
+        note.textContent = 'Postcode not found (404) — please check and try again.';
+      } else {
+        note.textContent = `Lookup error (${res.status}) — please type your address below.`;
+      }
+      console.error('getAddress API error:', res.status, await res.text().catch(() => ''));
       return;
     }
     const data      = await res.json();
