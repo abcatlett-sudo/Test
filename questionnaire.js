@@ -6,7 +6,7 @@
 const urlParams    = new URLSearchParams(window.location.search);
 const PRODUCT_TYPE = urlParams.get('type') || 'mirror';
 
-const GA_KEY = 'dtoken_hEDzcyiWMr2RKmx5bEJGy5bofuck2nS8LH7WTFnLfogkDCXvGBp5BI1eyhADhPZyfzU2sJaORWkvEP54-YPKurEEZYQULGcTUWz7M17gTdyLyFxSO1UBqxgGFxFO_SgqCBTxNEmj2CC0YlCW7f1O27HgM4F4EMSCybW4NE7eeIjbhEqSBvQkMA5SrkwqnSgiWUkDab0A-mE';
+const GA_KEY = 'acPBS3fpEkSijq1JhbnOcA52031';
 
 const MIRROR_SECTIONS = [
   { id: 'about',     label: 'About You & Your Partner' },
@@ -566,7 +566,7 @@ async function handlePostcodeLookup(widget) {
 
   try {
     const res = await fetch(
-      `/.netlify/functions/postcode-lookup?postcode=${encodeURIComponent(postcode)}`
+      `https://api.getaddress.io/autocomplete/${encodeURIComponent(postcode)}?api-key=${GA_KEY}`
     );
     if (!res.ok) {
       if (res.status === 401) {
@@ -582,7 +582,7 @@ async function handlePostcodeLookup(widget) {
       return;
     }
     const data        = await res.json();
-    const suggestions = data.suggestions || [];
+    const suggestions = (data.suggestions || []).map(s => ({ ...s, postcode }));
     if (suggestions.length === 0) {
       note.textContent = 'No addresses found — please type your address below.';
       return;
