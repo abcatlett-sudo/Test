@@ -76,11 +76,21 @@ function buildPrompt(
   // ── executors (mirror)
   let executorClause = ''
   if (productType === 'mirror') {
-    executorClause = `(a) My spouse, ${caps(spouseName)} (if they survive me by twenty-eight days); or\n` +
-      `(b) If my spouse does not survive me by twenty-eight days, I appoint:\n` +
-      `    ${caps(r.executor1_name || '')} of ${r.executor1_address || ''}; and\n` +
-      `    ${caps(r.executor2_name || '')} of ${r.executor2_address || ''}\n` +
-      `to be my Executors and Trustees jointly.`
+    const survivingKey   = isPrimary ? 'executor_surviving_yes'   : 'partner_executor_surviving_yes'
+    const survivingOther = isPrimary ? r.executor_surviving_other : r.partner_executor_surviving_other
+    if (r[survivingKey] === 'no' && survivingOther) {
+      executorClause = `(a) ${survivingOther} (if they survive me by twenty-eight days and are willing to act); or\n` +
+        `(b) If they are unable or unwilling to act, I appoint:\n` +
+        `    ${caps(r.executor1_name || '')} of ${r.executor1_address || ''}; and\n` +
+        `    ${caps(r.executor2_name || '')} of ${r.executor2_address || ''}\n` +
+        `to be my Executors and Trustees jointly.`
+    } else {
+      executorClause = `(a) My spouse, ${caps(spouseName)} (if they survive me by twenty-eight days); or\n` +
+        `(b) If my spouse does not survive me by twenty-eight days, I appoint:\n` +
+        `    ${caps(r.executor1_name || '')} of ${r.executor1_address || ''}; and\n` +
+        `    ${caps(r.executor2_name || '')} of ${r.executor2_address || ''}\n` +
+        `to be my Executors and Trustees jointly.`
+    }
   } else {
     executorClause = `${caps(r.executor1_name || '')} of ${r.executor1_address || ''}; and\n` +
       `    ${caps(r.executor2_name || '')} of ${r.executor2_address || ''}\n` +
