@@ -6,7 +6,7 @@
 const urlParams    = new URLSearchParams(window.location.search);
 const PRODUCT_TYPE = urlParams.get('type') || 'mirror';
 
-const GA_KEY = 'acPBS3fpEkSijq1JhbnOcA52031';
+const GA_KEY = 'ak_mp6vfo7awnRTaj1zIBftyIbj5IIPq';
 
 const MIRROR_SECTIONS = [
   { id: 'about',     label: 'About You & Your Partner' },
@@ -565,24 +565,27 @@ async function handlePostcodeLookup(widget) {
   select.style.display = 'none';
 
   try {
-    const res = await fetch(
-      `https://api.getaddress.io/autocomplete/${encodeURIComponent(postcode)}?api-key=${GA_KEY}`
+    const res  = await fetch(
+      `https://api.ideal-postcodes.co.uk/v1/postcodes/${encodeURIComponent(postcode)}?api_key=${GA_KEY}`
     );
-    if (!res.ok) {
-      if (res.status === 401) {
-        note.textContent = 'API key not authorised (401) — please type your address below.';
-      } else if (res.status === 403) {
-        note.textContent = 'Access denied (403) — please type your address below.';
-      } else if (res.status === 404) {
-        note.textContent = 'Postcode not found (404) — please check and try again.';
+    const data = await res.json();
+
+    if (data.code !== 2000) {
+      if (data.code === 4040) {
+        note.textContent = 'Postcode not found — please check and try again.';
+      } else if (data.code === 4010) {
+        note.textContent = 'API key error — please type your address below.';
       } else {
-        note.textContent = `Lookup error (${res.status}) — please type your address below.`;
+        note.textContent = 'Lookup error — please type your address below.';
       }
-      console.error('getAddress API error:', res.status, await res.text().catch(() => ''));
       return;
     }
-    const data        = await res.json();
-    const suggestions = (data.suggestions || []).map(s => ({ ...s, postcode }));
+
+    const suggestions = (data.result || []).map(a => {
+      const parts = [a.line_1, a.line_2, a.line_3, a.post_town, a.county]
+        .filter(p => p && p.trim());
+      return { address: [...parts, a.postcode].join(', '), parts, postcode: a.postcode };
+    });
     if (suggestions.length === 0) {
       note.textContent = 'No addresses found — please type your address below.';
       return;
