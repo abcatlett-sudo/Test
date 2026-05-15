@@ -982,13 +982,19 @@ function renderTextareaOptional(step) {
 
 function renderDualTextareaOptional(step) {
   return `
-    <div class="quest-field">
-      <label class="quest-label">Your wishes <span class="quest-optional">Optional</span></label>
-      <textarea class="quest-input quest-textarea" name="${step.key}" placeholder="${esc(step.placeholder)}" rows="4">${esc(responses[step.key] || '')}</textarea>
+    <div class="quest-dual-section">
+      <h4 class="quest-dual-heading">Your wishes</h4>
+      <div class="quest-field">
+        <span class="quest-optional">Optional</span>
+        <textarea class="quest-input quest-textarea" name="${step.key}" placeholder="${esc(step.placeholder)}" rows="4">${esc(responses[step.key] || '')}</textarea>
+      </div>
     </div>
-    <div class="quest-field" style="margin-top:20px;">
-      <label class="quest-label">Your partner's wishes <span class="quest-optional">Optional</span></label>
-      <textarea class="quest-input quest-textarea" name="${step.key2}" placeholder="${esc(step.placeholder2)}" rows="4">${esc(responses[step.key2] || '')}</textarea>
+    <div class="quest-dual-section" style="margin-top:24px;">
+      <h4 class="quest-dual-heading">Your partner's wishes</h4>
+      <div class="quest-field">
+        <span class="quest-optional">Optional</span>
+        <textarea class="quest-input quest-textarea" name="${step.key2}" placeholder="${esc(step.placeholder2)}" rows="4">${esc(responses[step.key2] || '')}</textarea>
+      </div>
     </div>`;
 }
 
