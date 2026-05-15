@@ -1,9 +1,9 @@
 const https = require('https');
 
-function httpsGet(url, headers) {
+function httpsGet(url) {
   return new Promise((resolve, reject) => {
     const opts = new URL(url);
-    https.get({ hostname: opts.hostname, path: opts.pathname + opts.search, headers }, (res) => {
+    https.get({ hostname: opts.hostname, path: opts.pathname + opts.search }, (res) => {
       let body = '';
       res.on('data', chunk => body += chunk);
       res.on('end', () => resolve({ status: res.statusCode, body }));
@@ -18,14 +18,11 @@ exports.handler = async (event) => {
     return { statusCode: 400, body: JSON.stringify({ error: 'No postcode provided' }) };
   }
 
-  const token = 'dtoken_hEDzcyiWMr2RKmx5bEJGy5bofuck2nS8LH7WTFnLfogkDCXvGBp5BI1eyhADhPZyfzU2sJaORWkvEP54-YPKurEEZYQULGcTUWz7M17gTdyLyFxSO1UBqxgGFxFO_SgqCBTxNEmj2CC0YlCW7f1O27HgM4F4EMSCybW4NE7eeIjbhEqSBvQkMA5SrkwqnSgiWUkDab0A-mE';
-  const url   = `https://api.getaddress.io/find/${encodeURIComponent(postcode)}?api-key=${token}&expand=true`;
+  const apiKey = 'acPBS3fpEkSijq1JhbnOcA52031';
+  const url    = `https://api.getaddress.io/find/${encodeURIComponent(postcode)}?api-key=${apiKey}&expand=true`;
 
   try {
-    const { status, body } = await httpsGet(url, {
-      'Origin':  'https://willsassured.co.uk',
-      'Referer': 'https://willsassured.co.uk/',
-    });
+    const { status, body } = await httpsGet(url);
 
     if (status !== 200) {
       return { statusCode: status, headers: { 'Content-Type': 'application/json' }, body };
