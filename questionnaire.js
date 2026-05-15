@@ -566,11 +566,13 @@ async function handlePostcodeLookup(widget) {
 
   try {
     const res = await fetch(
-      `https://api.getaddress.io/find/${encodeURIComponent(postcode)}?api-key=${GA_KEY}&expand=true`
+      `https://api.getaddress.io/find/${encodeURIComponent(postcode)}?api-key=${GA_KEY}`
     );
     if (!res.ok) {
       if (res.status === 401) {
         note.textContent = 'API key not authorised (401) — please type your address below.';
+      } else if (res.status === 403) {
+        note.textContent = 'Access denied (403) — please type your address below.';
       } else if (res.status === 404) {
         note.textContent = 'Postcode not found (404) — please check and try again.';
       } else {
@@ -588,7 +590,8 @@ async function handlePostcodeLookup(widget) {
     note.textContent = `${addresses.length} address${addresses.length > 1 ? 'es' : ''} found — select one below.`;
     select.innerHTML = '<option value="">— Select your address —</option>' +
       addresses.map((a, i) => {
-        const preview = [a.line_1, a.line_2, a.town_or_city].filter(p => p && p.trim()).join(', ');
+        const parts   = a.split(', ').map(p => p.trim()).filter(p => p);
+        const preview = parts.slice(0, 2).join(', ');
         return `<option value="${i}">${preview}, ${data.postcode}</option>`;
       }).join('');
     select.style.display = 'block';
@@ -596,10 +599,9 @@ async function handlePostcodeLookup(widget) {
     select.onchange = () => {
       const idx = parseInt(select.value);
       if (isNaN(idx)) return;
-      const a = addresses[idx];
-      const formatted = [a.line_1, a.line_2, a.line_3, a.town_or_city, a.county, data.postcode]
-        .filter(p => p && p.trim())
-        .join('\n');
+      const a     = addresses[idx];
+      const parts = a.split(', ').map(p => p.trim()).filter(p => p);
+      const formatted = [...parts, data.postcode].join('\n');
       const target = widget.closest('.quest-field')?.querySelector(`[name="${widget.dataset.target}"]`)
         || document.querySelector(`[name="${widget.dataset.target}"]`);
       if (target) {
