@@ -557,7 +557,7 @@ async function handlePostcodeLookup(widget) {
   const input    = widget.querySelector('.pc-input');
   const note     = widget.querySelector('.pc-note');
   const select   = widget.querySelector('.pc-select');
-  const postcode = input.value.trim().replace(/\s+/g, '');
+  const postcode = input.value.trim().toUpperCase();
 
   if (!postcode) { note.textContent = 'Please enter a postcode.'; return; }
 
@@ -566,7 +566,7 @@ async function handlePostcodeLookup(widget) {
 
   try {
     const res = await fetch(
-      `https://api.getaddress.io/find/${encodeURIComponent(postcode)}?api-key=${GA_KEY}`
+      `https://api.getaddress.io/autocomplete/${encodeURIComponent(postcode)}?api-key=${GA_KEY}`
     );
     if (!res.ok) {
       if (res.status === 401) {
@@ -581,27 +581,25 @@ async function handlePostcodeLookup(widget) {
       console.error('getAddress API error:', res.status, await res.text().catch(() => ''));
       return;
     }
-    const data      = await res.json();
-    const addresses = data.addresses || [];
-    if (addresses.length === 0) {
+    const data        = await res.json();
+    const suggestions = data.suggestions || [];
+    if (suggestions.length === 0) {
       note.textContent = 'No addresses found — please type your address below.';
       return;
     }
-    note.textContent = `${addresses.length} address${addresses.length > 1 ? 'es' : ''} found — select one below.`;
+    note.textContent = `${suggestions.length} address${suggestions.length > 1 ? 'es' : ''} found — select one below.`;
     select.innerHTML = '<option value="">— Select your address —</option>' +
-      addresses.map((a, i) => {
-        const parts   = a.split(', ').map(p => p.trim()).filter(p => p);
-        const preview = parts.slice(0, 2).join(', ');
-        return `<option value="${i}">${preview}, ${data.postcode}</option>`;
-      }).join('');
+      suggestions.map((s, i) => `<option value="${i}">${s.address}</option>`).join('');
     select.style.display = 'block';
 
     select.onchange = () => {
       const idx = parseInt(select.value);
       if (isNaN(idx)) return;
-      const a     = addresses[idx];
-      const parts = a.split(', ').map(p => p.trim()).filter(p => p);
-      const formatted = [...parts, data.postcode].join('\n');
+      const s     = suggestions[idx];
+      const parts = s.address.split(', ').map(p => p.trim()).filter(p => p);
+      const hasPostcode = parts.some(p => /^[A-Z]{1,2}\d/i.test(p));
+      if (!hasPostcode) parts.push(postcode);
+      const formatted = parts.join('\n');
       const target = widget.closest('.quest-field')?.querySelector(`[name="${widget.dataset.target}"]`)
         || document.querySelector(`[name="${widget.dataset.target}"]`);
       if (target) {
