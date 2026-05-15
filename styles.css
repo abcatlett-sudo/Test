@@ -2055,6 +2055,7 @@ img { max-width: 100%; display: block; }
 .quest-field   { display: flex; flex-direction: column; gap: 6px; }
 .quest-label   { font-size: 0.88rem; font-weight: 600; color: var(--white); }
 .quest-optional{ font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.quest-revision-note { font-size: 0.82rem; color: var(--muted); border-top: 1px solid var(--light); margin: 28px 0 0; padding-top: 16px; line-height: 1.6; }
 .quest-hint    { font-size: 0.8rem; color: var(--muted); margin: 0; }
 
 .quest-input {
