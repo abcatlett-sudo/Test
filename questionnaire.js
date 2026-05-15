@@ -650,7 +650,6 @@ function renderStep() {
       <h2 class="quest-title">${step.title}</h2>
       <p class="quest-subtitle">${step.subtitle}</p>
       <div class="quest-fields">${fieldHTML}</div>
-      <p class="quest-revision-note">You can update any answer or selection at any time — and once you've seen how your will reads, simply return to your questionnaire to make the changes you need to.</p>
       <div class="quest-nav-btns">
         <div class="quest-nav-left">
           ${currentStep > 0
@@ -664,7 +663,8 @@ function renderStep() {
           ${isLast ? 'Complete &#10003;' : 'Continue &#8594;'}
         </button>
       </div>
-    </div>`;
+    </div>
+    <p class="quest-revision-note">You can update any answer or selection at any time — and once you've seen how your will reads, simply return to your questionnaire to make the changes you need to.</p>`;
 
   requestAnimationFrame(() =>
     main.querySelector('.quest-card')?.classList.add('quest-card-visible')
