@@ -2126,6 +2126,10 @@ img { max-width: 100%; display: block; }
 .quest-conditional { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
 .quest-conditional.visible { max-height: 600px; }
 
+/* Dual yes/no sections (mirror will per-testator questions) */
+.quest-dual-section { border-left: 3px solid var(--primary); padding-left: 16px; }
+.quest-dual-heading { font-size: 0.9rem; font-weight: 600; color: var(--primary); margin: 0 0 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+
 /* Children counter */
 .quest-counter     { display: flex; align-items: center; gap: 20px; }
 .quest-counter-btn {
