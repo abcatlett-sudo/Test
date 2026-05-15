@@ -566,7 +566,7 @@ async function handlePostcodeLookup(widget) {
 
   try {
     const res = await fetch(
-      `https://api.getaddress.io/autocomplete/${encodeURIComponent(postcode)}?api-key=${GA_KEY}`
+      `/.netlify/functions/postcode-lookup?postcode=${encodeURIComponent(postcode)}`
     );
     if (!res.ok) {
       if (res.status === 401) {
