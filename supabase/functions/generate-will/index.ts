@@ -102,11 +102,13 @@ function buildPrompt(
     ? (r.funeral_wishes         || 'I have no specific funeral wishes.')
     : (r.partner_funeral_wishes || 'I have no specific funeral wishes.')
 
-  // ── specific gifts
-  const hasGifts = r.specific_gifts_yes === 'yes' && r.specific_gifts_details
-  const giftsClause = hasGifts
+  // ── specific gifts (per-testator for mirror wills)
+  const giftsYesKey    = isPrimary ? 'specific_gifts_yes'     : 'partner_specific_gifts_yes'
+  const giftsDetails   = isPrimary ? r.specific_gifts_details : r.partner_specific_gifts_details
+  const hasGifts       = r[giftsYesKey] === 'yes' && giftsDetails
+  const giftsClause    = hasGifts
     ? `SPECIFIC GIFTS\n\n` +
-      `I give the following specific gifts:\n${r.specific_gifts_details}\n\n` +
+      `I give the following specific gifts:\n${giftsDetails}\n\n` +
       `If any specific beneficiary named in this clause shall predecease me, the gift to them shall fall into the residuary estate.`
     : ''
 
@@ -180,8 +182,10 @@ function buildPrompt(
   // ── business interests
   const hasBusiness = r.business_interests_yes === 'yes'
 
-  // ── exclusions
-  const hasExclusions = r.exclusions_yes === 'yes' && r.exclusions_details
+  // ── exclusions (per-testator for mirror wills)
+  const exclusionsYesKey  = isPrimary ? 'exclusions_yes'     : 'partner_exclusions_yes'
+  const exclusionsDetails = isPrimary ? r.exclusions_details : r.partner_exclusions_details
+  const hasExclusions     = r[exclusionsYesKey] === 'yes' && exclusionsDetails
 
   // ── pronoun helper
   const pronoun = 'their'
@@ -256,7 +260,7 @@ If any child dies before becoming entitled to their whole share, that share or t
 
 ` : ''}${hasExclusions ? `[NEXT_CLAUSE]. EXCLUSIONS
 
-[NEXT_CLAUSE].1 I specifically exclude the following person(s) from benefiting in any way from my estate, whether under the terms of this will or on an intestacy: ${r.exclusions_details}
+[NEXT_CLAUSE].1 I specifically exclude the following person(s) from benefiting in any way from my estate, whether under the terms of this will or on an intestacy: ${exclusionsDetails}
 
 ` : ''}[NEXT_CLAUSE]. GENERAL ADMINISTRATIVE PROVISIONS
 

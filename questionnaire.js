@@ -171,13 +171,15 @@ const MIRROR_STEPS = [
     icon: '&#127968;',
     title: 'Your net assets',
     subtitle: 'This covers everything you own — property, savings, investments, and personal possessions.',
-    type: 'yesno_with_text',
-    key: 'net_assets_yes',
+    type: 'dual_yesno_with_text',
+    key:  'net_assets_yes',
+    key2: 'partner_net_assets_yes',
     yesLabel: 'Yes — net assets pass to each other; if we both pass, equally to our children',
     noLabel:  'No — we have different arrangements in mind',
-    textKey:        'net_assets_custom',
-    textLabel:      'Please describe your wishes',
-    textPlaceholder:'Describe how you\'d like your net assets distributed...',
+    textKey:         'net_assets_custom',
+    textKey2:        'partner_net_assets_custom',
+    textLabel:       'Please describe your wishes',
+    textPlaceholder: 'Describe how you\'d like your net assets distributed...',
   },
   {
     id: 'business_interests',
@@ -196,15 +198,17 @@ const MIRROR_STEPS = [
     icon: '&#127873;',
     title: 'Specific gifts or charitable donations',
     subtitle: 'Would you like to leave specific items — jewellery, artwork, a family heirloom — to particular people, or make a charitable donation?',
-    type: 'yesno_with_text',
-    key: 'specific_gifts_yes',
+    type: 'dual_yesno_with_text',
+    key:  'specific_gifts_yes',
+    key2: 'partner_specific_gifts_yes',
     showTextOn: 'yes',
     noFirst: true,
     yesLabel: 'Yes — I\'d like to leave specific gifts',
     noLabel:  'No specific gifts',
-    textKey:        'specific_gifts_details',
-    textLabel:      'Please describe the gifts or donations',
-    textPlaceholder:'e.g. My grandmother\'s engagement ring to my daughter Emma...',
+    textKey:         'specific_gifts_details',
+    textKey2:        'partner_specific_gifts_details',
+    textLabel:       'Please describe the gifts or donations',
+    textPlaceholder: 'e.g. My grandmother\'s engagement ring to my daughter Emma...',
   },
   {
     id: 'exclusions',
@@ -212,15 +216,17 @@ const MIRROR_STEPS = [
     icon: '&#128683;',
     title: 'Exclusions',
     subtitle: 'Is there anyone you specifically want to exclude from benefiting from your will? This is sometimes appropriate where there has been a family estrangement.',
-    type: 'yesno_with_text',
-    key: 'exclusions_yes',
+    type: 'dual_yesno_with_text',
+    key:  'exclusions_yes',
+    key2: 'partner_exclusions_yes',
     showTextOn: 'yes',
     noFirst: true,
     yesLabel: 'Yes — I want to exclude specific people',
     noLabel:  'No exclusions',
-    textKey:        'exclusions_details',
-    textLabel:      'Please name the person(s) you wish to exclude and the reason',
-    textPlaceholder:'e.g. John Smith — estranged since 2015...',
+    textKey:         'exclusions_details',
+    textKey2:        'partner_exclusions_details',
+    textLabel:       'Please name the person(s) you wish to exclude and the reason',
+    textPlaceholder: 'e.g. John Smith — estranged since 2015...',
   },
   // ── SECTION 6: Final Details ─────────────────────────────────
   {
@@ -695,8 +701,9 @@ function buildStepHTML(step) {
     case 'checkboxes':      return renderCheckboxes(step);
     case 'options':         return renderOptions(step);
     case 'yesno':           return renderYesNo(step);
-    case 'yesno_with_text': return renderYesNoWithText(step);
-    case 'children':        return renderChildren();
+    case 'yesno_with_text':      return renderYesNoWithText(step);
+    case 'dual_yesno_with_text': return renderDualYesNoWithText(step);
+    case 'children':             return renderChildren();
     case 'guardians':             return renderGuardians();
     case 'secondary_wish':        return renderSecondaryWish();
     case 'single_secondary_wish': return renderSingleSecondaryWish();
@@ -772,6 +779,42 @@ function renderYesNoWithText(step) {
       <div class="quest-field" style="margin-top:16px;">
         <label class="quest-label">${step.textLabel}</label>
         <textarea class="quest-input quest-textarea" name="${step.textKey}" placeholder="${esc(step.textPlaceholder)}" rows="4">${esc(responses[step.textKey] || '')}</textarea>
+      </div>
+    </div>`;
+}
+
+function renderDualYesNoWithText(step) {
+  const trigger   = step.showTextOn || 'no';
+  const showText1 = responses[step.key]  === trigger;
+  const showText2 = responses[step.key2] === trigger;
+  const opts = step.noFirst
+    ? [{ value: 'no', label: step.noLabel }, { value: 'yes', label: step.yesLabel }]
+    : [{ value: 'yes', label: step.yesLabel }, { value: 'no', label: step.noLabel }];
+  return `
+    <div class="quest-dual-section">
+      <h4 class="quest-dual-heading">Your wishes</h4>
+      <div class="quest-options-grid quest-yesno">${opts.map(o => `
+        <button class="quest-option${responses[step.key] === o.value ? ' selected' : ''}" data-key="${step.key}" data-value="${o.value}">
+          ${o.label}
+        </button>`).join('')}</div>
+      <div class="quest-conditional${showText1 ? ' visible' : ''}" data-for="${step.key}" data-show-on="${trigger}">
+        <div class="quest-field" style="margin-top:16px;">
+          <label class="quest-label">${step.textLabel}</label>
+          <textarea class="quest-input quest-textarea" name="${step.textKey}" placeholder="${esc(step.textPlaceholder)}" rows="4">${esc(responses[step.textKey] || '')}</textarea>
+        </div>
+      </div>
+    </div>
+    <div class="quest-dual-section" style="margin-top:24px;">
+      <h4 class="quest-dual-heading">Your partner's wishes</h4>
+      <div class="quest-options-grid quest-yesno">${opts.map(o => `
+        <button class="quest-option${responses[step.key2] === o.value ? ' selected' : ''}" data-key="${step.key2}" data-value="${o.value}">
+          ${o.label}
+        </button>`).join('')}</div>
+      <div class="quest-conditional${showText2 ? ' visible' : ''}" data-for="${step.key2}" data-show-on="${trigger}">
+        <div class="quest-field" style="margin-top:16px;">
+          <label class="quest-label">${step.textLabel}</label>
+          <textarea class="quest-input quest-textarea" name="${step.textKey2}" placeholder="${esc(step.textPlaceholder)}" rows="4">${esc(responses[step.textKey2] || '')}</textarea>
+        </div>
       </div>
     </div>`;
 }
@@ -997,7 +1040,9 @@ function attachListeners(step) {
       btn.classList.add('selected');
       responses[key] = value;
 
-      const conditional = document.getElementById('conditionalText') || document.getElementById('pctFields');
+      const conditional = document.querySelector(`.quest-conditional[data-for="${key}"]`)
+        || document.getElementById('conditionalText')
+        || document.getElementById('pctFields');
       if (conditional) {
         const showOn = conditional.dataset.showOn || 'no';
         conditional.classList.toggle('visible', value === showOn);
@@ -1136,6 +1181,10 @@ function validateStep(step) {
   }
 
   if ((step.type === 'yesno' || step.type === 'yesno_with_text') && !responses[step.key]) {
+    shakeBtn(nextBtn); return false;
+  }
+
+  if (step.type === 'dual_yesno_with_text' && (!responses[step.key] || !responses[step.key2])) {
     shakeBtn(nextBtn); return false;
   }
 
