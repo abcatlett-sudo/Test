@@ -161,7 +161,7 @@ const MIRROR_STEPS = [
     section: 'executors',
     icon: '&#128101;',
     title: 'Executors if you both pass away',
-    subtitle: 'You need two executors who are trustworthy, organised, and able to handle legal and financial matters. Ideally they should be under 70 and not benefit from the will.',
+    subtitle: 'Your executors are the people who will carry out the wishes in your will. Choose two people you trust completely — ideally under 70, and not someone who inherits from the will.',
     type: 'executors',
   },
   // ── SECTION 5: Your Estate ───────────────────────────────────
