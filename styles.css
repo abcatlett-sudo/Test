@@ -2601,7 +2601,8 @@ img { max-width: 100%; display: block; }
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-bottom: 32px;
-  display: inline-block;
+  display: block;
+  text-align: center;
 }
 
 /* ---------------------------------------------------------
