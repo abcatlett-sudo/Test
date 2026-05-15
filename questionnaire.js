@@ -6,7 +6,7 @@
 const urlParams    = new URLSearchParams(window.location.search);
 const PRODUCT_TYPE = urlParams.get('type') || 'mirror';
 
-const GA_KEY = 'acPBS3fpEkSijq1JhbnOcA52031';
+const GA_KEY = 'dtoken_hEDzcyiWMr2RKmx5bEJGy5bofuck2nS8LH7WTFnLfogkDCXvGBp5BI1eyhADhPZyfzU2sJaORWkvEP54-YPKurEEZYQULGcTUWz7M17gTdyLyFxSO1UBqxgGFxFO_SgqCBTxNEmj2CC0YlCW7f1O27HgM4F4EMSCybW4NE7eeIjbhEqSBvQkMA5SrkwqnSgiWUkDab0A-mE';
 
 const MIRROR_SECTIONS = [
   { id: 'about',     label: 'About You & Your Partner' },
