@@ -103,8 +103,8 @@ function buildPrompt(
     : (r.partner_funeral_wishes || 'I have no specific funeral wishes.')
 
   // ── specific gifts (per-testator for mirror wills)
-  const giftsYesKey    = isPrimary ? 'specific_gifts_yes'     : 'partner_specific_gifts_yes'
-  const giftsDetails   = isPrimary ? r.specific_gifts_details : r.partner_specific_gifts_details
+  const giftsYesKey    = isPrimary ? 'partner_specific_gifts_yes'     : 'specific_gifts_yes'
+  const giftsDetails   = isPrimary ? r.partner_specific_gifts_details : r.specific_gifts_details
   const hasGifts       = r[giftsYesKey] === 'yes' && giftsDetails
   const giftsClause    = hasGifts
     ? `SPECIFIC GIFTS\n\n` +
@@ -183,8 +183,8 @@ function buildPrompt(
   const hasBusiness = r.business_interests_yes === 'yes'
 
   // ── exclusions (per-testator for mirror wills)
-  const exclusionsYesKey  = isPrimary ? 'exclusions_yes'     : 'partner_exclusions_yes'
-  const exclusionsDetails = isPrimary ? r.exclusions_details : r.partner_exclusions_details
+  const exclusionsYesKey  = isPrimary ? 'partner_exclusions_yes'     : 'exclusions_yes'
+  const exclusionsDetails = isPrimary ? r.partner_exclusions_details : r.exclusions_details
   const hasExclusions     = r[exclusionsYesKey] === 'yes' && exclusionsDetails
 
   // ── pronoun helper
