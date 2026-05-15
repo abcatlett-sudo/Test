@@ -161,7 +161,7 @@ const MIRROR_STEPS = [
     section: 'executors',
     icon: '&#128101;',
     title: 'Executors if you both pass away',
-    subtitle: 'Your executors are the people who will carry out the wishes in your will. Choose two people you trust completely — ideally under 70, and not someone who inherits from the will.',
+    subtitle: 'You can name one or two executors — the people responsible for carrying out your wishes. Naming two is recommended so there\'s always someone who can act. Choose people you trust, ideally under 70 and not named as beneficiaries in your will.',
     type: 'executors',
   },
   // ── SECTION 5: Your Estate ───────────────────────────────────
