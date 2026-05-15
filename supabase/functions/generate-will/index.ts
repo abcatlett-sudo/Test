@@ -76,8 +76,10 @@ function buildPrompt(
   // ── executors (mirror)
   let executorClause = ''
   if (productType === 'mirror') {
-    if (r.executor_surviving_yes === 'no' && r.executor_surviving_other) {
-      executorClause = `(a) ${r.executor_surviving_other} (if they survive me by twenty-eight days and are willing to act); or\n` +
+    const survivingKey   = isPrimary ? 'executor_surviving_yes'   : 'partner_executor_surviving_yes'
+    const survivingOther = isPrimary ? r.executor_surviving_other : r.partner_executor_surviving_other
+    if (r[survivingKey] === 'no' && survivingOther) {
+      executorClause = `(a) ${survivingOther} (if they survive me by twenty-eight days and are willing to act); or\n` +
         `(b) If they are unable or unwilling to act, I appoint:\n` +
         `    ${caps(r.executor1_name || '')} of ${r.executor1_address || ''}; and\n` +
         `    ${caps(r.executor2_name || '')} of ${r.executor2_address || ''}\n` +
