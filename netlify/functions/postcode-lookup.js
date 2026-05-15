@@ -1,3 +1,16 @@
+const https = require('https');
+
+function httpsGet(url, headers) {
+  return new Promise((resolve, reject) => {
+    const opts = new URL(url);
+    https.get({ hostname: opts.hostname, path: opts.pathname + opts.search, headers }, (res) => {
+      let body = '';
+      res.on('data', chunk => body += chunk);
+      res.on('end', () => resolve({ status: res.statusCode, body }));
+    }).on('error', reject);
+  });
+}
+
 exports.handler = async (event) => {
   const postcode = (event.queryStringParameters?.postcode || '').trim().toUpperCase();
 
@@ -9,21 +22,19 @@ exports.handler = async (event) => {
   const url   = `https://api.getaddress.io/find/${encodeURIComponent(postcode)}?api-key=${token}&expand=true`;
 
   try {
-    const res  = await fetch(url, {
-      headers: {
-        'Origin':  'https://willsassured.co.uk',
-        'Referer': 'https://willsassured.co.uk/',
-      },
+    const { status, body } = await httpsGet(url, {
+      'Origin':  'https://willsassured.co.uk',
+      'Referer': 'https://willsassured.co.uk/',
     });
-    const data = await res.json();
 
-    if (!res.ok) {
-      return { statusCode: res.status, body: JSON.stringify(data) };
+    if (status !== 200) {
+      return { statusCode: status, headers: { 'Content-Type': 'application/json' }, body };
     }
 
-    // Normalise to {suggestions:[{address,postcode}]} shape the client expects
+    const data        = JSON.parse(body);
     const addresses   = data.addresses || [];
     const postcodeFmt = data.postcode  || postcode;
+
     const suggestions = addresses.map(a => {
       const parts = [a.line_1, a.line_2, a.line_3, a.town_or_city, a.county]
         .filter(p => p && p.trim());
