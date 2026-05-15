@@ -6,6 +6,8 @@
 const urlParams    = new URLSearchParams(window.location.search);
 const PRODUCT_TYPE = urlParams.get('type') || 'mirror';
 
+const GA_KEY = 'acPBS3fpEkSijq1JhbnOcA52031';
+
 const MIRROR_SECTIONS = [
   { id: 'about',     label: 'About You & Your Partner' },
   { id: 'family',    label: 'Your Family'               },
@@ -536,6 +538,75 @@ async function initQuestionnaire() {
 
 
 // ================================================================
+// POSTCODE LOOKUP
+// ================================================================
+
+function postcodeWidget(targetName) {
+  return `
+    <div class="pc-lookup" data-target="${targetName}">
+      <div class="pc-row">
+        <input class="quest-input pc-input" type="text" placeholder="Enter postcode" autocomplete="off" maxlength="8" />
+        <button type="button" class="btn btn-primary pc-btn">Find &rarr;</button>
+      </div>
+      <select class="quest-input pc-select" style="display:none;margin-top:8px;"></select>
+      <p class="pc-note"></p>
+    </div>`;
+}
+
+async function handlePostcodeLookup(widget) {
+  const input    = widget.querySelector('.pc-input');
+  const note     = widget.querySelector('.pc-note');
+  const select   = widget.querySelector('.pc-select');
+  const postcode = input.value.trim().replace(/\s+/g, '');
+
+  if (!postcode) { note.textContent = 'Please enter a postcode.'; return; }
+
+  note.textContent = 'Searching…';
+  select.style.display = 'none';
+
+  try {
+    const res = await fetch(
+      `https://api.getaddress.io/find/${encodeURIComponent(postcode)}?api-key=${GA_KEY}&expand=true`
+    );
+    if (!res.ok) {
+      note.textContent = 'Postcode not found — please type your address below.';
+      return;
+    }
+    const data      = await res.json();
+    const addresses = data.addresses || [];
+    if (addresses.length === 0) {
+      note.textContent = 'No addresses found — please type your address below.';
+      return;
+    }
+    note.textContent = `${addresses.length} address${addresses.length > 1 ? 'es' : ''} found — select one below.`;
+    select.innerHTML = '<option value="">— Select your address —</option>' +
+      addresses.map((a, i) => {
+        const preview = [a.line_1, a.line_2, a.town_or_city].filter(p => p && p.trim()).join(', ');
+        return `<option value="${i}">${preview}, ${data.postcode}</option>`;
+      }).join('');
+    select.style.display = 'block';
+
+    select.onchange = () => {
+      const idx = parseInt(select.value);
+      if (isNaN(idx)) return;
+      const a = addresses[idx];
+      const formatted = [a.line_1, a.line_2, a.line_3, a.town_or_city, a.county, data.postcode]
+        .filter(p => p && p.trim())
+        .join('\n');
+      const target = widget.closest('.quest-field')?.querySelector(`[name="${widget.dataset.target}"]`)
+        || document.querySelector(`[name="${widget.dataset.target}"]`);
+      if (target) {
+        target.value = formatted;
+        responses[widget.dataset.target] = formatted;
+      }
+    };
+  } catch {
+    note.textContent = 'Lookup failed — please type your address below.';
+  }
+}
+
+
+// ================================================================
 // RENDER
 // ================================================================
 
@@ -589,6 +660,7 @@ function renderGuardians() {
     </div>
     <div class="quest-field" style="margin-top:12px;">
       <label class="quest-label">Guardian's address</label>
+      ${postcodeWidget('guardian_address')}
       <textarea class="quest-input quest-textarea" name="guardian_address" placeholder="Full address including postcode" rows="3" required>${esc(responses.guardian_address || '')}</textarea>
     </div>
     <button type="button" id="addSecondaryGuardianBtn" class="btn btn-ghost" style="margin-top:14px;font-size:0.88rem;padding:8px 14px;">
@@ -602,6 +674,7 @@ function renderGuardians() {
       </div>
       <div class="quest-field" style="margin-top:12px;">
         <label class="quest-label">Secondary guardian's address</label>
+        ${postcodeWidget('secondary_guardian_address')}
         <textarea class="quest-input quest-textarea" name="secondary_guardian_address" placeholder="Full address including postcode" rows="3">${esc(responses.secondary_guardian_address || '')}</textarea>
       </div>
     </div>`;
@@ -627,14 +700,16 @@ function buildStepHTML(step) {
 }
 
 function renderField(f) {
-  const val = esc(responses[f.key] || '');
-  const input = f.type === 'textarea'
+  const val      = esc(responses[f.key] || '');
+  const isAddr   = f.type === 'textarea' && f.key.endsWith('_address');
+  const input    = f.type === 'textarea'
     ? `<textarea class="quest-input quest-textarea" name="${f.key}" placeholder="${esc(f.placeholder || '')}" rows="3">${val}</textarea>`
     : `<input class="quest-input" type="${f.type}" name="${f.key}" placeholder="${esc(f.placeholder || '')}" value="${val}" />`;
   return `
     <div class="quest-field">
       <label class="quest-label">${f.label}${!f.required ? ' <span class="quest-optional">Optional</span>' : ''}</label>
       ${f.hint ? `<p class="quest-hint">${f.hint}</p>` : ''}
+      ${isAddr ? postcodeWidget(f.key) : ''}
       ${input}
     </div>`;
 }
@@ -976,6 +1051,16 @@ function attachListeners(step) {
     });
     icon.addEventListener('mouseleave', () => {
       icon.querySelector('.quest-tooltip')?.remove();
+    });
+  });
+
+  // Postcode lookup
+  document.querySelectorAll('.pc-btn').forEach(btn => {
+    btn.addEventListener('click', () => handlePostcodeLookup(btn.closest('.pc-lookup')));
+  });
+  document.querySelectorAll('.pc-input').forEach(input => {
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); handlePostcodeLookup(input.closest('.pc-lookup')); }
     });
   });
 

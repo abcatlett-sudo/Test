@@ -2159,6 +2159,41 @@ img { max-width: 100%; display: block; }
 .quest-pct-symbol { font-weight: 700; color: var(--muted); }
 
 /* Executors */
+.pc-lookup {
+  margin-bottom: 8px;
+}
+
+.pc-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pc-input {
+  flex: 1;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 0 !important;
+}
+
+.pc-btn {
+  white-space: nowrap;
+  padding: 10px 16px;
+  font-size: 0.85rem;
+}
+
+.pc-note {
+  font-size: 0.78rem;
+  color: var(--muted);
+  min-height: 18px;
+  margin: 4px 0 0;
+}
+
+.pc-select {
+  width: 100%;
+  cursor: pointer;
+}
+
 .quest-executor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .quest-executor-card {
   border: 1.5px solid var(--mid); border-radius: var(--radius);
