@@ -18,6 +18,13 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 // onAuthStateChange reads from localStorage so there is no flash.
 // ----------------------------------------------------------------
 sb.auth.onAuthStateChange((_event, session) => {
+  if (_event === 'PASSWORD_RECOVERY') {
+    if (!window.location.pathname.endsWith('reset-password.html')) {
+      window.location.href = 'reset-password.html';
+    }
+    return;
+  }
+
   document.querySelectorAll('.nav-cta').forEach(cta => {
     if (session) {
       cta.textContent = 'Dashboard';
