@@ -30,7 +30,7 @@ async function sendVoucherEmail(to: string, code: string, productType: string, e
   const expiryStr    = expiresAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' })
   const redeemUrl    = `https://www.willsassured.co.uk/redeem.html?code=${code}`
 
-  await fetch('https://api.resend.com/emails', {
+  const emailRes = await fetch('https://api.resend.com/emails', {
     method:  'POST',
     headers: {
       'Authorization': `Bearer ${resendKey}`,
@@ -122,6 +122,10 @@ async function sendVoucherEmail(to: string, code: string, productType: string, e
 </html>`,
     }),
   })
+  if (!emailRes.ok) {
+    const body = await emailRes.text()
+    console.error(`[VOUCHER] Resend email failed for ${to} (${emailRes.status}):`, body)
+  }
 }
 
 // ─── main handler ────────────────────────────────────────────

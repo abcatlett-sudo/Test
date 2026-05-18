@@ -55,6 +55,7 @@ Deno.serve(async (req) => {
       .from('purchases')
       .select('id')
       .eq('status', 'paid')
+      .eq('email', user.email!)
       .maybeSingle()
 
     if (existing) {
