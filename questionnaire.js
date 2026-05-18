@@ -243,7 +243,7 @@ const MIRROR_STEPS = [
     subtitle: 'If you have an existing will, it\'s important to formally revoke it to ensure there is no ambiguity.',
     type: 'checkbox_confirm',
     key: 'previous_wills_confirmed',
-    label: 'I confirm that this will revokes and replaces any and all previous wills I have made',
+    label: 'I confirm that this will, once signed in the presence of two independent witnesses, revokes and replaces all former wills and testamentary dispositions previously made by me.',
   },
   {
     id: 'funeral_wishes',
@@ -473,7 +473,7 @@ const SINGLE_STEPS = [
     subtitle: 'If you have an existing will, it\'s important to formally revoke it to ensure there is no ambiguity.',
     type: 'checkbox_confirm',
     key: 'previous_wills_confirmed',
-    label: 'I confirm that this will revokes and replaces any and all previous wills I have made',
+    label: 'I confirm that this will, once signed in the presence of two independent witnesses, revokes and replaces all former wills and testamentary dispositions previously made by me.',
   },
   {
     id: 'funeral_wishes',
