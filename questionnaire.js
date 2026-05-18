@@ -143,6 +143,7 @@ const MIRROR_STEPS = [
     ],
     customTextKey:         'inheritance_age_custom',
     customTextPlaceholder: 'Describe your custom inheritance arrangement, e.g. one third at 21, one third at 25, the remainder at 30...',
+    showIf: (r) => parseInt(r.children_count || 0) > 0,
   },
   // ── SECTION 4: Executors ─────────────────────────────────────
   {
@@ -385,6 +386,7 @@ const SINGLE_STEPS = [
     ],
     customTextKey:         'inheritance_age_custom',
     customTextPlaceholder: 'Describe your custom inheritance arrangement, e.g. one third at 21, one third at 25, the remainder at 30...',
+    showIf: (r) => parseInt(r.children_count || 0) > 0,
   },
   // ── SECTION 4: Executors ─────────────────────────────────────
   {
