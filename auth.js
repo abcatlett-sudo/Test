@@ -227,7 +227,9 @@ if (loginForm) {
       btn.disabled    = false;
       btn.textContent = 'Sign In';
     } else {
-      window.location.href = 'dashboard.html';
+      const params     = new URLSearchParams(window.location.search);
+      const redirectTo = params.get('redirect');
+      window.location.href = redirectTo ? decodeURIComponent(redirectTo) : 'dashboard.html';
     }
   });
 }

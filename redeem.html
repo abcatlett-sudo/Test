@@ -88,11 +88,11 @@
       const input = document.getElementById('voucherCodeInput')
       if (codeParam) input.value = codeParam.toUpperCase()
 
-      // Require auth
+      // Require auth — save code so it survives the register/login flow
       const { data: { user } } = await sb.auth.getUser()
       if (!user) {
-        const redirect = encodeURIComponent('redeem.html' + (codeParam ? `?code=${codeParam}` : ''))
-        window.location.href = `login.html?redirect=${redirect}`
+        if (codeParam) localStorage.setItem('wa_pending_voucher', codeParam.toUpperCase())
+        window.location.href = 'register.html'
         return
       }
 
