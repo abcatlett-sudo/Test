@@ -107,6 +107,27 @@ document.addEventListener('click', async (e) => {
       btn.textContent = 'Apply Voucher →';
     }
   } else {
+    // Validate before redirecting — no auth needed for check-voucher
+    try {
+      const checkResp = await fetch(
+        'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/check-voucher',
+        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code }) }
+      );
+      const checkResult = await checkResp.json();
+      if (!checkResp.ok) {
+        note.style.color = 'var(--accent)';
+        note.textContent = checkResult.error || 'Invalid voucher code.';
+        btn.disabled    = false;
+        btn.textContent = 'Apply Voucher →';
+        return;
+      }
+    } catch {
+      note.style.color = 'var(--accent)';
+      note.textContent = 'Could not verify voucher. Please try again.';
+      btn.disabled    = false;
+      btn.textContent = 'Apply Voucher →';
+      return;
+    }
     localStorage.setItem('wa_pending_voucher', code);
     localStorage.removeItem('wa_basket');
     note.style.color = 'var(--teal)';
