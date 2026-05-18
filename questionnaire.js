@@ -236,16 +236,6 @@ const MIRROR_STEPS = [
   },
   // ── SECTION 6: Final Details ─────────────────────────────────
   {
-    id: 'previous_wills',
-    section: 'final',
-    icon: '&#128196;',
-    title: 'Revoking previous wills',
-    subtitle: 'If you have an existing will, it\'s important to formally revoke it to ensure there is no ambiguity.',
-    type: 'checkbox_confirm',
-    key: 'previous_wills_confirmed',
-    label: 'I confirm that this will revokes and replaces any and all previous wills I have made',
-  },
-  {
     id: 'funeral_wishes',
     section: 'final',
     icon: '&#128538;',
@@ -465,16 +455,6 @@ const SINGLE_STEPS = [
     textPlaceholder:'e.g. John Smith — estranged since 2015...',
   },
   // ── SECTION 6: Final Details ─────────────────────────────────
-  {
-    id: 'previous_wills',
-    section: 'final',
-    icon: '&#128196;',
-    title: 'Revoking previous wills',
-    subtitle: 'If you have an existing will, it\'s important to formally revoke it to ensure there is no ambiguity.',
-    type: 'checkbox_confirm',
-    key: 'previous_wills_confirmed',
-    label: 'I confirm that this will revokes and replaces any and all previous wills I have made',
-  },
   {
     id: 'funeral_wishes',
     section: 'final',
