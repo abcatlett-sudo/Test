@@ -111,7 +111,7 @@ document.addEventListener('click', async (e) => {
     try {
       const checkResp = await fetch(
         'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/check-voucher',
-        { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code }) }
+        { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }, body: JSON.stringify({ code }) }
       );
       const checkResult = await checkResp.json();
       if (!checkResp.ok) {
