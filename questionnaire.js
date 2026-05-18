@@ -344,6 +344,14 @@ const SINGLE_STEPS = [
       { value: 'children', label: 'My children',    description: 'My estate passes to my children in equal shares' },
       { value: 'other',    label: 'Someone else',   description: 'I want to name a specific person as my primary beneficiary — my children would inherit if that person predeceases me' },
     ],
+    inlineFields: {
+      showOn: 'other',
+      fields: [
+        { key: 'beneficiary_name',         label: 'Full legal name',     type: 'text',     placeholder: 'e.g. James Robert Smith',        required: true },
+        { key: 'beneficiary_relationship', label: 'Relationship to you', type: 'text',     placeholder: 'e.g. Son, Partner, Friend',       required: true },
+        { key: 'beneficiary_address',      label: 'Address',             type: 'textarea', placeholder: 'Full address including postcode', required: true },
+      ],
+    },
   },
   {
     id: 'primary_beneficiary',
@@ -351,7 +359,7 @@ const SINGLE_STEPS = [
     icon: '&#128140;',
     title: 'Your primary beneficiary',
     subtitle: 'Who should inherit your entire estate if you pass away? Please provide their details below.',
-    showIf: (r) => parseInt(r.children_count || 0) === 0 || r.primary_beneficiary_type === 'other',
+    showIf: (r) => parseInt(r.children_count || 0) === 0,
     type: 'fields',
     fields: [
       { key: 'beneficiary_name',         label: 'Full legal name',     type: 'text',     placeholder: 'e.g. James Robert Smith',        required: true },
@@ -756,6 +764,12 @@ function renderOptions(step) {
     const isCustom = responses[step.key] === 'custom';
     html += `<div id="conditionalText" class="quest-conditional${isCustom ? ' visible' : ''}" data-show-on="custom">
       <textarea class="quest-input quest-textarea" name="${step.customTextKey}" placeholder="${step.customTextPlaceholder || ''}" rows="4">${esc(responses[step.customTextKey] || '')}</textarea>
+    </div>`;
+  }
+  if (step.inlineFields) {
+    const show = responses[step.key] === step.inlineFields.showOn;
+    html += `<div class="quest-conditional${show ? ' visible' : ''}" data-for="${step.key}" data-show-on="${step.inlineFields.showOn}" style="margin-top:16px;">
+      ${step.inlineFields.fields.map(renderField).join('')}
     </div>`;
   }
   return html;
@@ -1201,6 +1215,16 @@ function validateStep(step) {
         showFieldError(`child_${i}_dob`, 'Please enter the date of birth for this child')
         shakeBtn(nextBtn)
         return false
+      }
+    }
+  }
+
+  if (step.type === 'options' && step.inlineFields && responses[step.key] === step.inlineFields.showOn) {
+    for (const f of step.inlineFields.fields) {
+      if (f.required && !String(responses[f.key] || '').trim()) {
+        showFieldError(f.key, `Please enter ${f.label.toLowerCase()}`);
+        shakeBtn(nextBtn);
+        return false;
       }
     }
   }
