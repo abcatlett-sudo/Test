@@ -135,7 +135,7 @@ function buildPrompt(
       ? `If my spouse, ${caps(spouseName)}, survives me by twenty-eight days, I give the whole of my estate (including any property over which I have a general power of appointment) to them absolutely.`
       : `Primary Estate Disposition: ${r.primary_wish_custom || 'To be determined.'}`
 
-    // Mirror secondary — children or custom
+    // Mirror secondary — children, named beneficiaries, or custom
     const spouseRef = `my spouse`
     if (r.secondary_equal !== 'no' && childCount > 0) {
       secondaryClause =
@@ -150,6 +150,29 @@ function buildPrompt(
       secondaryClause =
         `If ${spouseRef} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold in equal shares for my children:\n${childrenList}` +
         under18Notice
+    } else {
+      // No children — named beneficiaries with percentage splits
+      const numBen = parseInt(r.secondary_beneficiary_count || '0')
+      if (numBen > 0) {
+        const lines: string[] = []
+        for (let i = 0; i < numBen; i++) {
+          const name         = r[`secondary_ben_${i}_name`]
+          const address      = r[`secondary_ben_${i}_address`]
+          const relationship = r[`secondary_ben_${i}_relationship`]
+          const pct          = r[`secondary_ben_${i}_pct`]
+          if (name) lines.push(`${caps(name)}${address ? ` of ${address}` : ''}${relationship ? ` (${relationship})` : ''} — ${pct ?? ''}%`)
+        }
+        if (lines.length === 1) {
+          const name         = r['secondary_ben_0_name']
+          const address      = r['secondary_ben_0_address']
+          const relationship = r['secondary_ben_0_relationship']
+          secondaryClause = `If ${spouseRef} does not survive me by twenty-eight days, I give the whole of my estate to ${caps(name || '')}${address ? ` of ${address}` : ''}${relationship ? ` (${relationship})` : ''} absolutely, provided they survive me by twenty-eight days.`
+        } else if (lines.length > 1) {
+          secondaryClause =
+            `If ${spouseRef} does not survive me by twenty-eight days, I give the whole of my estate to be divided in the following proportions:\n\n` +
+            lines.map(l => `- ${l}`).join('\n')
+        }
+      }
     }
 
   } else {
