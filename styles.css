@@ -2075,6 +2075,10 @@ img { max-width: 100%; display: block; }
 .quest-input-error { border-color: var(--accent) !important; }
 .quest-error       { font-size: 0.8rem; color: var(--accent); margin: 4px 0 0; }
 
+/* White calendar icon on date inputs and white eye icon on password inputs */
+input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+input[type="password"]::-ms-reveal                    { filter: invert(1); }
+
 /* Option cards */
 .quest-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
 .quest-option {
