@@ -112,7 +112,7 @@ const MIRROR_STEPS = [
     type: 'yesno_with_text',
     key: 'primary_wish_yes',
     yesLabel: 'Yes — everything passes to the surviving partner absolutely',
-    noLabel:  'No — I have different wishes',
+    noLabel:  'No — we have different wishes',
     textKey:        'primary_wish_custom',
     textLabel:      'Please describe your wishes',
     textPlaceholder:'Describe how you\'d like your estate to be divided...',
@@ -893,7 +893,8 @@ function renderSecondaryWish() {
         </div>
       </div>
       <p class="quest-hint" style="margin-top:16px;">Percentages must add up to 100%</p>
-      ${beneficiaryFields}`;
+      ${beneficiaryFields}
+      <div class="quest-pct-total">Total: <span id="pctTotalVal">0</span>% <span id="pctTotalMsg"></span></div>`;
   }
 
   // Has children — offer equal split or custom percentages
@@ -903,7 +904,7 @@ function renderSecondaryWish() {
         Yes — divided equally between all our children
       </button>
       <button class="quest-option${isCustom ? ' selected' : ''}" data-key="secondary_equal" data-value="no">
-        No — I want to specify percentages
+        No — we want to specify percentages
       </button>
     </div>`;
 
@@ -925,6 +926,7 @@ function renderSecondaryWish() {
     <div class="quest-conditional${isCustom ? ' visible' : ''}" id="pctFields">
       <p class="quest-hint" style="margin-top:16px;">Percentages must add up to 100%</p>
       ${pctFields}
+      <div class="quest-pct-total">Total: <span id="pctTotalVal">0</span>% <span id="pctTotalMsg"></span></div>
     </div>`;
 }
 
@@ -1145,8 +1147,32 @@ function bindInputListeners() {
       if (el.name) responses[el.name] = el.value;
       el.classList.remove('quest-input-error');
       el.parentNode.querySelector('.quest-error')?.remove();
+      if (el.classList.contains('quest-pct-input')) updatePctTotal();
     });
   });
+}
+
+function updatePctTotal() {
+  const totalVal = document.getElementById('pctTotalVal');
+  const totalMsg = document.getElementById('pctTotalMsg');
+  if (!totalVal) return;
+  let sum = 0;
+  document.querySelectorAll('.quest-pct-input').forEach(inp => {
+    sum += parseFloat(inp.value || 0);
+  });
+  const rounded = Math.round(sum);
+  totalVal.textContent = rounded;
+  if (totalMsg) {
+    if (rounded === 100) {
+      totalVal.style.color = 'var(--teal)';
+      totalMsg.style.color = 'var(--teal)';
+      totalMsg.textContent = '✓';
+    } else {
+      totalVal.style.color = 'var(--accent)';
+      totalMsg.style.color = 'var(--accent)';
+      totalMsg.textContent = rounded > 100 ? '— over 100%' : '— must reach 100%';
+    }
+  }
 }
 
 function collectInputValues() {
@@ -1208,6 +1234,23 @@ function validateStep(step) {
 
   if (step.type === 'checkbox_confirm' && !responses[step.key]) {
     shakeBtn(nextBtn); return false;
+  }
+
+  if (step.type === 'secondary_wish' && responses.secondary_equal === 'no') {
+    const count = parseInt(responses.children_count || 0);
+    let total = 0;
+    if (count > 0) {
+      for (let i = 0; i < count; i++) total += parseFloat(responses[`child_${i}_pct`] || 0);
+    } else {
+      const numBen = parseInt(responses.secondary_beneficiary_count || 1);
+      for (let i = 0; i < numBen; i++) total += parseFloat(responses[`secondary_ben_${i}_pct`] || 0);
+    }
+    if (Math.round(total) !== 100) {
+      const msg = document.getElementById('pctTotalMsg');
+      if (msg) { msg.textContent = '— must add up to exactly 100%'; msg.style.color = 'var(--accent)'; }
+      shakeBtn(nextBtn);
+      return false;
+    }
   }
 
   if (step.type === 'executors') {
