@@ -143,6 +143,7 @@ const MIRROR_STEPS = [
     ],
     customTextKey:         'inheritance_age_custom',
     customTextPlaceholder: 'Describe your custom inheritance arrangement, e.g. one third at 21, one third at 25, the remainder at 30...',
+    showIf: (r) => parseInt(r.children_count || 0) > 0,
   },
   // ── SECTION 4: Executors ─────────────────────────────────────
   {
@@ -385,6 +386,7 @@ const SINGLE_STEPS = [
     ],
     customTextKey:         'inheritance_age_custom',
     customTextPlaceholder: 'Describe your custom inheritance arrangement, e.g. one third at 21, one third at 25, the remainder at 30...',
+    showIf: (r) => parseInt(r.children_count || 0) > 0,
   },
   // ── SECTION 4: Executors ─────────────────────────────────────
   {
@@ -660,6 +662,7 @@ function renderStep() {
   );
 
   attachListeners(step);
+  updatePctTotal();
 }
 
 function renderGuardians() {
@@ -870,7 +873,9 @@ function renderSecondaryWish() {
       beneficiaryFields += `
         <div class="quest-field" style="margin-top:14px;">
           <label class="quest-label">Beneficiary ${i + 1}</label>
-          <input class="quest-input" type="text" name="secondary_ben_${i}_name" placeholder="Full name, address and relationship (e.g. Jane Smith, 14 High Street, Leeds LS1 1AA — Sister)" value="${esc(responses[`secondary_ben_${i}_name`] || '')}" style="margin-bottom:8px;" />
+          <input class="quest-input" type="text" name="secondary_ben_${i}_name" placeholder="Full name (e.g. Jane Smith)" value="${esc(responses[`secondary_ben_${i}_name`] || '')}" style="margin-bottom:8px;" />
+          <input class="quest-input" type="text" name="secondary_ben_${i}_address" placeholder="Address including postcode" value="${esc(responses[`secondary_ben_${i}_address`] || '')}" style="margin-bottom:8px;" />
+          <input class="quest-input" type="text" name="secondary_ben_${i}_relationship" placeholder="Relationship (e.g. Sister, Friend)" value="${esc(responses[`secondary_ben_${i}_relationship`] || '')}" style="margin-bottom:8px;" />
           <div class="quest-pct-input-wrap">
             <input class="quest-input quest-pct-input" type="number" name="secondary_ben_${i}_pct" min="0" max="100" value="${esc(String(responses[`secondary_ben_${i}_pct`] ?? defaultPct))}" />
             <span class="quest-pct-symbol">%</span>
@@ -1054,6 +1059,13 @@ function attachListeners(step) {
       btn.closest('.quest-options-grid').querySelectorAll('.quest-option').forEach(b => b.classList.remove('selected'));
       btn.classList.add('selected');
       responses[key] = value;
+
+      // Re-render the full step when beneficiary count changes so fields update immediately
+      if (key === 'secondary_beneficiary_count') {
+        collectInputValues();
+        renderStep();
+        return;
+      }
 
       const conditional = document.querySelector(`.quest-conditional[data-for="${key}"]`)
         || document.getElementById('conditionalText')
