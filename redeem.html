@@ -88,10 +88,32 @@
       const input = document.getElementById('voucherCodeInput')
       if (codeParam) input.value = codeParam.toUpperCase()
 
-      // Require auth — save code so it survives the register/login flow
+      // Require auth — validate code first, then save so it survives the register/login flow
       const { data: { user } } = await sb.auth.getUser()
       if (!user) {
-        if (codeParam) localStorage.setItem('wa_pending_voucher', codeParam.toUpperCase())
+        if (codeParam) {
+          const note = document.getElementById('redeemNote')
+          const btn  = document.getElementById('redeemBtn')
+          btn.disabled    = true
+          btn.textContent = 'Checking…'
+          try {
+            const checkResp = await fetch(
+              'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/check-voucher',
+              { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: codeParam.toUpperCase() }) }
+            )
+            const checkResult = await checkResp.json()
+            if (!checkResp.ok) {
+              note.style.color = 'var(--accent)'
+              note.textContent = checkResult.error || 'Invalid voucher code.'
+              btn.disabled    = false
+              btn.textContent = 'Redeem Voucher →'
+              return
+            }
+          } catch {
+            // Network error — allow through and let redemption catch it
+          }
+          localStorage.setItem('wa_pending_voucher', codeParam.toUpperCase())
+        }
         window.location.href = 'register.html'
         return
       }
