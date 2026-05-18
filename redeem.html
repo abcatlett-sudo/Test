@@ -99,7 +99,7 @@
           try {
             const checkResp = await fetch(
               'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/check-voucher',
-              { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ code: codeParam.toUpperCase() }) }
+              { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZneXF1bWd2bWxsaGlxZG1ncmZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzQ1NDYsImV4cCI6MjA5MjUxMDU0Nn0.GwQsnXsraNegEqdYASRwagOxMgyAZg2iNXzP3Syqii8' }, body: JSON.stringify({ code: codeParam.toUpperCase() }) }
             )
             const checkResult = await checkResp.json()
             if (!checkResp.ok) {
