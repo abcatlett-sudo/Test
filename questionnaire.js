@@ -414,6 +414,7 @@ const SINGLE_STEPS = [
     subtitle: 'This covers everything you own — property, savings, investments, and personal possessions.',
     type: 'yesno_with_text',
     key: 'net_assets_yes',
+    showIf: (r) => r.primary_beneficiary_type !== 'children',
     yesLabel: 'Yes — net assets pass to my primary beneficiary; if they predecease me, equally to my children',
     noLabel:  'No — I have a different arrangement in mind',
     textKey:        'net_assets_custom',
