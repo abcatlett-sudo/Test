@@ -171,6 +171,7 @@ Deno.serve(async (req) => {
         product_type:     productType,
         purchaser_email:  email,
         expires_at:       expiresAt.toISOString(),
+        max_uses:         1,
       })
 
       if (voucherError) {
