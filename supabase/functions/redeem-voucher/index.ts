@@ -62,13 +62,13 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Your account already has an active will product.' }), { status: 409, headers: cors })
     }
 
-    // Atomic increment — guard against race conditions by only updating
-    // if use_count is still below max_uses at the moment of the write.
+    // Atomic increment — optimistic lock: only updates if use_count hasn't
+    // changed since we read it, guarding against concurrent redemptions.
     const { data: updated, error: updateError } = await supabase
       .from('vouchers')
       .update({ use_count: voucher.use_count + 1 })
       .eq('id', voucher.id)
-      .lt('use_count', voucher.max_uses)
+      .eq('use_count', voucher.use_count)
       .select('id')
       .maybeSingle()
 
