@@ -786,6 +786,7 @@ function renderYesNoWithText(step) {
       <div class="quest-field" style="margin-top:16px;">
         <label class="quest-label">${step.textLabel}</label>
         <textarea class="quest-input quest-textarea" name="${step.textKey}" placeholder="${esc(step.textPlaceholder)}" rows="4">${esc(responses[step.textKey] || '')}</textarea>
+        <p class="quest-textarea-tip">Tip: generate your will to see how this reads, then come back and tweak the wording until you're completely satisfied.</p>
       </div>
     </div>`;
 }
@@ -808,6 +809,7 @@ function renderDualYesNoWithText(step) {
         <div class="quest-field" style="margin-top:16px;">
           <label class="quest-label">${step.textLabel}</label>
           <textarea class="quest-input quest-textarea" name="${step.textKey}" placeholder="${esc(step.textPlaceholder)}" rows="4">${esc(responses[step.textKey] || '')}</textarea>
+          <p class="quest-textarea-tip">Tip: generate your will to see how this reads, then come back and tweak the wording until you're completely satisfied.</p>
         </div>
       </div>
     </div>
@@ -821,6 +823,7 @@ function renderDualYesNoWithText(step) {
         <div class="quest-field" style="margin-top:16px;">
           <label class="quest-label">${step.textLabel}</label>
           <textarea class="quest-input quest-textarea" name="${step.textKey2}" placeholder="${esc(step.textPlaceholder)}" rows="4">${esc(responses[step.textKey2] || '')}</textarea>
+          <p class="quest-textarea-tip">Tip: generate your will to see how this reads, then come back and tweak the wording until you're completely satisfied.</p>
         </div>
       </div>
     </div>`;
@@ -994,6 +997,7 @@ function renderDualTextareaOptional(step) {
       <div class="quest-field">
         <span class="quest-optional">Optional</span>
         <textarea class="quest-input quest-textarea" name="${step.key}" placeholder="${esc(step.placeholder)}" rows="4">${esc(responses[step.key] || '')}</textarea>
+        <p class="quest-textarea-tip">Tip: generate your will to see how this reads, then come back and tweak the wording until you're completely satisfied.</p>
       </div>
     </div>
     <div class="quest-dual-section" style="margin-top:24px;">
@@ -1001,6 +1005,7 @@ function renderDualTextareaOptional(step) {
       <div class="quest-field">
         <span class="quest-optional">Optional</span>
         <textarea class="quest-input quest-textarea" name="${step.key2}" placeholder="${esc(step.placeholder2)}" rows="4">${esc(responses[step.key2] || '')}</textarea>
+        <p class="quest-textarea-tip">Tip: generate your will to see how this reads, then come back and tweak the wording until you're completely satisfied.</p>
       </div>
     </div>`;
 }

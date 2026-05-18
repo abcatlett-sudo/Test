@@ -2056,6 +2056,7 @@ img { max-width: 100%; display: block; }
 .quest-label   { font-size: 0.88rem; font-weight: 600; color: var(--white); }
 .quest-optional{ font-weight: 400; color: var(--muted); font-size: 0.8rem; }
 .quest-revision-note { font-size: 0.82rem; color: var(--muted); text-align: center; margin: 20px auto 0; max-width: 520px; line-height: 1.6; }
+.quest-textarea-tip  { font-size: 0.78rem; color: var(--muted); margin: 8px 0 0; line-height: 1.5; font-style: italic; }
 .quest-hint    { font-size: 0.8rem; color: var(--muted); margin: 0; }
 
 .quest-input {
@@ -2074,6 +2075,10 @@ img { max-width: 100%; display: block; }
 .quest-textarea    { resize: vertical; min-height: 90px; }
 .quest-input-error { border-color: var(--accent) !important; }
 .quest-error       { font-size: 0.8rem; color: var(--accent); margin: 4px 0 0; }
+
+/* White calendar icon on date inputs and white eye icon on password inputs */
+input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+input[type="password"]::-ms-reveal                    { filter: invert(1); }
 
 /* Option cards */
 .quest-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
