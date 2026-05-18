@@ -181,7 +181,9 @@ const MIRROR_STEPS = [
     type: 'dual_yesno_with_text',
     key:  'net_assets_yes',
     key2: 'partner_net_assets_yes',
-    yesLabel: 'Yes — net assets pass to each other; if we both pass, equally to our children',
+    yesLabel: (r) => parseInt(r.children_count || 0) > 0
+      ? 'Yes — net assets pass to each other; if we both pass, equally to our children'
+      : 'Yes — net assets pass to each other; if we both pass, to our stated beneficiaries',
     noLabel:  'No — we have different arrangements in mind',
     textKey:         'net_assets_custom',
     textKey2:        'partner_net_assets_custom',
@@ -793,9 +795,11 @@ function renderDualYesNoWithText(step) {
   const trigger   = step.showTextOn || 'no';
   const showText1 = responses[step.key]  === trigger;
   const showText2 = responses[step.key2] === trigger;
+  const yesLabel  = typeof step.yesLabel === 'function' ? step.yesLabel(responses) : step.yesLabel;
+  const noLabel   = typeof step.noLabel  === 'function' ? step.noLabel(responses)  : step.noLabel;
   const opts = step.noFirst
-    ? [{ value: 'no', label: step.noLabel }, { value: 'yes', label: step.yesLabel }]
-    : [{ value: 'yes', label: step.yesLabel }, { value: 'no', label: step.noLabel }];
+    ? [{ value: 'no', label: noLabel }, { value: 'yes', label: yesLabel }]
+    : [{ value: 'yes', label: yesLabel }, { value: 'no', label: noLabel }];
   return `
     <div class="quest-dual-section">
       <h4 class="quest-dual-heading">Your wishes</h4>
