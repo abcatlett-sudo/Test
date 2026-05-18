@@ -112,7 +112,7 @@ const MIRROR_STEPS = [
     type: 'yesno_with_text',
     key: 'primary_wish_yes',
     yesLabel: 'Yes — everything passes to the surviving partner absolutely',
-    noLabel:  'No — I have different wishes',
+    noLabel:  'No — we have different wishes',
     textKey:        'primary_wish_custom',
     textLabel:      'Please describe your wishes',
     textPlaceholder:'Describe how you\'d like your estate to be divided...',
