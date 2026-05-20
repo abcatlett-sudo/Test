@@ -32,6 +32,10 @@ function caps(name: string): string {
   return (name || '').toUpperCase()
 }
 
+function isNorthernIreland(address: string): boolean {
+  return /\bBT\d/i.test(address || '')
+}
+
 function inheritanceClause(age: string, custom?: string): string {
   switch (age) {
     case '18':
@@ -63,6 +67,12 @@ function buildPrompt(
   const tDob        = isPrimary ? r.your_dob             : r.partner_dob
   const tAddress    = isPrimary ? r.your_address         : (r.partner_address || r.your_address)
   const spouseName  = isPrimary ? r.partner_full_name    : r.your_full_name
+
+  // ── jurisdiction (Northern Ireland detection via BT postcode)
+  const isNI           = isNorthernIreland(tAddress)
+  const trusteeAct     = isNI ? 'Trustee Act (Northern Ireland) 2001'                                                         : 'Trustee Act 2000'
+  const willsAct       = isNI ? 'Wills Act 1837 (as amended by the Wills and Administration Proceedings (Northern Ireland) Act 1966)' : 'Wills Act 1837'
+  const inheritanceAct = isNI ? 'Inheritance (Provision for Family and Dependants) (Northern Ireland) Order 1979'              : 'Inheritance (Provision for Family and Dependants) Act 1975'
 
   // ── children
   const childCount = parseInt(r.children_count || 0)
@@ -297,7 +307,7 @@ If any child dies before becoming entitled to their whole share, that share or t
 
 [NEXT_CLAUSE].1 I specifically exclude the following person(s) from benefiting in any way from my estate, whether under the terms of this will or on an intestacy: ${exclusionsDetails}
 
-[NEXT_CLAUSE].2 This exclusion does not and cannot override any rights that any person may have to make a claim against my estate under the Inheritance (Provision for Family and Dependants) Act 1975 or any equivalent legislation.
+[NEXT_CLAUSE].2 This exclusion does not and cannot override any rights that any person may have to make a claim against my estate under the ${inheritanceAct} or any equivalent legislation.
 
 ` : ''}[NEXT_CLAUSE]. GENERAL ADMINISTRATIVE PROVISIONS
 
@@ -314,10 +324,10 @@ My Trustees may insure any property forming part of my estate against any risk a
 Any Trustee being a solicitor or other person engaged in any profession or business may charge and be paid all usual professional and business charges for work done by them or their firm.
 
 [NEXT_CLAUSE].5 Delegation
-My Trustees shall have power to delegate any of their functions in accordance with the provisions of the Trustee Act 2000.
+My Trustees shall have power to delegate any of their functions in accordance with the provisions of the ${trusteeAct}.
 
 [NEXT_CLAUSE].6 Statutory Powers
-My Trustees shall have all the powers conferred by the Trustee Act 2000 and any other relevant legislation.
+My Trustees shall have all the powers conferred by the ${trusteeAct} and any other relevant legislation.
 
 [NEXT_CLAUSE]. DECLARATIONS
 
@@ -356,7 +366,7 @@ Now produce the complete will above, replacing all [NEXT_CLAUSE] placeholders wi
 
 IMPORTANT — NEXT STEPS TO MAKE YOUR WILL LEGAL
 
-Your will has been prepared in accordance with the Wills Act 1837. However, it is not yet legally valid. You must complete the following steps before this document takes effect.
+Your will has been prepared in accordance with the ${willsAct}. However, it is not yet legally valid. You must complete the following steps before this document takes effect.
 
 STEP 1 — PRINT YOUR WILL
 Print all pages of this document. Do not alter or annotate any part of the will after printing.
