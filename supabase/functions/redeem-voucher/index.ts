@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Unauthorised' }), { status: 401, headers: cors })
     }
 
-    const { code } = await req.json()
+    const { code, productType } = await req.json()
     if (!code) {
       return new Response(JSON.stringify({ error: 'Voucher code is required' }), { status: 400, headers: cors })
     }
@@ -39,6 +39,13 @@ Deno.serve(async (req) => {
 
     if (!voucher) {
       return new Response(JSON.stringify({ error: 'Voucher code not found. Please check and try again.' }), { status: 404, headers: cors })
+    }
+
+    // Check product type matches basket
+    if (productType && voucher.product_type !== productType) {
+      const voucherLabel = voucher.product_type === 'mirror' ? 'Mirror Wills' : 'Single Will'
+      const basketLabel  = productType === 'mirror' ? 'Mirror Wills' : 'Single Will'
+      return new Response(JSON.stringify({ error: `This is a ${voucherLabel} voucher and cannot be used for a ${basketLabel}.` }), { status: 409, headers: cors })
     }
 
     // Check uses remaining

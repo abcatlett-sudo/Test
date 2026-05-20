@@ -14,7 +14,7 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
 
   try {
-    const { code } = await req.json()
+    const { code, productType } = await req.json()
     if (!code) {
       return new Response(JSON.stringify({ valid: false, error: 'Voucher code is required' }), {
         status: 400, headers: { ...cors, 'Content-Type': 'application/json' },
@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
 
     const { data: voucher, error } = await supabase
       .from('vouchers')
-      .select('use_count, max_uses, expires_at')
+      .select('use_count, max_uses, expires_at, product_type')
       .eq('code', code.trim().toUpperCase())
       .maybeSingle()
 
@@ -44,6 +44,14 @@ Deno.serve(async (req) => {
     if (new Date(voucher.expires_at) < new Date()) {
       return new Response(JSON.stringify({ valid: false, error: 'This voucher has expired.' }), {
         status: 410, headers: { ...cors, 'Content-Type': 'application/json' },
+      })
+    }
+
+    if (productType && voucher.product_type !== productType) {
+      const voucherLabel = voucher.product_type === 'mirror' ? 'Mirror Wills' : 'Single Will'
+      const basketLabel  = productType === 'mirror' ? 'Mirror Wills' : 'Single Will'
+      return new Response(JSON.stringify({ valid: false, error: `This is a ${voucherLabel} voucher and cannot be used for a ${basketLabel}.` }), {
+        status: 409, headers: { ...cors, 'Content-Type': 'application/json' },
       })
     }
 
