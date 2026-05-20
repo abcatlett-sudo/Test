@@ -77,6 +77,8 @@ document.addEventListener('click', async (e) => {
   note.textContent = '';
 
   const { data: { session } } = await sb.auth.getSession();
+  const basket      = JSON.parse(localStorage.getItem('wa_basket') || '[]');
+  const productType = basket[0]?.id || null;
 
   if (session) {
     try {
@@ -85,7 +87,7 @@ document.addEventListener('click', async (e) => {
         {
           method:  'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
-          body:    JSON.stringify({ code }),
+          body:    JSON.stringify({ code, productType }),
         }
       );
       const result = await resp.json();
@@ -111,7 +113,7 @@ document.addEventListener('click', async (e) => {
     try {
       const checkResp = await fetch(
         'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/check-voucher',
-        { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }, body: JSON.stringify({ code }) }
+        { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }, body: JSON.stringify({ code, productType }) }
       );
       const checkResult = await checkResp.json();
       if (!checkResp.ok) {
