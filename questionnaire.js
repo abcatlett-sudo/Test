@@ -109,13 +109,16 @@ const MIRROR_STEPS = [
     icon: '&#128140;',
     title: 'If one of you passes away first',
     subtitle: 'This is your primary wish — it sets out what happens when the first partner dies.',
-    type: 'yesno_with_text',
-    key: 'primary_wish_yes',
+    type: 'dual_yesno_with_text',
+    key:  'primary_wish_yes',
+    key2: 'partner_primary_wish_yes',
     yesLabel: 'Yes — everything passes to the surviving partner absolutely',
     noLabel:  'No — we have different wishes',
-    textKey:        'primary_wish_custom',
-    textLabel:      'Please describe your wishes',
-    textPlaceholder:'Describe how you\'d like your estate to be divided...',
+    textKey:         'primary_wish_custom',
+    textKey2:        'partner_primary_wish_custom',
+    textLabel:       'Please describe your wishes',
+    textPlaceholder: 'Describe how you\'d like your estate to be divided...',
+    warningText:     'Complex arrangements may require professional legal advice. We recommend consulting a solicitor if your wishes differ significantly from the standard mirror will structure.',
   },
   {
     id: 'secondary_wish',
@@ -775,6 +778,7 @@ function renderDualYesNoWithText(step) {
           ${o.label}
         </button>`).join('')}</div>
       <div class="quest-conditional${showText1 ? ' visible' : ''}" data-for="${step.key}" data-show-on="${trigger}">
+        ${step.warningText ? `<p class="quest-warning">${step.warningText}</p>` : ''}
         <div class="quest-field" style="margin-top:16px;">
           <label class="quest-label">${step.textLabel}</label>
           <textarea class="quest-input quest-textarea" name="${step.textKey}" placeholder="${esc(step.textPlaceholder)}" rows="4">${esc(responses[step.textKey] || '')}</textarea>
@@ -789,6 +793,7 @@ function renderDualYesNoWithText(step) {
           ${o.label}
         </button>`).join('')}</div>
       <div class="quest-conditional${showText2 ? ' visible' : ''}" data-for="${step.key2}" data-show-on="${trigger}">
+        ${step.warningText ? `<p class="quest-warning">${step.warningText}</p>` : ''}
         <div class="quest-field" style="margin-top:16px;">
           <label class="quest-label">${step.textLabel}</label>
           <textarea class="quest-input quest-textarea" name="${step.textKey2}" placeholder="${esc(step.textPlaceholder)}" rows="4">${esc(responses[step.textKey2] || '')}</textarea>

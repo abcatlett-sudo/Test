@@ -130,10 +130,12 @@ function buildPrompt(
   let secondaryClause = ''
 
   if (productType === 'mirror') {
-    const primaryWish = r.primary_wish_yes !== 'no'
+    const primaryWishKey    = isPrimary ? 'primary_wish_yes'           : 'partner_primary_wish_yes'
+    const primaryWishCustom = isPrimary ? r.primary_wish_custom        : r.partner_primary_wish_custom
+    const primaryWish       = r[primaryWishKey] !== 'no'
     dispositionClause = primaryWish
       ? `If my spouse, ${caps(spouseName)}, survives me by twenty-eight days, I give the whole of my estate (including any property over which I have a general power of appointment) to them absolutely.`
-      : `Primary Estate Disposition: ${r.primary_wish_custom || 'To be determined.'}`
+      : `Primary Estate Disposition: ${primaryWishCustom || 'To be determined.'}`
 
     // Mirror secondary — children, named beneficiaries, or custom
     const spouseRef = `my spouse`
