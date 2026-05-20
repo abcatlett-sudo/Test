@@ -170,9 +170,6 @@ async function sendConfirmationEmail(to: string, productId: string, amount: numb
           <!-- Body -->
           <tr>
             <td style="padding:40px 40px 32px;">
-              <div style="width:56px;height:56px;background:linear-gradient(135deg,#7C4DFF,#00C4A7);border-radius:50%;display:flex;align-items:center;justify-content:center;margin-bottom:20px;">
-                <span style="font-size:1.6rem;color:#fff;">&#10003;</span>
-              </div>
               <h1 style="margin:0 0 8px;font-size:1.3rem;font-weight:700;color:#0F0E17;">Payment confirmed</h1>
               <p style="margin:0 0 24px;font-size:0.95rem;color:#6B6880;line-height:1.6;">
                 Thank you — your payment of <strong>${amountStr}</strong> for a <strong>${productLabel}</strong> has been received successfully.
@@ -186,7 +183,7 @@ async function sendConfirmationEmail(to: string, productId: string, amount: numb
               <table cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
                 <tr>
                   <td style="border-radius:50px;background:#7C4DFF;">
-                    <a href="${setupUrl}" style="display:inline-block;padding:14px 32px;font-size:0.95rem;font-weight:600;color:#ffffff;text-decoration:none;border-radius:50px;">
+                    <a href="${setupUrl}" style="display:inline-block;padding:14px 32px;font-size:0.95rem;font-weight:600;color:#ffffff;text-decoration:none;border-radius:50px;white-space:nowrap;">
                       Complete Account Setup &rarr;
                     </a>
                   </td>
