@@ -69,6 +69,7 @@ function buildPrompt(
   const spouseName  = isPrimary ? r.partner_full_name    : r.your_full_name
 
   // ── jurisdiction (Northern Ireland detection via BT postcode)
+  console.log(`[generate-will] testator=${testatorKey} partner_address=${JSON.stringify(r.partner_address)} tAddress=${JSON.stringify(tAddress)}`)
   const isNI           = isNorthernIreland(tAddress)
   const trusteeAct     = isNI ? 'Trustee Act (Northern Ireland) 2001'                                                         : 'Trustee Act 2000'
   const willsAct       = isNI ? 'Wills Act 1837 (as amended by the Wills and Administration Proceedings (Northern Ireland) Act 1966)' : 'Wills Act 1837'
