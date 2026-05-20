@@ -173,24 +173,6 @@ const MIRROR_STEPS = [
   },
   // ── SECTION 5: Your Estate ───────────────────────────────────
   {
-    id: 'net_assets',
-    section: 'estate',
-    icon: '&#127968;',
-    title: 'Your net assets',
-    subtitle: 'This covers everything you own — property, savings, investments, and personal possessions.',
-    type: 'dual_yesno_with_text',
-    key:  'net_assets_yes',
-    key2: 'partner_net_assets_yes',
-    yesLabel: (r) => parseInt(r.children_count || 0) > 0
-      ? 'Yes — net assets pass to each other; if we both pass, equally to our children'
-      : 'Yes — net assets pass to each other; if we both pass, to our stated beneficiaries',
-    noLabel:  'No — we have different arrangements in mind',
-    textKey:         'net_assets_custom',
-    textKey2:        'partner_net_assets_custom',
-    textLabel:       'Please describe your wishes',
-    textPlaceholder: 'Describe how you\'d like your net assets distributed...',
-  },
-  {
     id: 'business_interests',
     section: 'estate',
     icon: '&#128188;',
@@ -400,21 +382,6 @@ const SINGLE_STEPS = [
     type: 'executors',
   },
   // ── SECTION 5: Your Estate ───────────────────────────────────
-  {
-    id: 'net_assets',
-    section: 'estate',
-    icon: '&#127968;',
-    title: 'Your net assets',
-    subtitle: 'This covers everything you own — property, savings, investments, and personal possessions.',
-    type: 'yesno_with_text',
-    key: 'net_assets_yes',
-    showIf: (r) => r.primary_beneficiary_type !== 'children',
-    yesLabel: 'Yes — net assets pass to my primary beneficiary; if they predecease me, equally to my children',
-    noLabel:  'No — I have a different arrangement in mind',
-    textKey:        'net_assets_custom',
-    textLabel:      'Please describe your wishes',
-    textPlaceholder:'Describe how you\'d like your net assets distributed...',
-  },
   {
     id: 'business_interests',
     section: 'estate',
