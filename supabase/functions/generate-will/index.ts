@@ -286,6 +286,12 @@ ${dispositionClause}
 
 ${secondaryClause ? `[NEXT_CLAUSE].2 ${productType === 'mirror' ? 'Gift to Children (if spouse does not survive)' : 'Gift if Primary Beneficiary does not survive'}\n${secondaryClause}` : ''}
 
+[NEXT_CLAUSE]. RESIDUARY ESTATE
+
+[NEXT_CLAUSE].1 Subject to the payment of my debts, funeral and testamentary expenses, and the costs of administering my estate, I give the residue of my estate (including any property over which I have a general power of appointment) in accordance with the disposition set out above.
+
+[NEXT_CLAUSE].2 If any gift made under this will fails or lapses for any reason whatsoever, the subject matter of that gift shall fall into and form part of my residuary estate and be disposed of in accordance with the terms of this will.
+
 ${hasTrust ? `[NEXT_CLAUSE]. TRUST FOR CHILDREN
 
 [NEXT_CLAUSE].1 Vesting Ages
