@@ -344,6 +344,7 @@ My Trustees shall have all the powers conferred by the ${trusteeAct} and any oth
 [NEXT_CLAUSE].1 I declare that I am of sound mind, memory, and understanding.
 [NEXT_CLAUSE].2 I declare that I make this will voluntarily and without any undue influence or pressure from any person.
 [NEXT_CLAUSE].3 I declare that I understand the nature and effect of this will and the extent of my property.
+[NEXT_CLAUSE].4 I confirm that I have read this will and that it accurately records my testamentary wishes. I know and approve of its contents.
 
 [NEXT_CLAUSE]. ATTESTATION CLAUSE
 
