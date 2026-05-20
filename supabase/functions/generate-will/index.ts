@@ -154,13 +154,15 @@ function buildPrompt(
         `If ${spouseRef} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold upon the following trusts:\n\n` +
         `(a) My Trustees shall divide my estate into as many equal shares as there are children of mine living at my death, and hold one such share for each child upon the terms set out below.\n\n` +
         `(b) The children of mine living at my death are:\n${childrenList}\n` +
-        `(c) If any child of mine has died before me but leaving a child or children living at my death, such child or children shall take by substitution and if more than one in equal shares the share which their parent would have taken had they survived me.` +
+        `(c) If any child of mine has died before me but leaving a child or children living at my death, such child or children shall take by substitution and if more than one in equal shares the share which their parent would have taken had they survived me.\n\n` +
+        `(d) If no child of mine or any of their issue shall survive me, I give the whole of my estate to my statutory next of kin in accordance with the intestacy rules applicable at the date of my death.` +
         under18Notice
     } else if (r.secondary_equal === 'no' && r.secondary_custom) {
       secondaryClause = `If ${spouseRef} does not survive me by twenty-eight days: ${r.secondary_custom}`
     } else if (childCount > 0) {
       secondaryClause =
         `If ${spouseRef} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold in equal shares for my children:\n${childrenList}` +
+        `\n\nIf no child of mine or any of their issue shall survive me, I give the whole of my estate to my statutory next of kin in accordance with the intestacy rules applicable at the date of my death.` +
         under18Notice
     } else {
       // No children — named beneficiaries with percentage splits
@@ -208,13 +210,15 @@ function buildPrompt(
           `If ${namedParty} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold upon the following trusts:\n\n` +
           `(a) My Trustees shall divide my estate into as many equal shares as there are children of mine living at my death, and hold one such share for each child upon the terms set out below.\n\n` +
           `(b) The children of mine living at my death are:\n${childrenList}\n` +
-          `(c) If any child of mine has died before me but leaving a child or children living at my death, such child or children shall take by substitution and if more than one in equal shares the share which their parent would have taken had they survived me.` +
+          `(c) If any child of mine has died before me but leaving a child or children living at my death, such child or children shall take by substitution and if more than one in equal shares the share which their parent would have taken had they survived me.\n\n` +
+          `(d) If no child of mine or any of their issue shall survive me, I give the whole of my estate to my statutory next of kin in accordance with the intestacy rules applicable at the date of my death.` +
           under18Notice
       } else if (r.secondary_equal === 'no' && r.secondary_custom) {
         secondaryClause = `If ${namedParty} does not survive me by twenty-eight days: ${r.secondary_custom}`
       } else if (childCount > 0) {
         secondaryClause =
           `If ${namedParty} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold in equal shares for my children:\n${childrenList}` +
+          `\n\nIf no child of mine or any of their issue shall survive me, I give the whole of my estate to my statutory next of kin in accordance with the intestacy rules applicable at the date of my death.` +
           under18Notice
       }
     }
