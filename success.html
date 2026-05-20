@@ -148,8 +148,15 @@
   <script src="script.js"></script>
   <script src="auth.js"></script>
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const type   = params.get('type') || '';
+    const params    = new URLSearchParams(window.location.search);
+    const type      = params.get('type') || '';
+    const sessionId = params.get('session_id') || '';
+
+    // Fix 1 — persist session ID immediately so it survives lost connections
+    if (sessionId && !type.startsWith('voucher')) {
+      localStorage.setItem('wa_pending_session', JSON.stringify({ sessionId, productType: type }));
+    }
+
     if (type.startsWith('voucher')) {
       document.getElementById('regularSuccess').style.display = 'none';
       document.getElementById('voucherSuccess').style.display = '';
