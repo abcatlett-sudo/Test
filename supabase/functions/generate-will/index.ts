@@ -284,7 +284,7 @@ ${hasGifts ? '5. ' + giftsClause + '\n\n' : ''}[NEXT_CLAUSE]. DISPOSITION OF EST
 [NEXT_CLAUSE].1 Gift to ${productType === 'mirror' ? 'Spouse' : 'Primary Beneficiary'}
 ${dispositionClause}
 
-${secondaryClause ? `[NEXT_CLAUSE].2 ${productType === 'mirror' ? 'Gift to Children (if spouse does not survive)' : 'Gift if Primary Beneficiary does not survive'}\n${secondaryClause}` : ''}
+${secondaryClause ? `[NEXT_CLAUSE].2 ${productType === 'mirror' ? (childCount > 0 ? 'Gift to Children (if spouse does not survive)' : 'Gift to Named Beneficiaries (if spouse does not survive)') : 'Gift if Primary Beneficiary does not survive'}\n${secondaryClause}` : ''}
 
 [NEXT_CLAUSE]. RESIDUARY ESTATE
 
