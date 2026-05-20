@@ -297,6 +297,8 @@ If any child dies before becoming entitled to their whole share, that share or t
 
 [NEXT_CLAUSE].1 I specifically exclude the following person(s) from benefiting in any way from my estate, whether under the terms of this will or on an intestacy: ${exclusionsDetails}
 
+[NEXT_CLAUSE].2 This exclusion does not and cannot override any rights that any person may have to make a claim against my estate under the Inheritance (Provision for Family and Dependants) Act 1975 or any equivalent legislation.
+
 ` : ''}[NEXT_CLAUSE]. GENERAL ADMINISTRATIVE PROVISIONS
 
 [NEXT_CLAUSE].1 Investment Powers
