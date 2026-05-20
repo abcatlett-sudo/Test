@@ -217,7 +217,7 @@ function renderBasket() {
         <div class="basket-tc-check">
           <label class="basket-tc-label">
             <input type="checkbox" id="tcAgree" />
-            <span>I have read and agree to the <a href="terms.html" target="_blank">Terms &amp; Conditions</a>. I understand that Wills Assured is a document generation service and does not provide legal advice.</span>
+            <span>I have read and agree to the <a href="terms.html" target="_blank">Terms &amp; Conditions</a>. I understand that Wills Assured is a will writing service and does not provide legal advice.</span>
           </label>
         </div>
         <button id="checkoutBtn" class="btn btn-primary will-cta" disabled>Proceed to Checkout &rarr;</button>
