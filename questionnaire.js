@@ -650,7 +650,7 @@ function renderGuardians() {
       <textarea class="quest-input quest-textarea" name="guardian_address" placeholder="Full address including postcode" rows="3" required>${esc(responses.guardian_address || '')}</textarea>
     </div>
     <button type="button" id="addSecondaryGuardianBtn" class="btn btn-ghost" style="margin-top:14px;font-size:0.88rem;padding:8px 14px;">
-      ${hasSecondary ? '&#9660; Secondary guardian added' : '&#43; Add a secondary guardian'}
+      ${hasSecondary ? '&#9660; Secondary guardian added' : '&#43; Add a secondary guardian (optional)'}
     </button>
     <div id="secondaryGuardianPanel" class="quest-conditional${hasSecondary ? ' visible' : ''}" style="margin-top:10px;">
       <p class="quest-hint" style="margin-bottom:10px;">If the primary guardian has passed away, is unable or unwilling to act, this person will be appointed instead.</p>
@@ -1087,7 +1087,7 @@ function attachListeners(step) {
     const opening = !panel.classList.contains('visible');
     panel.classList.toggle('visible', opening);
     responses.show_secondary_guardian = opening ? 'yes' : 'no';
-    btn.textContent = opening ? '▼ Secondary guardian added' : '+ Add a secondary guardian';
+    btn.textContent = opening ? '▼ Secondary guardian added' : '+ Add a secondary guardian (optional)';
     if (!opening) {
       responses.secondary_guardian_name    = '';
       responses.secondary_guardian_address = '';
