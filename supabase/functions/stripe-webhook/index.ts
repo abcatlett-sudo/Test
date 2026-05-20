@@ -92,7 +92,7 @@ async function sendVoucherEmail(to: string, code: string, productType: string, e
               </table>
 
               <p style="margin:24px 0 0;font-size:0.82rem;color:#6B6880;line-height:1.6;">
-                The recipient will need to create a free account at willsassured.co.uk, then enter the voucher code to unlock their will.
+                The recipient can redeem this voucher at checkout on willsassured.co.uk — simply add a will to the basket, apply the code, and create a free account to get started.
               </p>
             </td>
           </tr>
