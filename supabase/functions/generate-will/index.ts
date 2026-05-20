@@ -89,14 +89,14 @@ function buildPrompt(
     const survivingKey   = isPrimary ? 'executor_surviving_yes'   : 'partner_executor_surviving_yes'
     const survivingOther = isPrimary ? r.executor_surviving_other : r.partner_executor_surviving_other
     if (r[survivingKey] === 'no' && survivingOther) {
-      executorClause = `(a) ${survivingOther} (if they survive me by twenty-eight days and are willing to act); or\n` +
+      executorClause = `(a) ${survivingOther} (if they survive me for a period of not less than twenty-eight days and are willing to act); or\n` +
         `(b) If they are unable or unwilling to act, I appoint:\n` +
         `    ${caps(r.executor1_name || '')} of ${r.executor1_address || ''}; and\n` +
         `    ${caps(r.executor2_name || '')} of ${r.executor2_address || ''}\n` +
         `to be my Executors and Trustees jointly.`
     } else {
-      executorClause = `(a) My spouse, ${caps(spouseName)} (if they survive me by twenty-eight days); or\n` +
-        `(b) If my spouse does not survive me by twenty-eight days, I appoint:\n` +
+      executorClause = `(a) My spouse, ${caps(spouseName)} (if they survive me for a period of not less than twenty-eight days); or\n` +
+        `(b) If my spouse does not survive me for a period of not less than twenty-eight days, I appoint:\n` +
         `    ${caps(r.executor1_name || '')} of ${r.executor1_address || ''}; and\n` +
         `    ${caps(r.executor2_name || '')} of ${r.executor2_address || ''}\n` +
         `to be my Executors and Trustees jointly.`
@@ -144,24 +144,24 @@ function buildPrompt(
     const primaryWishCustom = isPrimary ? r.primary_wish_custom        : r.partner_primary_wish_custom
     const primaryWish       = r[primaryWishKey] !== 'no'
     dispositionClause = primaryWish
-      ? `If my spouse, ${caps(spouseName)}, survives me by twenty-eight days, I give the whole of my estate (including any property over which I have a general power of appointment) to them absolutely.`
+      ? `If my spouse, ${caps(spouseName)}, survives me for a period of not less than twenty-eight days, I give the whole of my estate (including any property over which I have a general power of appointment) to them absolutely.`
       : `Primary Estate Disposition: ${primaryWishCustom || 'To be determined.'}`
 
     // Mirror secondary — children, named beneficiaries, or custom
     const spouseRef = `my spouse`
     if (r.secondary_equal !== 'no' && childCount > 0) {
       secondaryClause =
-        `If ${spouseRef} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold upon the following trusts:\n\n` +
+        `If ${spouseRef} does not survive me for a period of not less than twenty-eight days, I give the whole of my estate to my Trustees to hold upon the following trusts:\n\n` +
         `(a) My Trustees shall divide my estate into as many equal shares as there are children of mine living at my death, and hold one such share for each child upon the terms set out below.\n\n` +
         `(b) The children of mine living at my death are:\n${childrenList}\n` +
         `(c) If any child of mine has died before me but leaving a child or children living at my death, such child or children shall take by substitution and if more than one in equal shares the share which their parent would have taken had they survived me.\n\n` +
         `(d) If no child of mine or any of their issue shall survive me, I give the whole of my estate to my statutory next of kin in accordance with the intestacy rules applicable at the date of my death.` +
         under18Notice
     } else if (r.secondary_equal === 'no' && r.secondary_custom) {
-      secondaryClause = `If ${spouseRef} does not survive me by twenty-eight days: ${r.secondary_custom}`
+      secondaryClause = `If ${spouseRef} does not survive me for a period of not less than twenty-eight days: ${r.secondary_custom}`
     } else if (childCount > 0) {
       secondaryClause =
-        `If ${spouseRef} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold in equal shares for my children:\n${childrenList}` +
+        `If ${spouseRef} does not survive me for a period of not less than twenty-eight days, I give the whole of my estate to my Trustees to hold in equal shares for my children:\n${childrenList}` +
         `\n\nIf no child of mine or any of their issue shall survive me, I give the whole of my estate to my statutory next of kin in accordance with the intestacy rules applicable at the date of my death.` +
         under18Notice
     } else {
@@ -180,10 +180,10 @@ function buildPrompt(
           const name         = r['secondary_ben_0_name']
           const address      = r['secondary_ben_0_address']
           const relationship = r['secondary_ben_0_relationship']
-          secondaryClause = `If ${spouseRef} does not survive me by twenty-eight days, I give the whole of my estate to ${caps(name || '')}${address ? ` of ${address}` : ''}${relationship ? ` (${relationship})` : ''} absolutely, provided they survive me by twenty-eight days.`
+          secondaryClause = `If ${spouseRef} does not survive me for a period of not less than twenty-eight days, I give the whole of my estate to ${caps(name || '')}${address ? ` of ${address}` : ''}${relationship ? ` (${relationship})` : ''} absolutely, provided they survive me for a period of not less than twenty-eight days.`
         } else if (lines.length > 1) {
           secondaryClause =
-            `If ${spouseRef} does not survive me by twenty-eight days, I give the whole of my estate to be divided in the following proportions:\n\n` +
+            `If ${spouseRef} does not survive me for a period of not less than twenty-eight days, I give the whole of my estate to be divided in the following proportions:\n\n` +
             lines.map(l => `- ${l}`).join('\n')
         }
       }
@@ -202,22 +202,22 @@ function buildPrompt(
 
     } else {
       // Single will — named primary beneficiary
-      dispositionClause = `I give the whole of my estate to ${caps(r.beneficiary_name || '')} of ${r.beneficiary_address || ''} absolutely, provided they survive me by twenty-eight days.`
+      dispositionClause = `I give the whole of my estate to ${caps(r.beneficiary_name || '')} of ${r.beneficiary_address || ''} absolutely, provided they survive me for a period of not less than twenty-eight days.`
 
       const namedParty = r.beneficiary_name || 'my primary beneficiary'
       if (r.secondary_equal !== 'no' && childCount > 0) {
         secondaryClause =
-          `If ${namedParty} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold upon the following trusts:\n\n` +
+          `If ${namedParty} does not survive me for a period of not less than twenty-eight days, I give the whole of my estate to my Trustees to hold upon the following trusts:\n\n` +
           `(a) My Trustees shall divide my estate into as many equal shares as there are children of mine living at my death, and hold one such share for each child upon the terms set out below.\n\n` +
           `(b) The children of mine living at my death are:\n${childrenList}\n` +
           `(c) If any child of mine has died before me but leaving a child or children living at my death, such child or children shall take by substitution and if more than one in equal shares the share which their parent would have taken had they survived me.\n\n` +
           `(d) If no child of mine or any of their issue shall survive me, I give the whole of my estate to my statutory next of kin in accordance with the intestacy rules applicable at the date of my death.` +
           under18Notice
       } else if (r.secondary_equal === 'no' && r.secondary_custom) {
-        secondaryClause = `If ${namedParty} does not survive me by twenty-eight days: ${r.secondary_custom}`
+        secondaryClause = `If ${namedParty} does not survive me for a period of not less than twenty-eight days: ${r.secondary_custom}`
       } else if (childCount > 0) {
         secondaryClause =
-          `If ${namedParty} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold in equal shares for my children:\n${childrenList}` +
+          `If ${namedParty} does not survive me for a period of not less than twenty-eight days, I give the whole of my estate to my Trustees to hold in equal shares for my children:\n${childrenList}` +
           `\n\nIf no child of mine or any of their issue shall survive me, I give the whole of my estate to my statutory next of kin in accordance with the intestacy rules applicable at the date of my death.` +
           under18Notice
       }
