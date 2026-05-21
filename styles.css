@@ -381,7 +381,7 @@ img { max-width: 100%; display: block; }
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 6px 0;
+  padding: 8px 0;
   border-top: 1px solid var(--glass-border);
   flex-wrap: nowrap;
   white-space: nowrap;
@@ -394,7 +394,7 @@ img { max-width: 100%; display: block; }
 
 .tp-star {
   color: #00b67a;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   line-height: 1;
 }
 
@@ -406,29 +406,20 @@ img { max-width: 100%; display: block; }
 }
 
 .tp-label {
-  font-size: 0.85rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: var(--white);
 }
 
-.tp-score {
-  font-size: 0.82rem;
-  color: var(--muted);
-}
-
-.tp-score strong {
-  color: var(--white);
-}
-
 .tp-brand {
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   color: var(--muted);
   font-weight: 500;
 }
 
 .tp-divider {
   color: var(--mid);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
 
 
@@ -2357,12 +2348,11 @@ input[type="password"]::-ms-reveal                    { filter: invert(1); }
   .testimonials-grid { grid-template-columns: 1fr; }
 
   /* Trustpilot strip — shrink to fit one line */
-  .nav-trustpilot { gap: 6px; padding: 5px 12px; }
-  .tp-star        { font-size: 0.85rem; }
-  .tp-label       { font-size: 0.7rem; }
-  .tp-score       { font-size: 0.68rem; }
-  .tp-brand       { font-size: 0.68rem; }
-  .tp-divider     { font-size: 0.6rem; }
+  .nav-trustpilot { gap: 6px; padding: 6px 12px; }
+  .tp-star        { font-size: 0.95rem; }
+  .tp-label       { font-size: 0.75rem; }
+  .tp-brand       { font-size: 0.72rem; }
+  .tp-divider     { font-size: 0.65rem; }
 
   /* Hide desktop nav; show hamburger */
   .nav-links,
