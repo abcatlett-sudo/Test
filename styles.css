@@ -393,19 +393,16 @@ img { max-width: 100%; display: block; }
 }
 
 .tp-star {
-  display: inline-block;
-  background: #00b67a;
-  color: #ffffff;
-  width: 22px;
-  height: 22px;
-  text-align: center;
-  line-height: 22px;
-  font-size: 0.8rem;
-  margin: 0 1px;
+  color: #00b67a;
+  font-size: 1.1rem;
+  line-height: 1;
 }
 
-.tp-star-partial {
-  background: linear-gradient(to right, #00b67a 80%, #dcdce6 80%);
+.tp-star-half {
+  background: linear-gradient(90deg, #00b67a 60%, rgba(255,255,255,0.18) 60%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .tp-label {
@@ -425,23 +422,8 @@ img { max-width: 100%; display: block; }
 
 .tp-brand {
   font-size: 0.82rem;
-  font-weight: 700;
-  color: var(--white);
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.tp-brand-star {
-  display: inline-block;
-  background: #00b67a;
-  color: #ffffff;
-  width: 16px;
-  height: 16px;
-  text-align: center;
-  line-height: 16px;
-  font-size: 0.6rem;
-  border-radius: 2px;
+  color: var(--muted);
+  font-weight: 500;
 }
 
 .tp-divider {
@@ -2376,7 +2358,7 @@ input[type="password"]::-ms-reveal                    { filter: invert(1); }
 
   /* Trustpilot strip — shrink to fit one line */
   .nav-trustpilot { gap: 6px; padding: 5px 12px; }
-  .tp-star        { width: 18px; height: 18px; line-height: 18px; font-size: 0.7rem; }
+  .tp-star        { font-size: 0.85rem; }
   .tp-label       { font-size: 0.7rem; }
   .tp-score       { font-size: 0.68rem; }
   .tp-brand       { font-size: 0.68rem; }
