@@ -1093,7 +1093,6 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
   flex-shrink: 0;
 }
 
@@ -1442,7 +1441,6 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 4rem;
   margin-bottom: 48px;
 }
 
