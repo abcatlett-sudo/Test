@@ -1,0 +1,12 @@
+User-agent: *
+Allow: /
+
+# Private/app pages — not for indexing
+Disallow: /dashboard.html
+Disallow: /questionnaire.html
+Disallow: /will-preview.html
+Disallow: /basket.html
+Disallow: /success.html
+Disallow: /reset-password.html
+
+Sitemap: https://willsassured.co.uk/sitemap.xml
