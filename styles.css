@@ -1537,6 +1537,36 @@ img { max-width: 100%; display: block; }
   transform: translateY(-2px);
 }
 
+.blog-related {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--glass-border);
+}
+
+.blog-related-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 14px;
+}
+
+.blog-related-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.blog-related-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 0.93rem;
+  font-weight: 500;
+}
+
+.blog-related-link:hover { color: var(--teal); text-decoration: underline; }
+
 /* ---------------------------------------------------------
    17. DASHBOARD & SUCCESS PAGE
    --------------------------------------------------------- */
