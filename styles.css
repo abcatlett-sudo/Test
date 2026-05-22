@@ -1536,6 +1536,16 @@ img { max-width: 100%; display: block; }
   transform: translateY(-2px);
 }
 
+.blog-disclaimer {
+  margin-top: 2rem;
+  padding: 0.875rem 1.25rem;
+  border-left: 3px solid var(--muted);
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.65;
+  opacity: 0.85;
+}
+
 .blog-related {
   margin-top: 48px;
   padding-top: 32px;
