@@ -279,6 +279,8 @@ ${guardianClause}
 
 4.1 My Trustees shall pay my funeral and testamentary expenses and debts out of my estate.
 
+4.2 My Executors shall pay all inheritance tax, duties and liabilities arising on my death from my residuary estate before distribution to the beneficiaries.
+
 ${hasGifts ? '5. ' + giftsClause + '\n\n' : ''}[NEXT_CLAUSE]. DISPOSITION OF ESTATE
 
 [NEXT_CLAUSE].1 Gift to ${productType === 'mirror' ? 'Spouse' : 'Primary Beneficiary'}
