@@ -835,7 +835,8 @@ img { max-width: 100%; display: block; }
 
 .page-hero .section-tag { display: block; margin-bottom: 14px; }
 
-.page-hero h1 {
+.page-hero h1,
+.page-hero-title {
   font-size: clamp(1.5rem, 3.5vw, 2.4rem);
   font-weight: 900;
   letter-spacing: -1px;
