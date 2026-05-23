@@ -416,9 +416,7 @@ img { max-width: 100%; display: block; }
   color: var(--muted);
   font-weight: 500;
   text-decoration: none;
-}
-.tp-brand:hover {
-  text-decoration: underline;
+  cursor: default;
 }
 
 .tp-brand-star {
