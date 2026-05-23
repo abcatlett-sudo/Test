@@ -21,41 +21,62 @@
 
   <script type="application/ld+json">
   {
-  "@context": "https://schema.org",
-  "@type": "LegalService",
-  "name": "Wills Assured",
-  "url": "https://willsassured.co.uk",
-  "description": "Online will writing service for UK adults. Create a legally binding will in under 20 minutes from £19.99. No solicitor required.",
-  "areaServed": {
-    "@type": "Country",
-    "name": "United Kingdom"
-  },
-  "priceRange": "£19.99 – £29.99",
-  "hasOfferCatalog": {
-    "@type": "OfferCatalog",
-    "name": "Will Writing Services",
-    "itemListElement": [
+    "@context": "https://schema.org",
+    "@type": "LegalService",
+    "name": "Wills Assured",
+    "url": "https://willsassured.co.uk",
+    "description": "Online will writing service for UK adults. Create a legally binding will in under 20 minutes from £19.99. No solicitor required.",
+    "areaServed": {
+      "@type": "Country",
+      "name": "United Kingdom"
+    },
+    "priceRange": "£19.99 – £29.99",
+    "aggregateRating": {
+      "@type": "AggregateRating",
+      "ratingValue": "5",
+      "reviewCount": "3",
+      "bestRating": "5",
+      "worstRating": "1"
+    },
+    "review": [
       {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Single Will"
-        },
-        "price": "19.99",
-        "priceCurrency": "GBP"
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Dennis D." },
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+        "reviewBody": "Being new to the UK, updating both my own and my wife's will felt like a daunting (and possibly expensive) task. Wills Assured made the process really easy—working through some simple questions, the platform generated properly drafted wills for both my wife and I. The downloadable documents also include a step-by-step guide to get the wills signed."
       },
       {
-        "@type": "Offer",
-        "itemOffered": {
-          "@type": "Service",
-          "name": "Mirror Wills"
-        },
-        "price": "29.99",
-        "priceCurrency": "GBP"
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "Audrey L." },
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+        "reviewBody": "This is such a brilliant concept — I've left it far too long to update my will. Wills Assured has made the whole process straightforward. It took me through the questions I needed to answer simply and easily. With the press of a button a new will was prepared & ready for me to get signed and witnessed."
+      },
+      {
+        "@type": "Review",
+        "author": { "@type": "Person", "name": "David K." },
+        "reviewRating": { "@type": "Rating", "ratingValue": "5", "bestRating": "5" },
+        "reviewBody": "Simple, clear and affordable. I finally feel like I've done right by my family."
       }
-    ]
+    ],
+    "hasOfferCatalog": {
+      "@type": "OfferCatalog",
+      "name": "Will Writing Services",
+      "itemListElement": [
+        {
+          "@type": "Offer",
+          "itemOffered": { "@type": "Service", "name": "Single Will" },
+          "price": "19.99",
+          "priceCurrency": "GBP"
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": { "@type": "Service", "name": "Mirror Wills" },
+          "price": "29.99",
+          "priceCurrency": "GBP"
+        }
+      ]
+    }
   }
-}
   </script>
 
   <link rel="canonical" href="https://willsassured.co.uk/index.html" />
@@ -190,7 +211,6 @@
 
   <!-- =====================
        TESTIMONIALS
-       PLACEHOLDER — replace with real customer quotes when available
   ======================== -->
   <section class="testimonials-section">
     <div class="container">
