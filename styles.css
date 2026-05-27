@@ -393,9 +393,11 @@ img { max-width: 100%; display: block; }
 }
 
 .nav-instagram {
-  position: absolute;
+  position: fixed;
+  top: 120px;
   left: 24px;
-  color: #00b67a;
+  z-index: 99;
+  color: var(--teal);
   text-decoration: none;
   display: flex;
   align-items: center;
@@ -405,8 +407,8 @@ img { max-width: 100%; display: block; }
 .nav-instagram:hover { opacity: 0.7; }
 
 .nav-instagram-icon {
-  width: 18px;
-  height: 18px;
+  width: 36px;
+  height: 36px;
 }
 
 .tp-stars {
@@ -2416,9 +2418,9 @@ input[type="password"]::-ms-reveal                    { filter: invert(1); }
   .testimonials-grid { grid-template-columns: 1fr; }
 
   /* Trustpilot strip — shrink to fit one line */
-  .nav-tp-row     { gap: 6px; padding-top: 6px; padding-bottom: 6px; }
-  .nav-instagram  { left: 16px; }
-  .nav-instagram-icon { width: 15px; height: 15px; }
+  .nav-tp-row        { gap: 6px; padding-top: 6px; padding-bottom: 6px; }
+  .nav-instagram     { top: 110px; left: 16px; }
+  .nav-instagram-icon { width: 28px; height: 28px; }
   .tp-star        { font-size: 0.95rem; }
   .tp-label       { font-size: 0.75rem; }
   .tp-brand       { font-size: 0.72rem; }
