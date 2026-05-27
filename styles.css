@@ -394,8 +394,8 @@ img { max-width: 100%; display: block; }
 
 .nav-instagram {
   position: fixed;
-  top: 120px;
-  left: 24px;
+  top: 140px;
+  left: max(24px, calc(50vw - 556px));
   z-index: 99;
   color: var(--teal);
   text-decoration: none;
@@ -2419,8 +2419,8 @@ input[type="password"]::-ms-reveal                    { filter: invert(1); }
 
   /* Trustpilot strip — shrink to fit one line */
   .nav-tp-row        { gap: 6px; padding-top: 6px; padding-bottom: 6px; }
-  .nav-instagram     { top: 110px; left: 16px; }
-  .nav-instagram-icon { width: 28px; height: 28px; }
+  .nav-instagram     { top: 130px; left: 16px; }
+  .nav-instagram-icon { width: 20px; height: 20px; }
   .tp-star        { font-size: 0.95rem; }
   .tp-label       { font-size: 0.75rem; }
   .tp-brand       { font-size: 0.72rem; }
