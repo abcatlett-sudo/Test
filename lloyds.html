@@ -50,17 +50,12 @@
       gap: 16px;
       height: 64px;
     }
-    .lb-logo-mark {
-      width: 40px;
+    .lb-logo-img {
       height: 40px;
-      background: var(--white);
-      border-radius: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      width: auto;
       flex-shrink: 0;
+      filter: brightness(0) invert(1);
     }
-    .lb-logo-mark svg { width: 26px; height: 26px; }
     .lb-logo-text { display: flex; flex-direction: column; line-height: 1.2; }
     .lb-logo-name { font-size: 1rem; font-weight: 700; color: var(--white); letter-spacing: -0.3px; }
     .lb-logo-sub  { font-size: 0.7rem; color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.08em; }
@@ -185,7 +180,8 @@
     }
     .card-check svg { width: 13px; height: 13px; stroke: #fff; stroke-width: 2.5; }
 
-    .card-icon { font-size: 2rem; margin-bottom: 10px; display: block; }
+    .card-icon { margin-bottom: 10px; display: block; }
+    .card-icon svg { width: 2rem; height: 2rem; fill: var(--green); display: block; }
     .card-name { font-size: 1.1rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
     .card-desc { font-size: 0.87rem; color: var(--muted); line-height: 1.6; margin-bottom: 18px; }
     .card-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
@@ -422,11 +418,25 @@
     .footer a { color: var(--green); text-decoration: none; font-weight: 600; }
     .footer a:hover { text-decoration: underline; }
 
-    /* ── Responsive ── */
+    .powered-by {
+      text-align: center;
+      padding: 18px 24px 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+    .powered-by-brand {
+      font-weight: 700;
+      background: linear-gradient(90deg, #7C4DFF, #00C4A7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
     @media (max-width: 640px) {
       .products-grid { grid-template-columns: 1fr; }
       .steps-grid    { grid-template-columns: 1fr; }
-      .form-row      { flex-direction: column; }
+      .form-row      { flex-direction: column; align-items: stretch; }
+      .form-group    { width: 100%; }
       .btn-claim     { width: 100%; text-align: center; }
       .hero          { padding: 40px 24px 48px; }
       .claim-section { padding: 24px 20px; }
@@ -439,16 +449,7 @@
   <!-- Header -->
   <header class="lb-header">
     <div class="lb-header-inner">
-      <div class="lb-logo-mark" aria-hidden="true">
-        <!-- Lloyds black horse silhouette -->
-        <svg viewBox="0 0 26 26" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M13 3C10.5 3 8.5 5 8.5 7.5C8.5 8.8 9 10 9.8 10.9L8 13H6.5C5.7 13 5 13.7 5 14.5V20H7V15H9V23H11V15H15V23H17V15H19V20H21V14.5C21 13.7 20.3 13 19.5 13H18L16.2 10.9C17 10 17.5 8.8 17.5 7.5C17.5 5 15.5 3 13 3Z" fill="#006A4E"/>
-        </svg>
-      </div>
-      <div class="lb-logo-text">
-        <span class="lb-logo-name">Lloyds Bank</span>
-        <span class="lb-logo-sub">Employee Benefits</span>
-      </div>
+      <img src="lloyds-logo.png" alt="Lloyds Bank" class="lb-logo-img" />
       <div class="lb-header-divider"></div>
       <span class="lb-header-section">Will Writing Programme</span>
     </div>
@@ -463,6 +464,9 @@
       <p>As a Lloyds Bank employee, your will writing is covered as part of your benefits package. Choose your will type, enter your email, and receive your personal voucher code instantly.</p>
     </section>
 
+    <!-- Powered by strip -->
+    <p class="powered-by">Powered by <span class="powered-by-brand">Wills Assured</span></p>
+
     <!-- Product selection -->
     <section class="section">
       <div class="container">
@@ -475,7 +479,7 @@
             <div class="card-check" aria-hidden="true">
               <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="2,6 5,9 10,3"/></svg>
             </div>
-            <span class="card-icon">&#128203;</span>
+            <span class="card-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></span>
             <p class="card-name">Single Will</p>
             <p class="card-desc">Ideal for individuals who are single, divorced, or prefer to make their own independent arrangements.</p>
             <ul class="card-features">
@@ -488,11 +492,10 @@
           </div>
 
           <div class="product-card" data-product="mirror" role="radio" aria-checked="false" tabindex="0">
-            <span class="card-badge">Most Popular</span>
             <div class="card-check" aria-hidden="true">
               <svg viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><polyline points="2,6 5,9 10,3"/></svg>
             </div>
-            <span class="card-icon">&#128101;</span>
+            <span class="card-icon"><svg viewBox="0 0 28 24" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="7" r="3.5" opacity="0.45"/><path d="M11 21c0-4 2.8-7 7-7 1.8 0 3.4.6 4.7 1.6" opacity="0.45"/><circle cx="10" cy="7" r="4"/><path d="M2 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></span>
             <p class="card-name">Mirror Wills</p>
             <p class="card-desc">Two complementary wills for couples, each leaving their estate to the other. The most popular choice for married couples and civil partners.</p>
             <ul class="card-features">
@@ -563,7 +566,7 @@
           <div class="step-card">
             <div class="step-num">2</div>
             <h3>Create your account</h3>
-            <p>Visit willsassured.co.uk, apply your code at checkout, and create your secure account.</p>
+            <p>Visit <a href="https://www.willsassured.co.uk" target="_blank" rel="noopener noreferrer" style="color:var(--green);font-weight:600;">willsassured.co.uk</a>, apply your code at checkout, and create your secure account.</p>
           </div>
           <div class="step-card">
             <div class="step-num">3</div>
