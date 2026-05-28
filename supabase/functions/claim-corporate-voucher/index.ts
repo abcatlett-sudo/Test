@@ -166,10 +166,11 @@ Deno.serve(async (req) => {
     // Insert into retail vouchers table so existing redeem flow works unchanged
     const { error: voucherError } = await supabase.from('vouchers').insert({
       code,
-      product_type: productType,
-      use_count:    0,
-      max_uses:     1,
-      expires_at:   expiresAt.toISOString(),
+      product_type:    productType,
+      purchaser_email: normEmail,
+      use_count:       0,
+      max_uses:        1,
+      expires_at:      expiresAt.toISOString(),
     })
     if (voucherError) throw new Error(voucherError.message)
 
