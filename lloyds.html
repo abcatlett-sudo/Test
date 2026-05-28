@@ -418,7 +418,20 @@
     .footer a { color: var(--green); text-decoration: none; font-weight: 600; }
     .footer a:hover { text-decoration: underline; }
 
-    /* ── Responsive ── */
+    .powered-by {
+      text-align: center;
+      padding: 18px 24px 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+      letter-spacing: 0.02em;
+    }
+    .powered-by-brand {
+      font-weight: 700;
+      background: linear-gradient(90deg, #7C4DFF, #00C4A7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
     @media (max-width: 640px) {
       .products-grid { grid-template-columns: 1fr; }
       .steps-grid    { grid-template-columns: 1fr; }
@@ -449,6 +462,9 @@
       <h1>Your will, written.<br/>Covered by Lloyds Bank.</h1>
       <p>As a Lloyds Bank employee, your will writing is covered as part of your benefits package. Choose your will type, enter your email, and receive your personal voucher code instantly.</p>
     </section>
+
+    <!-- Powered by strip -->
+    <p class="powered-by">Powered by <span class="powered-by-brand">Wills Assured</span></p>
 
     <!-- Product selection -->
     <section class="section">
