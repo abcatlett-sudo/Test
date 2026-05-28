@@ -337,12 +337,33 @@
 
     .voucher-box {
       display: inline-block;
+      position: relative;
       background: var(--white);
       border: 2px solid var(--green);
       border-radius: 8px;
       padding: 20px 40px;
       margin-bottom: 24px;
     }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: none;
+      border: 1px solid var(--green-mid);
+      border-radius: 6px;
+      padding: 4px 8px;
+      cursor: pointer;
+      color: var(--green);
+      font-size: 0.72rem;
+      font-weight: 600;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s, color 0.15s;
+    }
+    .copy-btn:hover { background: var(--green-tint); }
+    .copy-btn svg { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2; fill: none; }
     .voucher-label {
       font-size: 0.72rem;
       font-weight: 600;
@@ -553,6 +574,10 @@
             A voucher was already issued to this email — we have resent your original code.
           </div>
           <div class="voucher-box">
+            <button class="copy-btn" id="copyBtn" aria-label="Copy voucher code">
+              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="9" height="9" rx="1"/><path d="M11 5V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h2"/></svg>
+              <span id="copyLabel">Copy</span>
+            </button>
             <p class="voucher-label">Your Voucher Code</p>
             <p class="voucher-code" id="voucherCode"></p>
           </div>
@@ -621,6 +646,16 @@
     const confirmedEmail = document.getElementById('confirmedEmail')
     const redeemLink  = document.getElementById('redeemLink')
     const existingNotice = document.getElementById('existingNotice')
+    const copyBtn   = document.getElementById('copyBtn')
+    const copyLabel = document.getElementById('copyLabel')
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(voucherCode.textContent.trim()).then(() => {
+        copyLabel.textContent = 'Copied!'
+        copyBtn.style.background = 'var(--green-tint)'
+        setTimeout(() => { copyLabel.textContent = 'Copy'; copyBtn.style.background = '' }, 2000)
+      })
+    })
 
     function selectProduct(card) {
       cards.forEach(c => {
