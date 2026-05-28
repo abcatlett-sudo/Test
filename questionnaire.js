@@ -1293,6 +1293,7 @@ async function persistResponses() {
 
   const payload = {
     user_id:      user.id,
+    email:        user.email,
     product_type: PRODUCT_TYPE,
     responses,
     current_step: currentStep,
