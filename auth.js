@@ -336,11 +336,12 @@ if (dashboardContent) {
     const user = await requireAuth();
     if (!user) return;
 
-    // Check for a paid purchase against this email
+    // Check for a paid purchase against this user (RLS filters by user_id or email)
     const { data: purchases } = await sb
       .from('purchases')
       .select('*')
-      .eq('status', 'paid');
+      .eq('status', 'paid')
+      .or(`user_id.eq.${user.id},email.eq.${user.email}`);
 
     if (!purchases || purchases.length === 0) {
       // Fix 2 — check for a pending Stripe session saved before connection was lost
