@@ -58,7 +58,10 @@ Deno.serve(async (req) => {
       .maybeSingle()
 
     if (existing) {
-      // Purchase already recorded — just return it
+      // Link purchase to authenticated user if not yet linked
+      if (!existing.user_id) {
+        await supabase.from('purchases').update({ user_id: user.id }).eq('id', existing.id)
+      }
       return new Response(JSON.stringify({ success: true, product_type: existing.product_id }), {
         headers: { ...cors, 'Content-Type': 'application/json' },
       })
@@ -68,6 +71,7 @@ Deno.serve(async (req) => {
     const { error: insertError } = await supabase.from('purchases').insert({
       stripe_session_id: session.id,
       email,
+      user_id:    user.id,
       product_id: productId,
       amount:     session.amount_total ?? 0,
       status:     'paid',
