@@ -16,6 +16,12 @@ const cors = {
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 }
 
+function addMonths(date: Date, months: number): Date {
+  const d = new Date(date)
+  d.setMonth(d.getMonth() + months)
+  return d
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
 
@@ -49,11 +55,13 @@ Deno.serve(async (req) => {
 
     const email     = (session.customer_email ?? session.customer_details?.email ?? '').toLowerCase()
     const productId = session.metadata?.productId ?? 'unknown'
+    const isRenewal = productId === 'renewal'
+    const status    = isRenewal ? 'renewal' : 'paid'
 
     // Check purchase doesn't already exist for this session
     const { data: existing } = await supabase
       .from('purchases')
-      .select('id, product_id')
+      .select('id, product_id, user_id')
       .eq('stripe_session_id', session.id)
       .maybeSingle()
 
@@ -67,6 +75,8 @@ Deno.serve(async (req) => {
       })
     }
 
+    const expiresAt = addMonths(new Date(), 24)
+
     // Create missing purchase record
     const { error: insertError } = await supabase.from('purchases').insert({
       stripe_session_id: session.id,
@@ -74,7 +84,8 @@ Deno.serve(async (req) => {
       user_id:    user.id,
       product_id: productId,
       amount:     session.amount_total ?? 0,
-      status:     'paid',
+      status,
+      expires_at: expiresAt.toISOString(),
     })
 
     if (insertError) throw new Error(insertError.message)

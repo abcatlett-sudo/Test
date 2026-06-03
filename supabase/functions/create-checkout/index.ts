@@ -6,10 +6,11 @@ const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY') ?? '', {
 })
 
 const PRICES: Record<string, { name: string; amount: number }> = {
-  single:          { name: 'Single Will',               amount: 1999  },
-  mirror:          { name: 'Mirror Wills',               amount: 2999  },
-  'voucher-single': { name: 'Single Will Voucher',       amount: 1999  },
-  'voucher-mirror': { name: 'Mirror Wills Voucher',      amount: 2999  },
+  single:           { name: 'Single Will',                      amount: 1999 },
+  mirror:           { name: 'Mirror Wills',                     amount: 2999 },
+  'voucher-single': { name: 'Single Will Voucher',              amount: 1999 },
+  'voucher-mirror': { name: 'Mirror Wills Voucher',             amount: 2999 },
+  renewal:          { name: 'Wills Assured — 24 Month Renewal', amount: 999  },
 }
 
 const cors = {
@@ -21,13 +22,13 @@ Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') return new Response('ok', { headers: cors })
 
   try {
-    const { productId } = await req.json()
+    const { productId, customerEmail } = await req.json()
     const price = PRICES[productId]
     if (!price) throw new Error(`Invalid product ID: ${productId}`)
 
     const base = 'https://www.willsassured.co.uk'
 
-    const session = await stripe.checkout.sessions.create({
+    const sessionParams: Stripe.Checkout.SessionCreateParams = {
       payment_method_types: ['card'],
       line_items: [{
         price_data: {
@@ -40,12 +41,16 @@ Deno.serve(async (req) => {
         },
         quantity: 1,
       }],
-      mode: 'payment',
+      mode:                       'payment',
       billing_address_collection: 'auto',
       success_url: `${base}/success.html?session_id={CHECKOUT_SESSION_ID}&type=${productId}`,
-      cancel_url:  `${base}/basket.html`,
+      cancel_url:  productId === 'renewal' ? `${base}/dashboard.html` : `${base}/basket.html`,
       metadata: { productId },
-    })
+    }
+
+    if (customerEmail) sessionParams.customer_email = customerEmail
+
+    const session = await stripe.checkout.sessions.create(sessionParams)
 
     return new Response(JSON.stringify({ url: session.url }), {
       headers: { ...cors, 'Content-Type': 'application/json' },

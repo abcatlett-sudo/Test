@@ -493,6 +493,21 @@ async function initQuestionnaire() {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) { window.location.href = 'login.html'; return; }
 
+  // Check edit window has not expired
+  const { data: activePurchases } = await sb
+    .from('purchases')
+    .select('expires_at')
+    .in('status', ['paid', 'renewal'])
+    .or(`user_id.eq.${user.id},email.eq.${user.email}`)
+    .order('created_at', { ascending: false })
+    .limit(1);
+
+  const latestPurchase = activePurchases?.[0];
+  if (latestPurchase?.expires_at && new Date(latestPurchase.expires_at) < new Date()) {
+    window.location.href = 'dashboard.html';
+    return;
+  }
+
   const { data: existing } = await sb
     .from('will_responses')
     .select('*')

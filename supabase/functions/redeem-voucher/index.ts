@@ -57,11 +57,11 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'This voucher has expired.' }), { status: 410, headers: cors })
     }
 
-    // Check user doesn't already have a paid purchase
+    // Check user doesn't already have an active will purchase
     const { data: existing } = await supabase
       .from('purchases')
       .select('id')
-      .eq('status', 'paid')
+      .in('status', ['paid', 'renewal'])
       .eq('email', user.email!)
       .maybeSingle()
 
@@ -85,13 +85,18 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'This voucher has just been fully redeemed. Please contact us if you need help.' }), { status: 409, headers: cors })
     }
 
+    const expiresAt = new Date()
+    expiresAt.setMonth(expiresAt.getMonth() + 24)
+
     // Create purchase record for this user
     const { error: purchaseError } = await supabase.from('purchases').insert({
       stripe_session_id: `voucher-${voucher.code}-${user.id.slice(0, 8)}`,
       email:             user.email,
+      user_id:           user.id,
       product_id:        voucher.product_type,
       amount:            voucher.product_type === 'mirror' ? 2999 : 1999,
       status:            'paid',
+      expires_at:        expiresAt.toISOString(),
     })
     if (purchaseError) throw new Error(purchaseError.message)
 

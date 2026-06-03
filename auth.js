@@ -336,12 +336,13 @@ if (dashboardContent) {
     const user = await requireAuth();
     if (!user) return;
 
-    // Check for a paid purchase against this user (RLS filters by user_id or email)
+    // Check for a paid/renewal purchase against this user, most recent first
     const { data: purchases } = await sb
       .from('purchases')
       .select('*')
-      .eq('status', 'paid')
-      .or(`user_id.eq.${user.id},email.eq.${user.email}`);
+      .in('status', ['paid', 'renewal'])
+      .or(`user_id.eq.${user.id},email.eq.${user.email}`)
+      .order('created_at', { ascending: false });
 
     if (!purchases || purchases.length === 0) {
       // Fix 2 — check for a pending Stripe session saved before connection was lost
@@ -464,9 +465,31 @@ if (dashboardContent) {
       single:        'Single Will',
       mirror:        'Mirror Wills',
       comprehensive: 'Comprehensive Will',
+      renewal:       'Account Renewal',
     };
-    const productName = productLabels[purchase.product_id] || 'Will';
-    const amountPaid  = `£${(purchase.amount / 100).toFixed(2)}`;
+
+    // Find the original will purchase for product name/amount (not a renewal row)
+    const willPurchase = purchases.find(p => p.product_id !== 'renewal') || purchase;
+    const productName  = productLabels[willPurchase.product_id] || 'Will';
+    const amountPaid   = `£${(willPurchase.amount / 100).toFixed(2)}`;
+
+    // Expiry
+    const expiresAt  = purchase.expires_at ? new Date(purchase.expires_at) : null;
+    const now        = new Date();
+    const isExpired  = expiresAt ? expiresAt < now : false;
+    const daysLeft   = expiresAt ? Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;
+
+    let expiryHtml = '';
+    if (expiresAt) {
+      const expiryStr = expiresAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+      if (isExpired) {
+        expiryHtml = `<span class="dashboard-expiry expiry-expired">&#9888; Edit window expired ${expiryStr}</span>`;
+      } else if (daysLeft !== null && daysLeft <= 30) {
+        expiryHtml = `<span class="dashboard-expiry expiry-warning">&#9888; ${daysLeft} day${daysLeft === 1 ? '' : 's'} left to edit &mdash; expires ${expiryStr}</span>`;
+      } else {
+        expiryHtml = `<span class="dashboard-expiry">&#9679; Edits available until ${expiryStr}</span>`;
+      }
+    }
 
     // Check questionnaire progress
     const { data: questResponse } = await sb
@@ -476,7 +499,7 @@ if (dashboardContent) {
       .eq('product_type', purchase.product_id)
       .maybeSingle();
 
-    const questUrl = `questionnaire.html?type=${purchase.product_id}`;
+    const questUrl = `questionnaire.html?type=${willPurchase.product_id}`;
     let questBtnLabel, questBtnHref;
     if (!questResponse) {
       questBtnLabel = 'Start Your Questionnaire &rarr;';
@@ -495,12 +518,29 @@ if (dashboardContent) {
       .select('id, testator_key')
       .eq('user_id', user.id);
 
-    const isMirror      = purchase.product_id === 'mirror';
     const questComplete = questResponse?.completed === true;
+
+    const isMirror = willPurchase.product_id === 'mirror';
 
     // Build will actions block
     let willActionsHtml = '';
-    if (questComplete) {
+    if (isExpired) {
+      // Expired: show view/download buttons only, lock editing
+      willActionsHtml = `<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">`;
+      if (questComplete) {
+        const primaryWill = generatedWills?.find(w => w.testator_key === 'primary');
+        const partnerWill = generatedWills?.find(w => w.testator_key === 'partner');
+        if (primaryWill) {
+          willActionsHtml += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary" style="display:block;text-align:left;">View Your Will &rarr;</a>`;
+        }
+        if (isMirror && partnerWill) {
+          willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary" style="display:block;text-align:left;">View Partner's Will &rarr;</a>`;
+        }
+      }
+      willActionsHtml += `<button id="renewBtn" class="btn btn-primary btn-renew" style="display:block;text-align:left;">Renew to Edit &mdash; £9.99 &rarr;</button>`;
+      willActionsHtml += `<p style="font-size:0.8rem;color:var(--muted);margin-top:2px;">Unlock editing for another 24 months</p>`;
+      willActionsHtml += `</div>`;
+    } else if (questComplete) {
       const primaryWill  = generatedWills?.find(w => w.testator_key === 'primary');
       const partnerWill  = generatedWills?.find(w => w.testator_key === 'partner');
       const hasAnyWill   = !!primaryWill || !!partnerWill;
@@ -533,7 +573,8 @@ if (dashboardContent) {
           <h3>Your Will</h3>
           <p class="dashboard-status">${productName}</p>
           <span class="dashboard-badge">Paid ${amountPaid}</span>
-          ${willActionsHtml || `<a href="${questBtnHref}" class="btn btn-primary" style="margin-top:14px;display:block;text-align:left;">${questBtnLabel}</a>`}
+          ${expiryHtml}
+          ${willActionsHtml || (isExpired ? '' : `<a href="${questBtnHref}" class="btn btn-primary" style="margin-top:14px;display:block;text-align:left;">${questBtnLabel}</a>`)}
         </div>
 
         <div class="dashboard-card">
@@ -584,6 +625,25 @@ if (dashboardContent) {
 
     const regenBtn = document.getElementById('regenWillBtn');
     if (regenBtn) regenBtn.addEventListener('click', () => triggerWillGeneration(regenBtn));
+
+    const renewBtn = document.getElementById('renewBtn');
+    if (renewBtn) {
+      renewBtn.addEventListener('click', async () => {
+        renewBtn.disabled    = true;
+        renewBtn.textContent = 'Redirecting to payment…';
+        try {
+          const { data, error } = await sb.functions.invoke('create-checkout', {
+            body: { productId: 'renewal', customerEmail: user.email },
+          });
+          if (error || !data?.url) throw new Error(error?.message || 'No checkout URL');
+          window.location.href = data.url;
+        } catch (err) {
+          renewBtn.disabled    = false;
+          renewBtn.textContent = 'Renew to Edit — £9.99 →';
+          alert('Something went wrong starting renewal. Please try again.');
+        }
+      });
+    }
   })();
 }
 
