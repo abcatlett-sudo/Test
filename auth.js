@@ -344,30 +344,33 @@ if (dashboardContent) {
       .or(`user_id.eq.${user.id},email.eq.${user.email}`)
       .order('created_at', { ascending: false });
 
-    if (!purchases || purchases.length === 0) {
-      // Fix 2 — check for a pending Stripe session saved before connection was lost
-      const pendingSession = JSON.parse(localStorage.getItem('wa_pending_session') || 'null');
-      if (pendingSession?.sessionId) {
-        try {
-          const { data: { session: authSession } } = await sb.auth.getSession();
-          const resp = await fetch(
-            'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/verify-session',
-            {
-              method:  'POST',
-              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authSession.access_token}` },
-              body:    JSON.stringify({ sessionId: pendingSession.sessionId }),
-            }
-          );
-          const result = await resp.json();
-          if (result.success) {
-            localStorage.removeItem('wa_pending_session');
+    // Link any pending Stripe session — runs always so renewals (found via email) also get user_id set
+    const pendingSession = JSON.parse(localStorage.getItem('wa_pending_session') || 'null');
+    if (pendingSession?.sessionId) {
+      try {
+        const { data: { session: authSession } } = await sb.auth.getSession();
+        const resp = await fetch(
+          'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/verify-session',
+          {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authSession.access_token}` },
+            body:    JSON.stringify({ sessionId: pendingSession.sessionId }),
+          }
+        );
+        const result = await resp.json();
+        if (result.success) {
+          localStorage.removeItem('wa_pending_session');
+          if (!purchases || purchases.length === 0) {
             window.location.reload();
             return;
           }
-        } catch {
-          // Network error — fall through to no-purchase UI
         }
+      } catch {
+        // Network error — continue to render dashboard
       }
+    }
+
+    if (!purchases || purchases.length === 0) {
 
       dashboardContent.innerHTML = `
         <div class="dashboard-welcome">
