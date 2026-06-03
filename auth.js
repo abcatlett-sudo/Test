@@ -336,11 +336,10 @@ if (dashboardContent) {
     const user = await requireAuth();
     if (!user) return;
 
-    // Check for a paid/renewal purchase against this user, most recent first
     const { data: purchases } = await sb
       .from('purchases')
       .select('*')
-      .in('status', ['paid', 'renewal'])
+      .eq('status', 'paid')
       .or(`user_id.eq.${user.id},email.eq.${user.email}`)
       .order('created_at', { ascending: false });
 
@@ -360,7 +359,7 @@ if (dashboardContent) {
         const result = await resp.json();
         if (result.success) {
           localStorage.removeItem('wa_pending_session');
-          if (!purchases || purchases.length === 0) {
+          if (!purchases || purchases.length === 0 || result.product_type === 'renewal') {
             window.location.reload();
             return;
           }
@@ -468,13 +467,10 @@ if (dashboardContent) {
       single:        'Single Will',
       mirror:        'Mirror Wills',
       comprehensive: 'Comprehensive Will',
-      renewal:       'Account Renewal',
     };
 
-    // Find the original will purchase for product name/amount (not a renewal row)
-    const willPurchase = purchases.find(p => p.product_id !== 'renewal') || purchase;
-    const productName  = productLabels[willPurchase.product_id] || 'Will';
-    const amountPaid   = `£${(willPurchase.amount / 100).toFixed(2)}`;
+    const productName = productLabels[purchase.product_id] || 'Will';
+    const amountPaid  = `£${(purchase.amount / 100).toFixed(2)}`;
 
     // Expiry
     const expiresAt  = purchase.expires_at ? new Date(purchase.expires_at) : null;
@@ -502,7 +498,7 @@ if (dashboardContent) {
       .eq('product_type', purchase.product_id)
       .maybeSingle();
 
-    const questUrl = `questionnaire.html?type=${willPurchase.product_id}`;
+    const questUrl = `questionnaire.html?type=${purchase.product_id}`;
     let questBtnLabel, questBtnHref;
     if (!questResponse) {
       questBtnLabel = 'Start Your Questionnaire &rarr;';
@@ -523,7 +519,7 @@ if (dashboardContent) {
 
     const questComplete = questResponse?.completed === true;
 
-    const isMirror = willPurchase.product_id === 'mirror';
+    const isMirror = purchase.product_id === 'mirror';
 
     // Build will actions block
     let willActionsHtml = '';

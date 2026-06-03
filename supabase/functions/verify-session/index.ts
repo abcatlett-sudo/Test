@@ -56,9 +56,50 @@ Deno.serve(async (req) => {
     const email     = (session.customer_email ?? session.customer_details?.email ?? '').toLowerCase()
     const productId = session.metadata?.productId ?? 'unknown'
     const isRenewal = productId === 'renewal'
-    const status    = isRenewal ? 'renewal' : 'paid'
+    const expiresAt = addMonths(new Date(), 24)
 
-    // Check purchase doesn't already exist for this session
+    // Renewal: update existing purchase rather than inserting a new row
+    if (isRenewal) {
+      const { data: origPurchase } = await supabase
+        .from('purchases')
+        .select('id, renewal_count')
+        .eq('status', 'paid')
+        .or(`user_id.eq.${user.id},email.eq.${email}`)
+        .maybeSingle()
+
+      if (origPurchase) {
+        await supabase.from('purchases').update({
+          expires_at:    expiresAt.toISOString(),
+          renewal_count: (origPurchase.renewal_count || 0) + 1,
+          user_id:       user.id,
+        }).eq('id', origPurchase.id)
+
+        // Only log if webhook hasn't already done so
+        const { data: existingRenewal } = await supabase
+          .from('renewals')
+          .select('id')
+          .eq('stripe_session_id', session.id)
+          .maybeSingle()
+
+        if (!existingRenewal) {
+          await supabase.from('renewals').insert({
+            purchase_id:       origPurchase.id,
+            email,
+            renewed_at:        new Date().toISOString(),
+            expires_at:        expiresAt.toISOString(),
+            amount:            session.amount_total ?? 0,
+            stripe_session_id: session.id,
+          })
+        }
+        console.log(`[verify-session] Renewal linked for ${email}`)
+      }
+
+      return new Response(JSON.stringify({ success: true, product_type: 'renewal' }), {
+        headers: { ...cors, 'Content-Type': 'application/json' },
+      })
+    }
+
+    // Regular purchase — check if already exists for this session
     const { data: existing } = await supabase
       .from('purchases')
       .select('id, product_id, user_id')
@@ -66,7 +107,6 @@ Deno.serve(async (req) => {
       .maybeSingle()
 
     if (existing) {
-      // Link purchase to authenticated user if not yet linked
       if (!existing.user_id) {
         await supabase.from('purchases').update({ user_id: user.id }).eq('id', existing.id)
       }
@@ -75,8 +115,6 @@ Deno.serve(async (req) => {
       })
     }
 
-    const expiresAt = addMonths(new Date(), 24)
-
     // Create missing purchase record
     const { error: insertError } = await supabase.from('purchases').insert({
       stripe_session_id: session.id,
@@ -84,7 +122,7 @@ Deno.serve(async (req) => {
       user_id:    user.id,
       product_id: productId,
       amount:     session.amount_total ?? 0,
-      status,
+      status:     'paid',
       expires_at: expiresAt.toISOString(),
     })
 

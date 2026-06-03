@@ -288,50 +288,82 @@ Deno.serve(async (req) => {
     const productId = session.metadata?.productId ?? 'unknown'
     const isVoucher = productId.startsWith('voucher-')
     const isRenewal = productId === 'renewal'
-
     const expiresAt = addMonths(new Date(), 24)
-    const status    = isRenewal ? 'renewal' : 'paid'
 
-    // Record purchase
-    const { error: purchaseError } = await supabase.from('purchases').insert({
-      stripe_session_id: session.id,
-      email,
-      product_id: productId,
-      amount:     session.amount_total ?? 0,
-      status,
-      expires_at: expiresAt.toISOString(),
-    })
-    if (purchaseError) console.error('Failed to record purchase:', purchaseError)
-    else console.log(`Purchase recorded for ${email} (${status})`)
+    if (isRenewal) {
+      // Find existing paid purchase for this email and update it
+      const { data: origPurchase, error: lookupError } = await supabase
+        .from('purchases')
+        .select('id, renewal_count')
+        .eq('status', 'paid')
+        .ilike('email', email)
+        .maybeSingle()
 
-    if (!purchaseError) {
-      if (isRenewal) {
-        await sendRenewalConfirmationEmail(email, expiresAt)
-      } else if (!isVoucher) {
+      if (lookupError || !origPurchase) {
+        console.error(`[RENEWAL] No original purchase found for ${email}:`, lookupError)
+      } else {
+        const { error: updateError } = await supabase
+          .from('purchases')
+          .update({
+            expires_at:    expiresAt.toISOString(),
+            renewal_count: (origPurchase.renewal_count || 0) + 1,
+          })
+          .eq('id', origPurchase.id)
+
+        if (updateError) {
+          console.error(`[RENEWAL] Failed to update purchase for ${email}:`, updateError)
+        } else {
+          await supabase.from('renewals').insert({
+            purchase_id:       origPurchase.id,
+            email,
+            renewed_at:        new Date().toISOString(),
+            expires_at:        expiresAt.toISOString(),
+            amount:            session.amount_total ?? 0,
+            stripe_session_id: session.id,
+          })
+          console.log(`[RENEWAL] Renewed for ${email} until ${expiresAt.toISOString()}`)
+        }
+      }
+      await sendRenewalConfirmationEmail(email, expiresAt)
+
+    } else {
+      // Regular or voucher purchase — insert new row
+      const { error: purchaseError } = await supabase.from('purchases').insert({
+        stripe_session_id: session.id,
+        email,
+        product_id: productId,
+        amount:     session.amount_total ?? 0,
+        status:     'paid',
+        expires_at: expiresAt.toISOString(),
+      })
+      if (purchaseError) console.error('Failed to record purchase:', purchaseError)
+      else console.log(`Purchase recorded for ${email}`)
+
+      if (!purchaseError && !isVoucher) {
         await sendConfirmationEmail(email, productId, session.amount_total ?? 0, session.id)
       }
-    }
 
-    // Generate voucher if applicable
-    if (isVoucher) {
-      const productType = productId.replace('voucher-', '') as 'single' | 'mirror'
-      const code        = generateVoucherCode()
-      const voucherExp  = new Date()
-      voucherExp.setFullYear(voucherExp.getFullYear() + 1)
+      // Generate voucher if applicable
+      if (isVoucher) {
+        const productType = productId.replace('voucher-', '') as 'single' | 'mirror'
+        const code        = generateVoucherCode()
+        const voucherExp  = new Date()
+        voucherExp.setFullYear(voucherExp.getFullYear() + 1)
 
-      const { error: voucherError } = await supabase.from('vouchers').insert({
-        code,
-        product_type:    productType,
-        purchaser_email: email,
-        expires_at:      voucherExp.toISOString(),
-        max_uses:        1,
-      })
+        const { error: voucherError } = await supabase.from('vouchers').insert({
+          code,
+          product_type:    productType,
+          purchaser_email: email,
+          expires_at:      voucherExp.toISOString(),
+          max_uses:        1,
+        })
 
-      if (voucherError) {
-        console.error('Failed to create voucher:', voucherError)
-      } else {
-        console.log(`Voucher created: ${code} for ${email}`)
-        await sendVoucherEmail(email, code, productType, voucherExp)
+        if (voucherError) {
+          console.error('Failed to create voucher:', voucherError)
+        } else {
+          console.log(`Voucher created: ${code} for ${email}`)
+          await sendVoucherEmail(email, code, productType, voucherExp)
+        }
       }
     }
   }
