@@ -395,7 +395,7 @@ img { max-width: 100%; display: block; }
 .nav-instagram {
   position: fixed;
   top: 140px;
-  left: max(24px, calc(50vw - 556px));
+  left: max(24px, calc(50vw - 572px));
   z-index: 99;
   color: var(--teal);
   text-decoration: none;
