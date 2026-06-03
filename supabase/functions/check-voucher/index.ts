@@ -1,3 +1,4 @@
+// check-voucher: validates a voucher code without requiring auth
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2'
 
 const supabase = createClient(

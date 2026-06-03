@@ -1794,7 +1794,25 @@ img { max-width: 100%; display: block; }
 .dashboard-status {
   font-size: 0.9rem;
   color: var(--muted);
-  margin-bottom: 24px;
+  margin-bottom: 8px;
+}
+
+.dashboard-expiry {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--teal);
+  margin-bottom: 16px;
+  margin-top: 4px;
+}
+
+.dashboard-expiry.expiry-warning {
+  color: #F5A623;
+}
+
+.dashboard-expiry.expiry-expired {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 /* ---------------------------------------------------------

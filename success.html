@@ -104,6 +104,18 @@
       </p>
     </div>
 
+    <!-- Renewal purchase -->
+    <div class="auth-card success-card" id="renewalSuccess" style="display:none;">
+      <div class="success-icon" style="background: linear-gradient(135deg, var(--primary), var(--teal));">&#10003;</div>
+      <div class="auth-header">
+        <h1>Account renewed</h1>
+        <p>Your editing window has been extended by 24 months. Your will is ready to update.</p>
+      </div>
+      <a href="dashboard.html" class="btn btn-full" style="margin-top: 8px;">
+        Go to Dashboard &rarr;
+      </a>
+    </div>
+
     <!-- Voucher purchase -->
     <div class="auth-card success-card" id="voucherSuccess" style="display:none;">
       <div class="success-icon" style="background: linear-gradient(135deg, var(--primary), var(--teal)); font-size: 2rem;">&#127873;</div>
@@ -175,7 +187,10 @@
       localStorage.setItem('wa_pending_session', JSON.stringify({ sessionId, productType: type }));
     }
 
-    if (type.startsWith('voucher')) {
+    if (type === 'renewal') {
+      document.getElementById('regularSuccess').style.display = 'none';
+      document.getElementById('renewalSuccess').style.display = '';
+    } else if (type.startsWith('voucher')) {
       document.getElementById('regularSuccess').style.display = 'none';
       document.getElementById('voucherSuccess').style.display = '';
     }
