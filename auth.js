@@ -537,7 +537,7 @@ if (dashboardContent) {
           willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary" style="display:block;text-align:left;">View Partner's Will &rarr;</a>`;
         }
       }
-      willActionsHtml += `<button id="renewBtn" class="btn btn-primary btn-renew" style="display:block;text-align:left;">Renew to Edit &mdash; £9.99 &rarr;</button>`;
+      willActionsHtml += `<button id="renewBtn" class="btn btn-primary" style="display:block;text-align:left;">Renew to Edit &mdash; £9.99 &rarr;</button>`;
       willActionsHtml += `<p style="font-size:0.8rem;color:var(--muted);margin-top:2px;">Unlock editing for another 24 months</p>`;
       willActionsHtml += `</div>`;
     } else if (questComplete) {
