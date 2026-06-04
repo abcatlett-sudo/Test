@@ -1739,6 +1739,7 @@ img { max-width: 100%; display: block; }
 
 .dashboard-welcome {
   margin-bottom: 40px;
+  text-align: center;
 }
 
 .dashboard-welcome h2 {
@@ -1770,6 +1771,8 @@ img { max-width: 100%; display: block; }
   padding: 36px 32px;
   transition: all var(--transition);
   backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
 }
 
 .dashboard-card:hover {

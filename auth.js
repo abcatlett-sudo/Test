@@ -529,18 +529,18 @@ if (dashboardContent) {
     let willActionsHtml = '';
     if (isExpired) {
       // Expired: show view/download buttons only, lock editing
-      willActionsHtml = `<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">`;
+      willActionsHtml = `<div style="margin-top:14px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;">`;
       if (questComplete) {
         const primaryWill = generatedWills?.find(w => w.testator_key === 'primary');
         const partnerWill = generatedWills?.find(w => w.testator_key === 'partner');
         if (primaryWill) {
-          willActionsHtml += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary" style="display:block;text-align:left;">View Your Will &rarr;</a>`;
+          willActionsHtml += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary">View Your Will &rarr;</a>`;
         }
         if (isMirror && partnerWill) {
-          willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary" style="display:block;text-align:left;">View Partner's Will &rarr;</a>`;
+          willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary">View Partner's Will &rarr;</a>`;
         }
       }
-      willActionsHtml += `<button id="renewBtn" class="btn btn-primary" style="display:block;text-align:left;">Renew to Edit &mdash; £9.99 &rarr;</button>`;
+      willActionsHtml += `<button id="renewBtn" class="btn btn-primary">Renew to Edit &mdash; £9.99 &rarr;</button>`;
       willActionsHtml += `<p style="font-size:0.8rem;color:var(--muted);margin-top:2px;">Unlock editing for another 24 months</p>`;
       willActionsHtml += `</div>`;
     } else if (questComplete) {
@@ -549,18 +549,18 @@ if (dashboardContent) {
       const hasAnyWill   = !!primaryWill || !!partnerWill;
 
       if (hasAnyWill) {
-        willActionsHtml += `<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">`;
-        willActionsHtml += `<a href="${questUrl}" class="btn btn-primary" style="display:block;text-align:left;">View Questionnaire &rarr;</a>`;
+        willActionsHtml += `<div style="margin-top:14px;display:flex;flex-direction:column;align-items:flex-start;gap:8px;">`;
+        willActionsHtml += `<a href="${questUrl}" class="btn btn-primary">View Questionnaire &rarr;</a>`;
         if (primaryWill) {
-          willActionsHtml += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary" style="display:block;text-align:left;">View Your Will &rarr;</a>`;
+          willActionsHtml += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary">View Your Will &rarr;</a>`;
         }
         if (isMirror && partnerWill) {
-          willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary" style="display:block;text-align:left;">View Partner's Will &rarr;</a>`;
+          willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary">View Partner's Will &rarr;</a>`;
         }
         willActionsHtml += `<div style="display:flex;align-items:center;gap:10px;margin-top:4px;"><button id="regenWillBtn" class="btn btn-ghost" style="flex-shrink:0;font-size:0.8rem;color:var(--teal);opacity:0.8;">Regenerate Will &rarr;</button><span style="font-size:0.75rem;color:var(--white);">Regenerate your will after updating your questionnaire</span></div>`;
         willActionsHtml += `</div>`;
       } else {
-        willActionsHtml = `<button id="generateWillBtn" class="btn btn-primary" style="margin-top:14px;display:block;width:100%;text-align:left;">Generate My Will &rarr;</button>`;
+        willActionsHtml = `<button id="generateWillBtn" class="btn btn-primary" style="margin-top:14px;">Generate My Will &rarr;</button>`;
       }
     }
 
@@ -577,14 +577,14 @@ if (dashboardContent) {
           <p class="dashboard-status">${productName}</p>
           <span class="dashboard-badge">Paid ${amountPaid}</span>
           ${expiryHtml}
-          ${willActionsHtml || (isExpired ? '' : `<a href="${questBtnHref}" class="btn btn-primary" style="margin-top:14px;display:block;text-align:left;">${questBtnLabel}</a>`)}
+          ${willActionsHtml || (isExpired ? '' : `<a href="${questBtnHref}" class="btn btn-primary" style="margin-top:14px;display:inline-block;">${questBtnLabel}</a>`)}
         </div>
 
         <div class="dashboard-card">
           <div class="dashboard-card-icon">&#128100;</div>
           <h3>Account</h3>
           <p class="dashboard-status">${user.email}</p>
-          <button id="signOutBtn" class="btn btn-ghost">Sign out &rarr;</button>
+          <button id="signOutBtn" class="btn btn-ghost" style="margin-top:auto;padding-left:0;">Sign out &rarr;</button>
         </div>
 
       </div>`;
