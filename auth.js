@@ -468,6 +468,24 @@ if (dashboardContent) {
     const productName = productLabels[purchase.product_id] || 'Will';
     const amountPaid  = `£${(purchase.amount / 100).toFixed(2)}`;
 
+    // Expiry
+    const expiresAt = purchase.expires_at ? new Date(purchase.expires_at) : null;
+    const now       = new Date();
+    const isExpired = expiresAt ? expiresAt < now : false;
+    const daysLeft  = expiresAt ? Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;
+
+    let expiryHtml = '';
+    if (expiresAt) {
+      const expiryStr = expiresAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+      if (isExpired) {
+        expiryHtml = `<span class="dashboard-expiry expiry-expired">&#9888; Edit window expired ${expiryStr}</span>`;
+      } else if (daysLeft !== null && daysLeft <= 30) {
+        expiryHtml = `<span class="dashboard-expiry expiry-warning">&#9888; ${daysLeft} day${daysLeft === 1 ? '' : 's'} left to edit &mdash; expires ${expiryStr}</span>`;
+      } else {
+        expiryHtml = `<span class="dashboard-expiry">&#9679; Edits available until ${expiryStr}</span>`;
+      }
+    }
+
     // Check questionnaire progress
     const { data: questResponse } = await sb
       .from('will_responses')
@@ -533,6 +551,7 @@ if (dashboardContent) {
           <h3>Your Will</h3>
           <p class="dashboard-status">${productName}</p>
           <span class="dashboard-badge">Paid ${amountPaid}</span>
+          ${expiryHtml}
           ${willActionsHtml || `<a href="${questBtnHref}" class="btn btn-primary" style="margin-top:14px;display:block;text-align:left;">${questBtnLabel}</a>`}
         </div>
 
