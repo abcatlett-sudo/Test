@@ -395,7 +395,7 @@ img { max-width: 100%; display: block; }
 .nav-instagram {
   position: fixed;
   top: 140px;
-  left: max(24px, calc(50vw - 556px));
+  left: max(24px, calc(50vw - 572px));
   z-index: 99;
   color: var(--teal);
   text-decoration: none;
@@ -1725,26 +1725,7 @@ img { max-width: 100%; display: block; }
   padding: 4px 12px;
   border-radius: 50px;
   margin-top: 8px;
-}
-
-.dashboard-expiry {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 500;
-  color: var(--teal);
-  margin-top: 10px;
-}
-
-.dashboard-expiry.expiry-warning {
-  color: #F5A623;
-}
-
-.dashboard-expiry.expiry-expired {
-  color: var(--accent);
-  font-weight: 600;
-}
-
-.dashboard-section {
+}.dashboard-section {
   padding: 64px 0 110px;
   background: var(--surface);
   min-height: 60vh;
@@ -1813,7 +1794,25 @@ img { max-width: 100%; display: block; }
 .dashboard-status {
   font-size: 0.9rem;
   color: var(--muted);
-  margin-bottom: 24px;
+  margin-bottom: 8px;
+}
+
+.dashboard-expiry {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--teal);
+  margin-bottom: 16px;
+  margin-top: 4px;
+}
+
+.dashboard-expiry.expiry-warning {
+  color: #F5A623;
+}
+
+.dashboard-expiry.expiry-expired {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 /* ---------------------------------------------------------
