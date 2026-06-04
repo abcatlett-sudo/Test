@@ -360,7 +360,7 @@ if (dashboardContent) {
         const result = await resp.json();
         if (result.success) {
           localStorage.removeItem('wa_pending_session');
-          if (!purchases || purchases.length === 0) {
+          if (!purchases || purchases.length === 0 || result.product_type === 'renewal') {
             window.location.reload();
             return;
           }
@@ -479,8 +479,8 @@ if (dashboardContent) {
     const willTitles = { single: 'Your Single Will', mirror: 'Your Mirror Wills', comprehensive: 'Your Comprehensive Will' };
     const willTitle  = willTitles[willPurchase.product_id] || 'Your Will';
 
-    // Expiry
-    const expiresAt  = purchase.expires_at ? new Date(purchase.expires_at) : null;
+    // Expiry — read from willPurchase (the original paid row, not a legacy renewal row)
+    const expiresAt  = willPurchase.expires_at ? new Date(willPurchase.expires_at) : null;
     const now        = new Date();
     const isExpired  = expiresAt ? expiresAt < now : false;
     const daysLeft   = expiresAt ? Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;
@@ -502,7 +502,7 @@ if (dashboardContent) {
       .from('will_responses')
       .select('completed, current_step')
       .eq('user_id', user.id)
-      .eq('product_type', purchase.product_id)
+      .eq('product_type', willPurchase.product_id)
       .maybeSingle();
 
     const questUrl = `questionnaire.html?type=${willPurchase.product_id}`;
