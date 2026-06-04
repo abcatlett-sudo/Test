@@ -561,7 +561,7 @@ if (dashboardContent) {
           willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary">View Partner's Will &rarr;</a>`;
         }
         willActionsHtml += `</div>`;
-        willActionsHtml += `<div style="display:flex;align-items:center;gap:10px;margin-top:8px;"><button id="regenWillBtn" class="btn btn-ghost" style="flex-shrink:0;font-size:0.8rem;color:var(--teal);opacity:0.8;padding-left:0;">Regenerate Will &rarr;</button><span style="font-size:0.75rem;color:var(--muted);white-space:nowrap;">Regenerate your will after updating your questionnaire</span></div>`;
+        willActionsHtml += `<div style="display:flex;align-items:center;gap:10px;margin-top:8px;"><button id="regenWillBtn" class="btn btn-ghost" style="flex-shrink:0;font-size:0.8rem;color:var(--teal);opacity:0.8;padding-left:0;">Regenerate Will &rarr;</button><span style="font-size:0.75rem;color:var(--muted);min-width:0;">Regenerate your will after updating your questionnaire</span></div>`;
       } else {
         willActionsHtml = `<button id="generateWillBtn" class="btn btn-primary" style="margin-top:14px;display:block;max-width:300px;">Generate My Will &rarr;</button>`;
       }
