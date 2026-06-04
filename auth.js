@@ -336,40 +336,37 @@ if (dashboardContent) {
     const user = await requireAuth();
     if (!user) return;
 
+    // Check for a paid purchase against this user (RLS filters by user_id or email)
     const { data: purchases } = await sb
       .from('purchases')
       .select('*')
       .eq('status', 'paid')
-      .or(`user_id.eq.${user.id},email.eq.${user.email}`)
-      .order('created_at', { ascending: false });
+      .or(`user_id.eq.${user.id},email.eq.${user.email}`);
 
-    // Link any pending Stripe session — runs always so renewals (found via email) also get user_id set
-    const pendingSession = JSON.parse(localStorage.getItem('wa_pending_session') || 'null');
-    if (pendingSession?.sessionId) {
-      try {
-        const { data: { session: authSession } } = await sb.auth.getSession();
-        const resp = await fetch(
-          'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/verify-session',
-          {
-            method:  'POST',
-            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authSession.access_token}` },
-            body:    JSON.stringify({ sessionId: pendingSession.sessionId }),
-          }
-        );
-        const result = await resp.json();
-        if (result.success) {
-          localStorage.removeItem('wa_pending_session');
-          if (!purchases || purchases.length === 0 || result.product_type === 'renewal') {
+    if (!purchases || purchases.length === 0) {
+      // Fix 2 — check for a pending Stripe session saved before connection was lost
+      const pendingSession = JSON.parse(localStorage.getItem('wa_pending_session') || 'null');
+      if (pendingSession?.sessionId) {
+        try {
+          const { data: { session: authSession } } = await sb.auth.getSession();
+          const resp = await fetch(
+            'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/verify-session',
+            {
+              method:  'POST',
+              headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authSession.access_token}` },
+              body:    JSON.stringify({ sessionId: pendingSession.sessionId }),
+            }
+          );
+          const result = await resp.json();
+          if (result.success) {
+            localStorage.removeItem('wa_pending_session');
             window.location.reload();
             return;
           }
+        } catch {
+          // Network error — fall through to no-purchase UI
         }
-      } catch {
-        // Network error — continue to render dashboard
       }
-    }
-
-    if (!purchases || purchases.length === 0) {
 
       dashboardContent.innerHTML = `
         <div class="dashboard-welcome">
@@ -468,27 +465,8 @@ if (dashboardContent) {
       mirror:        'Mirror Wills',
       comprehensive: 'Comprehensive Will',
     };
-
     const productName = productLabels[purchase.product_id] || 'Will';
     const amountPaid  = `£${(purchase.amount / 100).toFixed(2)}`;
-
-    // Expiry
-    const expiresAt  = purchase.expires_at ? new Date(purchase.expires_at) : null;
-    const now        = new Date();
-    const isExpired  = expiresAt ? expiresAt < now : false;
-    const daysLeft   = expiresAt ? Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;
-
-    let expiryHtml = '';
-    if (expiresAt) {
-      const expiryStr = expiresAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-      if (isExpired) {
-        expiryHtml = `<span class="dashboard-expiry expiry-expired">&#9888; Edit window expired ${expiryStr}</span>`;
-      } else if (daysLeft !== null && daysLeft <= 30) {
-        expiryHtml = `<span class="dashboard-expiry expiry-warning">&#9888; ${daysLeft} day${daysLeft === 1 ? '' : 's'} left to edit &mdash; expires ${expiryStr}</span>`;
-      } else {
-        expiryHtml = `<span class="dashboard-expiry">&#9679; Edits available until ${expiryStr}</span>`;
-      }
-    }
 
     // Check questionnaire progress
     const { data: questResponse } = await sb
@@ -517,93 +495,52 @@ if (dashboardContent) {
       .select('id, testator_key')
       .eq('user_id', user.id);
 
+    const isMirror      = purchase.product_id === 'mirror';
     const questComplete = questResponse?.completed === true;
 
-    const isMirror = purchase.product_id === 'mirror';
+    // Build will actions block
+    let willActionsHtml = '';
+    if (questComplete) {
+      const primaryWill  = generatedWills?.find(w => w.testator_key === 'primary');
+      const partnerWill  = generatedWills?.find(w => w.testator_key === 'partner');
+      const hasAnyWill   = !!primaryWill || !!partnerWill;
 
-    // Build tile 1 actions (Your Will / Questionnaire / Renew)
-    let tile1Sub, tile1Actions;
-    if (isExpired) {
-      tile1Sub     = 'Renew your plan to unlock editing for another 24 months.';
-      tile1Actions = `<button id="renewBtn" class="btn btn-primary" style="width:100%;">Renew to Edit &mdash; £9.99 &rarr;</button>`;
-    } else if (!questResponse || !questResponse.completed) {
-      tile1Sub     = questResponse ? 'Continue where you left off.' : 'Begin your will questionnaire.';
-      tile1Actions = `<a href="${questBtnHref}" class="btn btn-primary" style="display:block;width:100%;">${questBtnLabel}</a>`;
-    } else {
-      tile1Sub     = 'Your questionnaire is complete.';
-      const hasGenerated = !!(generatedWills?.length);
-      if (hasGenerated) {
-        tile1Actions = `
-          <a href="${questUrl}" class="btn btn-primary" style="display:block;width:100%;">View Questionnaire &rarr;</a>
-          <button id="regenWillBtn" class="btn btn-ghost" style="width:100%;margin-top:8px;font-size:0.85rem;text-align:left;">Regenerate Will &rarr;</button>`;
+      if (hasAnyWill) {
+        willActionsHtml += `<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">`;
+        willActionsHtml += `<a href="${questUrl}" class="btn btn-primary" style="display:block;text-align:left;">View Questionnaire &rarr;</a>`;
+        if (primaryWill) {
+          willActionsHtml += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary" style="display:block;text-align:left;">View Your Will &rarr;</a>`;
+        }
+        if (isMirror && partnerWill) {
+          willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary" style="display:block;text-align:left;">View Partner's Will &rarr;</a>`;
+        }
+        willActionsHtml += `<div style="display:flex;align-items:center;gap:10px;margin-top:4px;"><button id="regenWillBtn" class="btn btn-ghost" style="flex-shrink:0;font-size:0.8rem;color:var(--teal);opacity:0.8;">Regenerate Will &rarr;</button><span style="font-size:0.75rem;color:var(--white);">Regenerate your will after updating your questionnaire</span></div>`;
+        willActionsHtml += `</div>`;
       } else {
-        tile1Actions = `
-          <a href="${questUrl}" class="btn btn-primary" style="display:block;width:100%;">View Questionnaire &rarr;</a>
-          <button id="generateWillBtn" class="btn btn-primary" style="width:100%;margin-top:8px;">Generate My Will &rarr;</button>`;
-      }
-    }
-
-    // Build tile 2 (Documents)
-    const primaryWill = generatedWills?.find(w => w.testator_key === 'primary');
-    const partnerWill = generatedWills?.find(w => w.testator_key === 'partner');
-    const hasAnyWill  = !!primaryWill || !!partnerWill;
-
-    let tile2Sub, tile2Actions;
-    if (!questComplete) {
-      tile2Sub     = 'Complete your questionnaire to generate your will.';
-      tile2Actions = `<span class="dash-tile-lock">&#128274; Not yet available</span>`;
-    } else if (!hasAnyWill) {
-      tile2Sub     = 'Generate your will to access it here.';
-      tile2Actions = `<span class="dash-tile-lock">&#128274; Not yet generated</span>`;
-    } else {
-      tile2Sub     = isMirror ? 'View and download your will documents.' : 'View and download your will.';
-      tile2Actions = '';
-      if (primaryWill) {
-        tile2Actions += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary" style="display:block;width:100%;">View Your Will &rarr;</a>`;
-      }
-      if (isMirror && partnerWill) {
-        tile2Actions += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary" style="display:block;width:100%;margin-top:8px;">View Partner&apos;s Will &rarr;</a>`;
+        willActionsHtml = `<button id="generateWillBtn" class="btn btn-primary" style="margin-top:14px;display:block;width:100%;text-align:left;">Generate My Will &rarr;</button>`;
       }
     }
 
     dashboardContent.innerHTML = `
-      <div class="dash-banner">
-        <div class="dash-banner-left">
-          <h2 class="dash-banner-greeting">Welcome back, ${firstName}.</h2>
-          <p class="dash-banner-sub">Manage your will and account from here.</p>
-        </div>
-        <div class="dash-banner-meta">
-          <div class="dash-banner-meta-row">
-            <span class="dashboard-badge">${productName}</span>
-            <span class="dash-amount-badge">Paid ${amountPaid}</span>
-          </div>
-          ${expiryHtml}
-        </div>
+      <div class="dashboard-welcome">
+        <h2>Welcome back, ${firstName}.</h2>
+        <p>Manage your will and account from here.</p>
       </div>
+      <div class="dashboard-grid">
 
-      <div class="dash-tiles">
-
-        <div class="dash-tile${isExpired ? ' dash-tile-expired' : ''}">
-          <span class="dash-tile-icon">&#128221;</span>
-          <h3>${isExpired ? 'Edit Window Closed' : 'Your Will'}</h3>
-          <p class="dash-tile-sub">${tile1Sub}</p>
-          <div class="dash-tile-actions">${tile1Actions}</div>
+        <div class="dashboard-card">
+          <div class="dashboard-card-icon">&#128196;</div>
+          <h3>Your Will</h3>
+          <p class="dashboard-status">${productName}</p>
+          <span class="dashboard-badge">Paid ${amountPaid}</span>
+          ${willActionsHtml || `<a href="${questBtnHref}" class="btn btn-primary" style="margin-top:14px;display:block;text-align:left;">${questBtnLabel}</a>`}
         </div>
 
-        <div class="dash-tile${!hasAnyWill ? ' dash-tile-locked' : ''}">
-          <span class="dash-tile-icon">&#128196;</span>
-          <h3>Documents</h3>
-          <p class="dash-tile-sub">${tile2Sub}</p>
-          <div class="dash-tile-actions">${tile2Actions}</div>
-        </div>
-
-        <div class="dash-tile">
-          <span class="dash-tile-icon">&#128100;</span>
+        <div class="dashboard-card">
+          <div class="dashboard-card-icon">&#128100;</div>
           <h3>Account</h3>
-          <p class="dash-tile-sub">${user.email}</p>
-          <div class="dash-tile-actions">
-            <button id="signOutBtn" class="btn btn-ghost" style="width:100%;padding-left:0;margin-top:4px;text-align:left;">Sign out &rarr;</button>
-          </div>
+          <p class="dashboard-status">${user.email}</p>
+          <button id="signOutBtn" class="btn btn-ghost">Sign out &rarr;</button>
         </div>
 
       </div>`;
@@ -647,25 +584,6 @@ if (dashboardContent) {
 
     const regenBtn = document.getElementById('regenWillBtn');
     if (regenBtn) regenBtn.addEventListener('click', () => triggerWillGeneration(regenBtn));
-
-    const renewBtn = document.getElementById('renewBtn');
-    if (renewBtn) {
-      renewBtn.addEventListener('click', async () => {
-        renewBtn.disabled    = true;
-        renewBtn.textContent = 'Redirecting to payment…';
-        try {
-          const { data, error } = await sb.functions.invoke('create-checkout', {
-            body: { productId: 'renewal', customerEmail: user.email },
-          });
-          if (error || !data?.url) throw new Error(error?.message || 'No checkout URL');
-          window.location.href = data.url;
-        } catch (err) {
-          renewBtn.disabled    = false;
-          renewBtn.textContent = 'Renew to Edit — £9.99 →';
-          alert('Something went wrong starting renewal. Please try again.');
-        }
-      });
-    }
   })();
 }
 
