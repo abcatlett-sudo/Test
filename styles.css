@@ -107,6 +107,7 @@ img { max-width: 100%; display: block; }
   transition: all var(--transition);
   border: 2px solid transparent;
   font-family: inherit;
+  white-space: nowrap;
 }
 
 /* Filled — primary brand colour */
