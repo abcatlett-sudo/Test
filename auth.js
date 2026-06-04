@@ -521,70 +521,89 @@ if (dashboardContent) {
 
     const isMirror = purchase.product_id === 'mirror';
 
-    // Build will actions block
-    let willActionsHtml = '';
+    // Build tile 1 actions (Your Will / Questionnaire / Renew)
+    let tile1Sub, tile1Actions;
     if (isExpired) {
-      // Expired: show view/download buttons only, lock editing
-      willActionsHtml = `<div style="display:flex;flex-direction:column;gap:8px;">`;
-      if (questComplete) {
-        const primaryWill = generatedWills?.find(w => w.testator_key === 'primary');
-        const partnerWill = generatedWills?.find(w => w.testator_key === 'partner');
-        if (primaryWill) {
-          willActionsHtml += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary" style="display:block;text-align:left;">View Your Will &rarr;</a>`;
-        }
-        if (isMirror && partnerWill) {
-          willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary" style="display:block;text-align:left;">View Partner's Will &rarr;</a>`;
-        }
-      }
-      willActionsHtml += `<button id="renewBtn" class="btn btn-primary" style="display:block;text-align:left;">Renew to Edit &mdash; £9.99 &rarr;</button>`;
-      willActionsHtml += `<p style="font-size:0.8rem;color:var(--muted);margin-top:2px;">Unlock editing for another 24 months</p>`;
-      willActionsHtml += `</div>`;
-    } else if (questComplete) {
-      const primaryWill  = generatedWills?.find(w => w.testator_key === 'primary');
-      const partnerWill  = generatedWills?.find(w => w.testator_key === 'partner');
-      const hasAnyWill   = !!primaryWill || !!partnerWill;
-
-      if (hasAnyWill) {
-        willActionsHtml += `<div style="display:flex;flex-direction:column;gap:8px;">`;
-        willActionsHtml += `<a href="${questUrl}" class="btn btn-primary" style="display:block;text-align:left;">View Questionnaire &rarr;</a>`;
-        if (primaryWill) {
-          willActionsHtml += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary" style="display:block;text-align:left;">View Your Will &rarr;</a>`;
-        }
-        if (isMirror && partnerWill) {
-          willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary" style="display:block;text-align:left;">View Partner's Will &rarr;</a>`;
-        }
-        willActionsHtml += `<div style="display:flex;align-items:center;gap:10px;margin-top:4px;"><button id="regenWillBtn" class="btn btn-ghost" style="flex-shrink:0;font-size:0.8rem;color:var(--teal);opacity:0.8;">Regenerate Will &rarr;</button><span style="font-size:0.75rem;color:var(--white);">Regenerate your will after updating your questionnaire</span></div>`;
-        willActionsHtml += `</div>`;
+      tile1Sub     = 'Renew your plan to unlock editing for another 24 months.';
+      tile1Actions = `<button id="renewBtn" class="btn btn-primary" style="width:100%;">Renew to Edit &mdash; £9.99 &rarr;</button>`;
+    } else if (!questResponse || !questResponse.completed) {
+      tile1Sub     = questResponse ? 'Continue where you left off.' : 'Begin your will questionnaire.';
+      tile1Actions = `<a href="${questBtnHref}" class="btn btn-primary" style="display:block;width:100%;">${questBtnLabel}</a>`;
+    } else {
+      tile1Sub     = 'Your questionnaire is complete.';
+      const hasGenerated = !!(generatedWills?.length);
+      if (hasGenerated) {
+        tile1Actions = `
+          <a href="${questUrl}" class="btn btn-primary" style="display:block;width:100%;">View Questionnaire &rarr;</a>
+          <button id="regenWillBtn" class="btn btn-ghost" style="width:100%;margin-top:8px;font-size:0.85rem;text-align:left;">Regenerate Will &rarr;</button>`;
       } else {
-        willActionsHtml = `<button id="generateWillBtn" class="btn btn-primary" style="display:block;width:100%;text-align:left;">Generate My Will &rarr;</button>`;
+        tile1Actions = `
+          <a href="${questUrl}" class="btn btn-primary" style="display:block;width:100%;">View Questionnaire &rarr;</a>
+          <button id="generateWillBtn" class="btn btn-primary" style="width:100%;margin-top:8px;">Generate My Will &rarr;</button>`;
+      }
+    }
+
+    // Build tile 2 (Documents)
+    const primaryWill = generatedWills?.find(w => w.testator_key === 'primary');
+    const partnerWill = generatedWills?.find(w => w.testator_key === 'partner');
+    const hasAnyWill  = !!primaryWill || !!partnerWill;
+
+    let tile2Sub, tile2Actions;
+    if (!questComplete) {
+      tile2Sub     = 'Complete your questionnaire to generate your will.';
+      tile2Actions = `<span class="dash-tile-lock">&#128274; Not yet available</span>`;
+    } else if (!hasAnyWill) {
+      tile2Sub     = 'Generate your will to access it here.';
+      tile2Actions = `<span class="dash-tile-lock">&#128274; Not yet generated</span>`;
+    } else {
+      tile2Sub     = isMirror ? 'View and download your will documents.' : 'View and download your will.';
+      tile2Actions = '';
+      if (primaryWill) {
+        tile2Actions += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary" style="display:block;width:100%;">View Your Will &rarr;</a>`;
+      }
+      if (isMirror && partnerWill) {
+        tile2Actions += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary" style="display:block;width:100%;margin-top:8px;">View Partner&apos;s Will &rarr;</a>`;
       }
     }
 
     dashboardContent.innerHTML = `
-      <div class="dashboard-welcome">
-        <h2>Welcome back, ${firstName}.</h2>
-        <p>Manage your will and account from here.</p>
-      </div>
-      <div class="dashboard-card dashboard-card-single">
-
-        <div class="dashboard-card-top">
-          <div class="dashboard-card-top-icon">&#128196;</div>
-          <div class="dashboard-card-top-info">
-            <h3>${productName}</h3>
-            <p class="dashboard-status">${user.email}</p>
-            <span class="dashboard-badge">Paid ${amountPaid}</span>
-            ${expiryHtml}
+      <div class="dash-banner">
+        <div class="dash-banner-left">
+          <h2 class="dash-banner-greeting">Welcome back, ${firstName}.</h2>
+          <p class="dash-banner-sub">Manage your will and account from here.</p>
+        </div>
+        <div class="dash-banner-meta">
+          <div class="dash-banner-meta-row">
+            <span class="dashboard-badge">${productName}</span>
+            <span class="dash-amount-badge">Paid ${amountPaid}</span>
           </div>
+          ${expiryHtml}
+        </div>
+      </div>
+
+      <div class="dash-tiles">
+
+        <div class="dash-tile${isExpired ? ' dash-tile-expired' : ''}">
+          <span class="dash-tile-icon">&#128221;</span>
+          <h3>${isExpired ? 'Edit Window Closed' : 'Your Will'}</h3>
+          <p class="dash-tile-sub">${tile1Sub}</p>
+          <div class="dash-tile-actions">${tile1Actions}</div>
         </div>
 
-        <hr class="dash-divider"/>
+        <div class="dash-tile${!hasAnyWill ? ' dash-tile-locked' : ''}">
+          <span class="dash-tile-icon">&#128196;</span>
+          <h3>Documents</h3>
+          <p class="dash-tile-sub">${tile2Sub}</p>
+          <div class="dash-tile-actions">${tile2Actions}</div>
+        </div>
 
-        ${willActionsHtml || (isExpired ? '' : `<a href="${questBtnHref}" class="btn btn-primary" style="display:block;text-align:left;">${questBtnLabel}</a>`)}
-
-        <hr class="dash-divider"/>
-
-        <div class="dashboard-card-foot">
-          <button id="signOutBtn" class="btn btn-ghost" style="padding-left:0;">Sign out &rarr;</button>
+        <div class="dash-tile">
+          <span class="dash-tile-icon">&#128100;</span>
+          <h3>Account</h3>
+          <p class="dash-tile-sub">${user.email}</p>
+          <div class="dash-tile-actions">
+            <button id="signOutBtn" class="btn btn-ghost" style="width:100%;padding-left:0;margin-top:4px;text-align:left;">Sign out &rarr;</button>
+          </div>
         </div>
 
       </div>`;
