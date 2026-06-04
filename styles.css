@@ -1778,6 +1778,41 @@ img { max-width: 100%; display: block; }
   box-shadow: var(--shadow);
 }
 
+.dashboard-card-single {
+  max-width: 580px;
+}
+
+.dashboard-card-top {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+}
+
+.dashboard-card-top-icon {
+  font-size: 2.2rem;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.dashboard-card-top-info h3 {
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--white);
+  margin-bottom: 4px;
+}
+
+.dash-divider {
+  border: none;
+  border-top: 1px solid var(--glass-border);
+  margin: 24px 0;
+}
+
+.dashboard-card-foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
 .dashboard-card-icon {
   font-size: 2.4rem;
   margin-bottom: 16px;
