@@ -476,6 +476,9 @@ if (dashboardContent) {
     const productName  = productLabels[willPurchase.product_id] || 'Will';
     const amountPaid   = `£${(willPurchase.amount / 100).toFixed(2)}`;
 
+    const willTitles = { single: 'Your Single Will', mirror: 'Your Mirror Wills', comprehensive: 'Your Comprehensive Will' };
+    const willTitle  = willTitles[willPurchase.product_id] || 'Your Will';
+
     // Expiry
     const expiresAt  = purchase.expires_at ? new Date(purchase.expires_at) : null;
     const now        = new Date();
@@ -557,7 +560,7 @@ if (dashboardContent) {
         if (isMirror && partnerWill) {
           willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary">View Partner's Will &rarr;</a>`;
         }
-        willActionsHtml += `<div style="display:flex;align-items:center;gap:10px;margin-top:4px;"><button id="regenWillBtn" class="btn btn-ghost" style="flex-shrink:0;font-size:0.8rem;color:var(--teal);opacity:0.8;">Regenerate Will &rarr;</button><span style="font-size:0.75rem;color:var(--white);">Regenerate your will after updating your questionnaire</span></div>`;
+        willActionsHtml += `<button id="regenWillBtn" class="btn btn-ghost" style="font-size:0.8rem;color:var(--teal);opacity:0.8;margin-top:4px;padding-left:0;">Regenerate Will &rarr;</button>`;
         willActionsHtml += `</div>`;
       } else {
         willActionsHtml = `<button id="generateWillBtn" class="btn btn-primary" style="margin-top:14px;display:block;max-width:240px;">Generate My Will &rarr;</button>`;
@@ -573,8 +576,7 @@ if (dashboardContent) {
 
         <div class="dashboard-card">
           <div class="dashboard-card-icon">&#128196;</div>
-          <h3>Your Will</h3>
-          <p class="dashboard-status">${productName}</p>
+          <h3>${willTitle}</h3>
           ${willActionsHtml || (isExpired ? '' : `<a href="${questBtnHref}" class="btn btn-primary" style="margin-top:14px;display:block;max-width:240px;">${questBtnLabel}</a>`)}
         </div>
 
