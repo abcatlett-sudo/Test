@@ -831,7 +831,7 @@ img { max-width: 100%; display: block; }
    10. PAGE HERO — compact header for inner pages
    --------------------------------------------------------- */
 .page-hero {
-  padding: 80px 0 64px;
+  padding: 80px 0 32px;
   background: var(--dark);
   text-align: center;
   position: relative;
@@ -859,7 +859,7 @@ img { max-width: 100%; display: block; }
   margin: 0 auto;
 }
 
-.page-hero .section-tag { display: block; margin-bottom: 14px; }
+.page-hero .section-tag { display: block; margin-bottom: 14px; font-size: 1.1rem; letter-spacing: 2.5px; }
 
 .page-hero h1,
 .page-hero-title {
@@ -1726,7 +1726,7 @@ img { max-width: 100%; display: block; }
   border-radius: 50px;
   margin-top: 8px;
 }.dashboard-section {
-  padding: 64px 0 110px;
+  padding: 32px 0 110px;
   background: var(--surface);
   min-height: 60vh;
 }
@@ -1739,6 +1739,7 @@ img { max-width: 100%; display: block; }
 
 .dashboard-welcome {
   margin-bottom: 40px;
+  text-align: center;
 }
 
 .dashboard-welcome h2 {
@@ -1770,6 +1771,9 @@ img { max-width: 100%; display: block; }
   padding: 36px 32px;
   transition: all var(--transition);
   backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .dashboard-card:hover {
@@ -1803,7 +1807,7 @@ img { max-width: 100%; display: block; }
   font-weight: 500;
   color: var(--teal);
   margin-bottom: 16px;
-  margin-top: 4px;
+  margin-top: 16px;
 }
 
 .dashboard-expiry.expiry-warning {
