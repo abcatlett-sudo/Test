@@ -1773,6 +1773,7 @@ img { max-width: 100%; display: block; }
   backdrop-filter: blur(8px);
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
 }
 
 .dashboard-card:hover {
