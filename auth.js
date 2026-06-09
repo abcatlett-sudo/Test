@@ -80,6 +80,54 @@ document.addEventListener('click', async (e) => {
   const basket      = JSON.parse(localStorage.getItem('wa_basket') || '[]');
   const productType = basket[0]?.id || null;
 
+  // Always validate first to determine voucher type
+  let checkResult;
+  try {
+    const checkResp = await fetch(
+      'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/check-voucher',
+      { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }, body: JSON.stringify({ code, productType }) }
+    );
+    checkResult = await checkResp.json();
+    if (!checkResp.ok) {
+      note.style.color = 'var(--accent)';
+      note.textContent = checkResult.error || 'Invalid voucher code.';
+      btn.disabled    = false;
+      btn.textContent = 'Apply Voucher →';
+      return;
+    }
+  } catch {
+    note.style.color = 'var(--accent)';
+    note.textContent = 'Could not verify voucher. Please try again.';
+    btn.disabled    = false;
+    btn.textContent = 'Apply Voucher →';
+    return;
+  }
+
+  const isDiscount = checkResult.discount_type === 'percentage';
+
+  if (isDiscount) {
+    // Discount voucher: store and update basket UI — goes through Stripe checkout
+    localStorage.setItem('wa_discount_voucher', JSON.stringify({
+      code,
+      discountValue: checkResult.discount_value,
+      productType:   checkResult.product_type,
+    }));
+    if (session) {
+      renderBasket();
+      note.style.color = 'var(--teal)';
+      note.textContent = `✓ ${checkResult.discount_value}% discount applied! Proceed to checkout below.`;
+      btn.disabled    = false;
+      btn.textContent = 'Apply Voucher →';
+    } else {
+      // Not logged in — keep basket, redirect to login then back to basket
+      note.style.color = 'var(--teal)';
+      note.textContent = `✓ ${checkResult.discount_value}% discount saved! Sign in to complete checkout.`;
+      setTimeout(() => { window.location.href = `login.html?redirect=${encodeURIComponent('basket.html')}`; }, 1200);
+    }
+    return;
+  }
+
+  // Free voucher path
   if (session) {
     try {
       const resp = await fetch(
@@ -109,27 +157,6 @@ document.addEventListener('click', async (e) => {
       btn.textContent = 'Apply Voucher →';
     }
   } else {
-    // Validate before redirecting — no auth needed for check-voucher
-    try {
-      const checkResp = await fetch(
-        'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/check-voucher',
-        { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }, body: JSON.stringify({ code, productType }) }
-      );
-      const checkResult = await checkResp.json();
-      if (!checkResp.ok) {
-        note.style.color = 'var(--accent)';
-        note.textContent = checkResult.error || 'Invalid voucher code.';
-        btn.disabled    = false;
-        btn.textContent = 'Apply Voucher →';
-        return;
-      }
-    } catch {
-      note.style.color = 'var(--accent)';
-      note.textContent = 'Could not verify voucher. Please try again.';
-      btn.disabled    = false;
-      btn.textContent = 'Apply Voucher →';
-      return;
-    }
     localStorage.setItem('wa_pending_voucher', code);
     localStorage.removeItem('wa_basket');
     note.style.color = 'var(--teal)';
@@ -151,14 +178,16 @@ document.addEventListener('click', async (e) => {
   btn.textContent = 'Redirecting to payment…';
 
   try {
-    const { data, error } = await sb.functions.invoke('create-checkout', {
-      body: { productId: basket[0].id },
-    });
+    const discountVoucher = JSON.parse(localStorage.getItem('wa_discount_voucher') || 'null');
+    const body = { productId: basket[0].id };
+    if (discountVoucher?.code) body.voucherCode = discountVoucher.code;
+
+    const { data, error } = await sb.functions.invoke('create-checkout', { body });
 
     if (error || !data?.url) throw new Error(error?.message || 'No checkout URL returned');
 
-    // Clear basket then redirect to Stripe
     localStorage.removeItem('wa_basket');
+    localStorage.removeItem('wa_discount_voucher');
     window.location.href = data.url;
   } catch (err) {
     console.error('Checkout error:', err);

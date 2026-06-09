@@ -170,7 +170,13 @@ function renderBasket() {
     return;
   }
 
-  const total = basket.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const discountVoucher = JSON.parse(localStorage.getItem('wa_discount_voucher') || 'null');
+  const originalTotal   = basket.reduce((sum, item) => sum + item.price * item.qty, 0);
+  const discountAmount  = discountVoucher
+    ? Math.round(originalTotal * discountVoucher.discountValue) / 100
+    : 0;
+  const finalTotal = originalTotal - discountAmount;
+
   const rows = basket.map(item => `
     <div class="basket-item">
       <div class="basket-item-info">
@@ -183,6 +189,16 @@ function renderBasket() {
   const summaryRows = basket.map(item =>
     `<div class="summary-row"><span>${item.name}</span><span>&pound;${(item.price * item.qty).toFixed(2)}</span></div>`
   ).join('');
+
+  const discountRow = discountVoucher ? `
+    <div class="summary-row" style="color:var(--teal);">
+      <span>&#10003; Discount (${discountVoucher.discountValue}% off)</span>
+      <span>&minus;&pound;${discountAmount.toFixed(2)}</span>
+    </div>
+    <div class="summary-row" style="font-size:0.8rem;color:var(--muted);margin-top:-6px;">
+      <span>Code: ${discountVoucher.code}</span>
+      <button id="removeDiscountBtn" style="background:none;border:none;color:var(--accent);cursor:pointer;font-size:0.78rem;padding:0;text-decoration:underline;">Remove</button>
+    </div>` : '';
 
   content.innerHTML = `
     <div class="basket-layout">
@@ -213,7 +229,11 @@ function renderBasket() {
       <aside class="basket-summary">
         <h3>Order summary</h3>
         ${summaryRows}
-        <div class="summary-row total"><span>Total</span><span>&pound;${total.toFixed(2)}</span></div>
+        ${discountRow}
+        <div class="summary-row total">
+          <span>Total</span>
+          <span>${discountVoucher ? `<span style="text-decoration:line-through;color:var(--muted);font-weight:400;font-size:0.9em;">&pound;${originalTotal.toFixed(2)}</span> ` : ''}&pound;${finalTotal.toFixed(2)}</span>
+        </div>
         <div class="basket-tc-check">
           <label class="basket-tc-label">
             <input type="checkbox" id="tcAgree" />
@@ -221,12 +241,13 @@ function renderBasket() {
           </label>
         </div>
         <button id="checkoutBtn" class="btn btn-primary will-cta" disabled>Proceed to Checkout &rarr;</button>
+        ${discountVoucher ? '' : `
         <button id="redeemVoucherBtn" class="btn btn-ghost will-cta" style="margin-top:10px;width:100%;text-align:center;">Have a voucher code?</button>
         <div id="voucherPanel" class="quest-conditional" style="margin-top:10px;">
           <input type="text" id="voucherCodeInput" class="quest-input" placeholder="e.g. WA-XXXX-XXXX" autocomplete="off" spellcheck="false" style="text-transform:uppercase;letter-spacing:0.06em;" />
           <p id="voucherNote" style="font-size:0.85rem;min-height:20px;margin-top:6px;color:var(--muted);"></p>
           <button id="applyVoucherBtn" class="btn btn-primary will-cta" style="margin-top:4px;">Apply Voucher &rarr;</button>
-        </div>
+        </div>`}
       </aside>
     </div>`;
 
@@ -237,6 +258,14 @@ function renderBasket() {
       renderBasket();
     });
   });
+
+  const removeDiscountBtn = document.getElementById('removeDiscountBtn');
+  if (removeDiscountBtn) {
+    removeDiscountBtn.addEventListener('click', () => {
+      localStorage.removeItem('wa_discount_voucher');
+      renderBasket();
+    });
+  }
 
   const tcAgree    = document.getElementById('tcAgree')
   const checkoutBtn = document.getElementById('checkoutBtn')

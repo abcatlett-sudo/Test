@@ -24,7 +24,7 @@ Deno.serve(async (req) => {
 
     const { data: voucher, error } = await supabase
       .from('vouchers')
-      .select('use_count, max_uses, expires_at, product_type')
+      .select('use_count, max_uses, expires_at, product_type, discount_type, discount_value')
       .eq('code', code.trim().toUpperCase())
       .maybeSingle()
 
@@ -48,7 +48,7 @@ Deno.serve(async (req) => {
       })
     }
 
-    if (productType && voucher.product_type !== productType) {
+    if (productType && voucher.product_type && voucher.product_type !== productType) {
       const voucherLabel = voucher.product_type === 'mirror' ? 'Mirror Wills' : 'Single Will'
       const basketLabel  = productType === 'mirror' ? 'Mirror Wills' : 'Single Will'
       return new Response(JSON.stringify({ valid: false, error: `This is a ${voucherLabel} voucher and cannot be used for a ${basketLabel}.` }), {
@@ -56,7 +56,15 @@ Deno.serve(async (req) => {
       })
     }
 
-    return new Response(JSON.stringify({ valid: true }), {
+    const discountType  = voucher.discount_type  ?? 'free'
+    const discountValue = voucher.discount_value ?? 100
+
+    return new Response(JSON.stringify({
+      valid:          true,
+      discount_type:  discountType,
+      discount_value: discountValue,
+      product_type:   voucher.product_type,
+    }), {
       headers: { ...cors, 'Content-Type': 'application/json' },
     })
 
