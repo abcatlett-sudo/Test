@@ -119,10 +119,8 @@ document.addEventListener('click', async (e) => {
       btn.disabled    = false;
       btn.textContent = 'Apply Voucher →';
     } else {
-      // Not logged in — keep basket, redirect to login then back to basket
-      note.style.color = 'var(--teal)';
-      note.textContent = `✓ ${checkResult.discount_value}% discount saved! Sign in to complete checkout.`;
-      setTimeout(() => { window.location.href = `login.html?redirect=${encodeURIComponent('basket.html')}`; }, 1200);
+      // Not logged in — store discount and re-render basket in place, no redirect needed
+      renderBasket();
     }
     return;
   }
