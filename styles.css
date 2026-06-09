@@ -949,6 +949,12 @@ img { max-width: 100%; display: block; }
   margin-bottom: 8px;
 }
 
+.will-name-sub {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--muted);
+}
+
 .will-price { margin-bottom: 16px; }
 
 .will-price strong {
