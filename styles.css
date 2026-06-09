@@ -953,6 +953,11 @@ img { max-width: 100%; display: block; }
   font-size: 0.85rem;
   font-weight: 400;
   color: var(--muted);
+  margin-left: 6px;
+}
+
+.will-card.featured .will-name-sub {
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .will-price { margin-bottom: 16px; }
