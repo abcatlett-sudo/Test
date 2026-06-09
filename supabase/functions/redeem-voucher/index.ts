@@ -41,6 +41,11 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Voucher code not found. Please check and try again.' }), { status: 404, headers: cors })
     }
 
+    // Reject discount vouchers — they go through Stripe checkout, not this endpoint
+    if (voucher.discount_type && voucher.discount_type !== 'free') {
+      return new Response(JSON.stringify({ error: 'This is a discount voucher. Add your item to the basket and apply the code there to get your discount.' }), { status: 400, headers: cors })
+    }
+
     // Check product type matches basket
     if (productType && voucher.product_type !== productType) {
       const voucherLabel = voucher.product_type === 'mirror' ? 'Mirror Wills' : 'Single Will'

@@ -312,6 +312,58 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Log partner earnings if a discount voucher was used
+    const discountVoucherCode = session.metadata?.voucherCode
+    if (discountVoucherCode && !purchaseError && !isRenewal && !isVoucher) {
+      try {
+        const { data: voucher } = await supabase
+          .from('vouchers')
+          .select('id, use_count, corporate_client_id')
+          .eq('code', discountVoucherCode)
+          .maybeSingle()
+
+        if (voucher) {
+          // Increment use_count
+          await supabase
+            .from('vouchers')
+            .update({ use_count: voucher.use_count + 1 })
+            .eq('id', voucher.id)
+
+          // Log earnings if voucher is linked to a partner
+          if (voucher.corporate_client_id) {
+            const { data: client } = await supabase
+              .from('corporate_clients')
+              .select('commission_per_sale')
+              .eq('id', voucher.corporate_client_id)
+              .maybeSingle()
+
+            const saleAmount        = session.amount_total ?? 0
+            const partnerCommission = client?.commission_per_sale ?? 0
+            const waRevenue         = Math.max(0, saleAmount - partnerCommission)
+
+            const { error: earningsError } = await supabase.from('partner_earnings').insert({
+              corporate_client_id: voucher.corporate_client_id,
+              voucher_code:        discountVoucherCode,
+              stripe_session_id:   session.id,
+              product_id:          productId,
+              sale_amount:         saleAmount,
+              wa_revenue:          waRevenue,
+              partner_commission:  partnerCommission,
+              status:              'pending',
+            })
+
+            if (earningsError) {
+              console.error('Failed to log partner earnings:', earningsError)
+            } else {
+              console.log(`Partner earnings logged: ${discountVoucherCode} — partner £${(partnerCommission/100).toFixed(2)}, WA £${(waRevenue/100).toFixed(2)}`)
+            }
+          }
+        }
+      } catch (err) {
+        console.error('Error processing discount voucher post-payment:', err)
+      }
+    }
+
     // Generate voucher if applicable
     if (isVoucher) {
       const productType = productId.replace('voucher-', '') as 'single' | 'mirror'
