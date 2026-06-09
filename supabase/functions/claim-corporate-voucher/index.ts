@@ -16,7 +16,7 @@ function generateCode(prefix: string): string {
   return `${prefix}-${seg()}-${seg()}`
 }
 
-async function sendVoucherEmail(to: string, code: string, productType: string, clientName: string): Promise<void> {
+async function sendVoucherEmail(to: string, code: string, productType: string, clientName: string, brandColour = '#006A4E', brandColourTint = '#E8F5F1'): Promise<void> {
   const resendKey = Deno.env.get('RESEND_API_KEY')
   if (!resendKey) {
     console.log(`[CORPORATE-VOUCHER] ${code} → ${to}`)
@@ -41,10 +41,10 @@ async function sendVoucherEmail(to: string, code: string, productType: string, c
   <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F0F4F3;padding:40px 20px;">
     <tr>
       <td align="center">
-        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 16px rgba(0,106,78,0.10);">
+        <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.10);">
 
           <tr>
-            <td style="background:#006A4E;padding:28px 40px;">
+            <td style="background:${brandColour};padding:28px 40px;">
               <p style="margin:0;font-size:1.1rem;font-weight:700;color:#ffffff;letter-spacing:-0.3px;">${clientName}</p>
               <p style="margin:4px 0 0;font-size:0.8rem;color:rgba(255,255,255,0.7);text-transform:uppercase;letter-spacing:0.08em;">Employee Benefits</p>
             </td>
@@ -59,20 +59,20 @@ async function sendVoucherEmail(to: string, code: string, productType: string, c
 
               <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
                 <tr>
-                  <td style="background:#E8F5F1;border:2px solid #006A4E;border-radius:8px;padding:24px;text-align:center;">
-                    <p style="margin:0 0 8px;font-size:0.75rem;color:#006A4E;letter-spacing:0.1em;text-transform:uppercase;font-weight:600;">Your Voucher Code</p>
-                    <p style="margin:0;font-size:1.9rem;font-weight:800;letter-spacing:0.12em;color:#006A4E;">${code}</p>
+                  <td style="background:${brandColourTint};border:2px solid ${brandColour};border-radius:8px;padding:24px;text-align:center;">
+                    <p style="margin:0 0 8px;font-size:0.75rem;color:${brandColour};letter-spacing:0.1em;text-transform:uppercase;font-weight:600;">Your Voucher Code</p>
+                    <p style="margin:0;font-size:1.9rem;font-weight:800;letter-spacing:0.12em;color:${brandColour};">${code}</p>
                   </td>
                 </tr>
               </table>
 
               <p style="margin:0 0 20px;font-size:0.88rem;color:#555;line-height:1.6;">
-                To use your voucher, visit <a href="${redeemUrl}" style="color:#006A4E;font-weight:600;">willsassured.co.uk/redeem</a>, enter the code above, and follow the guided questionnaire to complete your will.
+                To use your voucher, visit <a href="${redeemUrl}" style="color:${brandColour};font-weight:600;">willsassured.co.uk/redeem</a>, enter the code above, and follow the guided questionnaire to complete your will.
               </p>
 
               <table cellpadding="0" cellspacing="0" style="margin:0 auto;">
                 <tr>
-                  <td style="background:#006A4E;border-radius:6px;padding:14px 32px;">
+                  <td style="background:${brandColour};border-radius:6px;padding:14px 32px;">
                     <a href="${redeemUrl}" style="color:#ffffff;font-size:0.9rem;font-weight:700;text-decoration:none;">Redeem Your Voucher →</a>
                   </td>
                 </tr>
@@ -84,7 +84,7 @@ async function sendVoucherEmail(to: string, code: string, productType: string, c
             <td style="background:#F9F9F9;border-top:1px solid #eee;padding:20px 40px;text-align:center;">
               <p style="margin:0;font-size:0.75rem;color:#999;">
                 This voucher was issued as part of the ${clientName} employee benefits programme.<br/>
-                Powered by <a href="https://www.willsassured.co.uk" style="color:#006A4E;">Wills Assured</a> &mdash; UK online will writing from £19.99.
+                Powered by <a href="https://www.willsassured.co.uk" style="color:${brandColour};">Wills Assured</a> &mdash; UK online will writing from £19.99.
               </p>
             </td>
           </tr>
@@ -127,7 +127,7 @@ Deno.serve(async (req) => {
     // Look up active corporate client
     const { data: client, error: clientError } = await supabase
       .from('corporate_clients')
-      .select('id, name, code_prefix')
+      .select('id, name, code_prefix, brand_colour, brand_colour_tint')
       .eq('slug', slug)
       .eq('active', true)
       .maybeSingle()
@@ -152,7 +152,7 @@ Deno.serve(async (req) => {
     if (existingError) throw new Error(existingError.message)
 
     if (existing) {
-      await sendVoucherEmail(normEmail, existing.code, existing.product_type, client.name)
+      await sendVoucherEmail(normEmail, existing.code, existing.product_type, client.name, client.brand_colour ?? undefined, client.brand_colour_tint ?? undefined)
       return new Response(JSON.stringify({ success: true, existing: true, code: existing.code }), {
         headers: { ...cors, 'Content-Type': 'application/json' },
       })
@@ -183,7 +183,7 @@ Deno.serve(async (req) => {
     })
     if (redemptionError) throw new Error(redemptionError.message)
 
-    await sendVoucherEmail(normEmail, code, productType, client.name)
+    await sendVoucherEmail(normEmail, code, productType, client.name, client.brand_colour ?? undefined, client.brand_colour_tint ?? undefined)
 
     return new Response(JSON.stringify({ success: true, existing: false, code }), {
       headers: { ...cors, 'Content-Type': 'application/json' },
