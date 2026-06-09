@@ -532,7 +532,7 @@ if (dashboardContent) {
     let willActionsHtml = '';
     if (isExpired) {
       // Expired: show view/download buttons only, lock editing
-      willActionsHtml = `<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;max-width:240px;">`;
+      willActionsHtml = `<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;max-width:300px;">`;
       if (questComplete) {
         const primaryWill = generatedWills?.find(w => w.testator_key === 'primary');
         const partnerWill = generatedWills?.find(w => w.testator_key === 'partner');
@@ -552,7 +552,7 @@ if (dashboardContent) {
       const hasAnyWill   = !!primaryWill || !!partnerWill;
 
       if (hasAnyWill) {
-        willActionsHtml += `<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;max-width:240px;">`;
+        willActionsHtml += `<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;max-width:300px;">`;
         willActionsHtml += `<a href="${questUrl}" class="btn btn-primary">View Questionnaire &rarr;</a>`;
         if (primaryWill) {
           willActionsHtml += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary">View Your Will &rarr;</a>`;
@@ -561,9 +561,9 @@ if (dashboardContent) {
           willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary">View Partner's Will &rarr;</a>`;
         }
         willActionsHtml += `</div>`;
-        willActionsHtml += `<div style="display:flex;align-items:center;gap:10px;margin-top:8px;"><button id="regenWillBtn" class="btn btn-ghost" style="flex-shrink:0;font-size:0.8rem;color:var(--teal);opacity:0.8;padding-left:0;">Regenerate Will &rarr;</button><span style="font-size:0.75rem;color:var(--muted);white-space:nowrap;">Regenerate your will after updating your questionnaire</span></div>`;
+        willActionsHtml += `<div style="display:flex;align-items:center;gap:10px;margin-top:8px;"><button id="regenWillBtn" class="btn btn-ghost" style="flex-shrink:0;font-size:0.8rem;color:var(--teal);opacity:0.8;padding-left:0;">Regenerate Will &rarr;</button><span style="font-size:0.75rem;color:var(--muted);min-width:0;">Regenerate your will after updating your questionnaire</span></div>`;
       } else {
-        willActionsHtml = `<button id="generateWillBtn" class="btn btn-primary" style="margin-top:14px;display:block;max-width:240px;">Generate My Will &rarr;</button>`;
+        willActionsHtml = `<button id="generateWillBtn" class="btn btn-primary" style="margin-top:14px;display:block;max-width:300px;">Generate My Will &rarr;</button>`;
       }
     }
 
@@ -577,7 +577,7 @@ if (dashboardContent) {
         <div class="dashboard-card">
           <div class="dashboard-card-icon">&#128196;</div>
           <h3>${willTitle}</h3>
-          ${willActionsHtml || (isExpired ? '' : `<a href="${questBtnHref}" class="btn btn-primary" style="margin-top:14px;display:block;max-width:240px;">${questBtnLabel}</a>`)}
+          ${willActionsHtml || (isExpired ? '' : `<a href="${questBtnHref}" class="btn btn-primary" style="margin-top:14px;display:block;max-width:300px;">${questBtnLabel}</a>`)}
         </div>
 
         <div class="dashboard-card">

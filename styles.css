@@ -107,6 +107,7 @@ img { max-width: 100%; display: block; }
   transition: all var(--transition);
   border: 2px solid transparent;
   font-family: inherit;
+  white-space: nowrap;
 }
 
 /* Filled — primary brand colour */
@@ -946,6 +947,17 @@ img { max-width: 100%; display: block; }
   font-weight: 800;
   color: var(--white);
   margin-bottom: 8px;
+}
+
+.will-name-sub {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 6px;
+}
+
+.will-card.featured .will-name-sub {
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .will-price { margin-bottom: 16px; }
@@ -2154,7 +2166,7 @@ img { max-width: 100%; display: block; }
 .quest-field   { display: flex; flex-direction: column; gap: 6px; }
 .quest-label   { font-size: 0.88rem; font-weight: 600; color: var(--white); }
 .quest-optional{ font-weight: 400; color: var(--muted); font-size: 0.8rem; }
-.quest-revision-note { font-size: 0.82rem; color: var(--muted); text-align: center; margin: 20px auto 0; max-width: 520px; line-height: 1.6; }
+.quest-revision-note { font-size: 0.82rem; color: var(--muted); text-align: center; margin: 20px auto 0; max-width: 740px; line-height: 1.6; }
 .quest-textarea-tip  { font-size: 0.78rem; color: var(--muted); margin: 8px 0 0; line-height: 1.5; font-style: italic; }
 .quest-hint    { font-size: 0.8rem; color: var(--muted); margin: 0; }
 .quest-warning { font-size: 0.82rem; color: #e8a840; background: rgba(232,168,64,0.1); border: 1px solid rgba(232,168,64,0.3); border-radius: 8px; padding: 10px 14px; margin: 14px 0 0; line-height: 1.55; }
