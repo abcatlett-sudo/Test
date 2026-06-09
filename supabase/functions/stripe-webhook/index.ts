@@ -292,14 +292,17 @@ Deno.serve(async (req) => {
     const expiresAt = addMonths(new Date(), 24)
     const status    = isRenewal ? 'renewal' : 'paid'
 
+    const discountVoucherCode = session.metadata?.voucherCode ?? null
+
     // Record purchase
     const { error: purchaseError } = await supabase.from('purchases').insert({
       stripe_session_id: session.id,
       email,
-      product_id: productId,
-      amount:     session.amount_total ?? 0,
+      product_id:   productId,
+      amount:       session.amount_total ?? 0,
       status,
-      expires_at: expiresAt.toISOString(),
+      expires_at:   expiresAt.toISOString(),
+      voucher_code: discountVoucherCode,
     })
     if (purchaseError) console.error('Failed to record purchase:', purchaseError)
     else console.log(`Purchase recorded for ${email} (${status})`)
@@ -313,7 +316,6 @@ Deno.serve(async (req) => {
     }
 
     // Log partner earnings if a discount voucher was used
-    const discountVoucherCode = session.metadata?.voucherCode
     if (discountVoucherCode && !purchaseError && !isRenewal && !isVoucher) {
       try {
         const { data: voucher } = await supabase
