@@ -58,21 +58,6 @@
       gap: 10px;
       text-decoration: none;
     }
-    .bupa-logo-square {
-      width: 44px;
-      height: 44px;
-      background: var(--blue);
-      border-radius: 4px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .bupa-logo-square span {
-      font-size: 1rem;
-      font-weight: 800;
-      color: var(--white);
-      letter-spacing: -0.5px;
-    }
     .bupa-header-divider { width: 1px; height: 28px; background: var(--border); }
     .bupa-header-section { font-size: 0.85rem; font-weight: 500; color: var(--muted); }
 
@@ -474,9 +459,11 @@
   <header class="bupa-header">
     <div class="bupa-header-inner">
       <a href="#" class="bupa-logo" aria-label="Bupa">
-        <div class="bupa-logo-square">
-          <span>bupa</span>
-        </div>
+        <svg width="52" height="52" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bupa logo">
+          <rect width="52" height="52" rx="4" fill="#009EE0"/>
+          <text x="6" y="26" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="800" font-style="italic" fill="white">Bupa</text>
+          <path d="M6 38 L18 38 L22 20 L27 46 L31 34 L40 34 Q45 34 48 29" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
       </a>
       <div class="bupa-header-divider"></div>
       <span class="bupa-header-section">Employee Benefits — Will Writing</span>
