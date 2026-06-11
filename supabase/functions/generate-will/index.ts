@@ -32,6 +32,10 @@ function caps(name: string): string {
   return (name || '').toUpperCase()
 }
 
+function isNorthernIreland(address: string): boolean {
+  return /\bBT\d/i.test(address || '')
+}
+
 function inheritanceClause(age: string, custom?: string): string {
   switch (age) {
     case '18':
@@ -64,6 +68,12 @@ function buildPrompt(
   const tAddress    = isPrimary ? r.your_address         : (r.partner_address || r.your_address)
   const spouseName  = isPrimary ? r.partner_full_name    : r.your_full_name
 
+  // ── jurisdiction (Northern Ireland detection via BT postcode)
+  const isNI           = isNorthernIreland(tAddress)
+  const trusteeAct     = isNI ? 'Trustee Act (Northern Ireland) 2001'                                                         : 'Trustee Act 2000'
+  const willsAct       = isNI ? 'Wills Act 1837 (as amended by the Wills and Administration Proceedings (Northern Ireland) Act 1966)' : 'Wills Act 1837'
+  const inheritanceAct = isNI ? 'Inheritance (Provision for Family and Dependants) (Northern Ireland) Order 1979'              : 'Inheritance (Provision for Family and Dependants) Act 1975'
+
   // ── children
   const childCount = parseInt(r.children_count || 0)
   let childrenList = ''
@@ -76,11 +86,21 @@ function buildPrompt(
   // ── executors (mirror)
   let executorClause = ''
   if (productType === 'mirror') {
-    executorClause = `(a) My spouse, ${caps(spouseName)} (if they survive me by twenty-eight days); or\n` +
-      `(b) If my spouse does not survive me by twenty-eight days, I appoint:\n` +
-      `    ${caps(r.executor1_name || '')} of ${r.executor1_address || ''}; and\n` +
-      `    ${caps(r.executor2_name || '')} of ${r.executor2_address || ''}\n` +
-      `to be my Executors and Trustees jointly.`
+    const survivingKey   = isPrimary ? 'executor_surviving_yes'   : 'partner_executor_surviving_yes'
+    const survivingOther = isPrimary ? r.executor_surviving_other : r.partner_executor_surviving_other
+    if (r[survivingKey] === 'no' && survivingOther) {
+      executorClause = `(a) ${survivingOther} (if they survive me for a period of not less than twenty-eight days and are willing to act); or\n` +
+        `(b) If they are unable or unwilling to act, I appoint:\n` +
+        `    ${caps(r.executor1_name || '')} of ${r.executor1_address || ''}; and\n` +
+        `    ${caps(r.executor2_name || '')} of ${r.executor2_address || ''}\n` +
+        `to be my Executors and Trustees jointly.`
+    } else {
+      executorClause = `(a) My spouse, ${caps(spouseName)} (if they survive me for a period of not less than twenty-eight days); or\n` +
+        `(b) If my spouse does not survive me for a period of not less than twenty-eight days, I appoint:\n` +
+        `    ${caps(r.executor1_name || '')} of ${r.executor1_address || ''}; and\n` +
+        `    ${caps(r.executor2_name || '')} of ${r.executor2_address || ''}\n` +
+        `to be my Executors and Trustees jointly.`
+    }
   } else {
     executorClause = `${caps(r.executor1_name || '')} of ${r.executor1_address || ''}; and\n` +
       `    ${caps(r.executor2_name || '')} of ${r.executor2_address || ''}\n` +
@@ -102,11 +122,13 @@ function buildPrompt(
     ? (r.funeral_wishes         || 'I have no specific funeral wishes.')
     : (r.partner_funeral_wishes || 'I have no specific funeral wishes.')
 
-  // ── specific gifts
-  const hasGifts = r.specific_gifts_yes === 'yes' && r.specific_gifts_details
-  const giftsClause = hasGifts
+  // ── specific gifts (per-testator for mirror wills)
+  const giftsYesKey    = isPrimary ? 'specific_gifts_yes'     : 'partner_specific_gifts_yes'
+  const giftsDetails   = isPrimary ? r.specific_gifts_details : r.partner_specific_gifts_details
+  const hasGifts       = r[giftsYesKey] === 'yes' && giftsDetails
+  const giftsClause    = hasGifts
     ? `SPECIFIC GIFTS\n\n` +
-      `I give the following specific gifts:\n${r.specific_gifts_details}\n\n` +
+      `I give the following specific gifts:\n${giftsDetails}\n\n` +
       `If any specific beneficiary named in this clause shall predecease me, the gift to them shall fall into the residuary estate.`
     : ''
 
@@ -118,26 +140,53 @@ function buildPrompt(
   let secondaryClause = ''
 
   if (productType === 'mirror') {
-    const primaryWish = r.primary_wish_yes !== 'no'
+    const primaryWishKey    = isPrimary ? 'primary_wish_yes'           : 'partner_primary_wish_yes'
+    const primaryWishCustom = isPrimary ? r.primary_wish_custom        : r.partner_primary_wish_custom
+    const primaryWish       = r[primaryWishKey] !== 'no'
     dispositionClause = primaryWish
-      ? `If my spouse, ${caps(spouseName)}, survives me by twenty-eight days, I give the whole of my estate (including any property over which I have a general power of appointment) to them absolutely.`
-      : `Primary Estate Disposition: ${r.primary_wish_custom || 'To be determined.'}`
+      ? `If my spouse, ${caps(spouseName)}, survives me for a period of not less than twenty-eight days, I give the whole of my estate (including any property over which I have a general power of appointment) to them absolutely.`
+      : `Primary Estate Disposition: ${primaryWishCustom || 'To be determined.'}`
 
-    // Mirror secondary — children or custom
+    // Mirror secondary — children, named beneficiaries, or custom
     const spouseRef = `my spouse`
     if (r.secondary_equal !== 'no' && childCount > 0) {
       secondaryClause =
-        `If ${spouseRef} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold upon the following trusts:\n\n` +
+        `If ${spouseRef} does not survive me for a period of not less than twenty-eight days, I give the whole of my estate to my Trustees to hold upon the following trusts:\n\n` +
         `(a) My Trustees shall divide my estate into as many equal shares as there are children of mine living at my death, and hold one such share for each child upon the terms set out below.\n\n` +
         `(b) The children of mine living at my death are:\n${childrenList}\n` +
-        `(c) If any child of mine has died before me but leaving a child or children living at my death, such child or children shall take by substitution and if more than one in equal shares the share which their parent would have taken had they survived me.` +
+        `(c) If any child of mine has died before me but leaving a child or children living at my death, such child or children shall take by substitution and if more than one in equal shares the share which their parent would have taken had they survived me.\n\n` +
+        `(d) If no child of mine or any of their issue shall survive me, I give the whole of my estate to my statutory next of kin in accordance with the intestacy rules applicable at the date of my death.` +
         under18Notice
     } else if (r.secondary_equal === 'no' && r.secondary_custom) {
-      secondaryClause = `If ${spouseRef} does not survive me by twenty-eight days: ${r.secondary_custom}`
+      secondaryClause = `If ${spouseRef} does not survive me for a period of not less than twenty-eight days: ${r.secondary_custom}`
     } else if (childCount > 0) {
       secondaryClause =
-        `If ${spouseRef} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold in equal shares for my children:\n${childrenList}` +
+        `If ${spouseRef} does not survive me for a period of not less than twenty-eight days, I give the whole of my estate to my Trustees to hold in equal shares for my children:\n${childrenList}` +
+        `\n\nIf no child of mine or any of their issue shall survive me, I give the whole of my estate to my statutory next of kin in accordance with the intestacy rules applicable at the date of my death.` +
         under18Notice
+    } else {
+      // No children — named beneficiaries with percentage splits
+      const numBen = parseInt(r.secondary_beneficiary_count || '0')
+      if (numBen > 0) {
+        const lines: string[] = []
+        for (let i = 0; i < numBen; i++) {
+          const name         = r[`secondary_ben_${i}_name`]
+          const address      = r[`secondary_ben_${i}_address`]
+          const relationship = r[`secondary_ben_${i}_relationship`]
+          const pct          = r[`secondary_ben_${i}_pct`]
+          if (name) lines.push(`${caps(name)}${address ? ` of ${address}` : ''}${relationship ? ` (${relationship})` : ''} — ${pct ?? ''}%`)
+        }
+        if (lines.length === 1) {
+          const name         = r['secondary_ben_0_name']
+          const address      = r['secondary_ben_0_address']
+          const relationship = r['secondary_ben_0_relationship']
+          secondaryClause = `If ${spouseRef} does not survive me for a period of not less than twenty-eight days, I give the whole of my estate to ${caps(name || '')}${address ? ` of ${address}` : ''}${relationship ? ` (${relationship})` : ''} absolutely, provided they survive me for a period of not less than twenty-eight days.`
+        } else if (lines.length > 1) {
+          secondaryClause =
+            `If ${spouseRef} does not survive me for a period of not less than twenty-eight days, I give the whole of my estate to be divided in the following proportions:\n\n` +
+            lines.map(l => `- ${l}`).join('\n')
+        }
+      }
     }
 
   } else {
@@ -153,21 +202,23 @@ function buildPrompt(
 
     } else {
       // Single will — named primary beneficiary
-      dispositionClause = `I give the whole of my estate to ${caps(r.beneficiary_name || '')} of ${r.beneficiary_address || ''} absolutely, provided they survive me by twenty-eight days.`
+      dispositionClause = `I give the whole of my estate to ${caps(r.beneficiary_name || '')} of ${r.beneficiary_address || ''} absolutely, provided they survive me for a period of not less than twenty-eight days.`
 
       const namedParty = r.beneficiary_name || 'my primary beneficiary'
       if (r.secondary_equal !== 'no' && childCount > 0) {
         secondaryClause =
-          `If ${namedParty} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold upon the following trusts:\n\n` +
+          `If ${namedParty} does not survive me for a period of not less than twenty-eight days, I give the whole of my estate to my Trustees to hold upon the following trusts:\n\n` +
           `(a) My Trustees shall divide my estate into as many equal shares as there are children of mine living at my death, and hold one such share for each child upon the terms set out below.\n\n` +
           `(b) The children of mine living at my death are:\n${childrenList}\n` +
-          `(c) If any child of mine has died before me but leaving a child or children living at my death, such child or children shall take by substitution and if more than one in equal shares the share which their parent would have taken had they survived me.` +
+          `(c) If any child of mine has died before me but leaving a child or children living at my death, such child or children shall take by substitution and if more than one in equal shares the share which their parent would have taken had they survived me.\n\n` +
+          `(d) If no child of mine or any of their issue shall survive me, I give the whole of my estate to my statutory next of kin in accordance with the intestacy rules applicable at the date of my death.` +
           under18Notice
       } else if (r.secondary_equal === 'no' && r.secondary_custom) {
-        secondaryClause = `If ${namedParty} does not survive me by twenty-eight days: ${r.secondary_custom}`
+        secondaryClause = `If ${namedParty} does not survive me for a period of not less than twenty-eight days: ${r.secondary_custom}`
       } else if (childCount > 0) {
         secondaryClause =
-          `If ${namedParty} does not survive me by twenty-eight days, I give the whole of my estate to my Trustees to hold in equal shares for my children:\n${childrenList}` +
+          `If ${namedParty} does not survive me for a period of not less than twenty-eight days, I give the whole of my estate to my Trustees to hold in equal shares for my children:\n${childrenList}` +
+          `\n\nIf no child of mine or any of their issue shall survive me, I give the whole of my estate to my statutory next of kin in accordance with the intestacy rules applicable at the date of my death.` +
           under18Notice
       }
     }
@@ -180,8 +231,10 @@ function buildPrompt(
   // ── business interests
   const hasBusiness = r.business_interests_yes === 'yes'
 
-  // ── exclusions
-  const hasExclusions = r.exclusions_yes === 'yes' && r.exclusions_details
+  // ── exclusions (per-testator for mirror wills)
+  const exclusionsYesKey  = isPrimary ? 'exclusions_yes'     : 'partner_exclusions_yes'
+  const exclusionsDetails = isPrimary ? r.exclusions_details : r.partner_exclusions_details
+  const hasExclusions     = r[exclusionsYesKey] === 'yes' && exclusionsDetails
 
   // ── pronoun helper
   const pronoun = 'their'
@@ -226,12 +279,20 @@ ${guardianClause}
 
 4.1 My Trustees shall pay my funeral and testamentary expenses and debts out of my estate.
 
+4.2 My Executors shall pay all inheritance tax, duties and liabilities arising on my death from my residuary estate before distribution to the beneficiaries.
+
 ${hasGifts ? '5. ' + giftsClause + '\n\n' : ''}[NEXT_CLAUSE]. DISPOSITION OF ESTATE
 
 [NEXT_CLAUSE].1 Gift to ${productType === 'mirror' ? 'Spouse' : 'Primary Beneficiary'}
 ${dispositionClause}
 
-${secondaryClause ? `[NEXT_CLAUSE].2 ${productType === 'mirror' ? 'Gift to Children (if spouse does not survive)' : 'Gift if Primary Beneficiary does not survive'}\n${secondaryClause}` : ''}
+${secondaryClause ? `[NEXT_CLAUSE].2 ${productType === 'mirror' ? (childCount > 0 ? 'Gift to Children (if spouse does not survive)' : 'Gift to Named Beneficiaries (if spouse does not survive)') : 'Gift if Primary Beneficiary does not survive'}\n${secondaryClause}` : ''}
+
+[NEXT_CLAUSE]. RESIDUARY ESTATE
+
+[NEXT_CLAUSE].1 Subject to the payment of my debts, funeral and testamentary expenses, and the costs of administering my estate, I give the residue of my estate (including any property over which I have a general power of appointment) in accordance with the disposition set out above.
+
+[NEXT_CLAUSE].2 If any gift made under this will fails or lapses for any reason whatsoever, the subject matter of that gift shall fall into and form part of my residuary estate and be disposed of in accordance with the terms of this will.
 
 ${hasTrust ? `[NEXT_CLAUSE]. TRUST FOR CHILDREN
 
@@ -256,7 +317,9 @@ If any child dies before becoming entitled to their whole share, that share or t
 
 ` : ''}${hasExclusions ? `[NEXT_CLAUSE]. EXCLUSIONS
 
-[NEXT_CLAUSE].1 I specifically exclude the following person(s) from benefiting in any way from my estate, whether under the terms of this will or on an intestacy: ${r.exclusions_details}
+[NEXT_CLAUSE].1 I specifically exclude the following person(s) from benefiting in any way from my estate, whether under the terms of this will or on an intestacy: ${exclusionsDetails}
+
+[NEXT_CLAUSE].2 This exclusion does not and cannot override any rights that any person may have to make a claim against my estate under the ${inheritanceAct} or any equivalent legislation.
 
 ` : ''}[NEXT_CLAUSE]. GENERAL ADMINISTRATIVE PROVISIONS
 
@@ -273,16 +336,17 @@ My Trustees may insure any property forming part of my estate against any risk a
 Any Trustee being a solicitor or other person engaged in any profession or business may charge and be paid all usual professional and business charges for work done by them or their firm.
 
 [NEXT_CLAUSE].5 Delegation
-My Trustees shall have power to delegate any of their functions in accordance with the provisions of the Trustee Act 2000.
+My Trustees shall have power to delegate any of their functions in accordance with the provisions of the ${trusteeAct}.
 
 [NEXT_CLAUSE].6 Statutory Powers
-My Trustees shall have all the powers conferred by the Trustee Act 2000 and any other relevant legislation.
+My Trustees shall have all the powers conferred by the ${trusteeAct} and any other relevant legislation.
 
 [NEXT_CLAUSE]. DECLARATIONS
 
 [NEXT_CLAUSE].1 I declare that I am of sound mind, memory, and understanding.
 [NEXT_CLAUSE].2 I declare that I make this will voluntarily and without any undue influence or pressure from any person.
 [NEXT_CLAUSE].3 I declare that I understand the nature and effect of this will and the extent of my property.
+[NEXT_CLAUSE].4 I confirm that I have read this will and that it accurately records my testamentary wishes. I know and approve of its contents.
 
 [NEXT_CLAUSE]. ATTESTATION CLAUSE
 
@@ -315,7 +379,7 @@ Now produce the complete will above, replacing all [NEXT_CLAUSE] placeholders wi
 
 IMPORTANT — NEXT STEPS TO MAKE YOUR WILL LEGAL
 
-Your will has been prepared in accordance with the Wills Act 1837. However, it is not yet legally valid. You must complete the following steps before this document takes effect.
+Your will has been prepared in accordance with the ${willsAct}. However, it is not yet legally valid. You must complete the following steps before this document takes effect.
 
 STEP 1 — PRINT YOUR WILL
 Print all pages of this document. Do not alter or annotate any part of the will after printing.

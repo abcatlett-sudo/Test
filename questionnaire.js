@@ -6,6 +6,8 @@
 const urlParams    = new URLSearchParams(window.location.search);
 const PRODUCT_TYPE = urlParams.get('type') || 'mirror';
 
+const GA_KEY = 'ak_mp6vfo7awnRTaj1zIBftyIbj5IIPq';
+
 const MIRROR_SECTIONS = [
   { id: 'about',     label: 'About You & Your Partner' },
   { id: 'family',    label: 'Your Family'               },
@@ -107,13 +109,16 @@ const MIRROR_STEPS = [
     icon: '&#128140;',
     title: 'If one of you passes away first',
     subtitle: 'This is your primary wish — it sets out what happens when the first partner dies.',
-    type: 'yesno_with_text',
-    key: 'primary_wish_yes',
+    type: 'dual_yesno_with_text',
+    key:  'primary_wish_yes',
+    key2: 'partner_primary_wish_yes',
     yesLabel: 'Yes — everything passes to the surviving partner absolutely',
-    noLabel:  'No — I have different wishes',
-    textKey:        'primary_wish_custom',
-    textLabel:      'Please describe your wishes',
-    textPlaceholder:'Describe how you\'d like your estate to be divided...',
+    noLabel:  'No — we have different wishes',
+    textKey:         'primary_wish_custom',
+    textKey2:        'partner_primary_wish_custom',
+    textLabel:       'Please describe your wishes',
+    textPlaceholder: 'Describe how you\'d like your estate to be divided...',
+    warningText:     'Complex arrangements may require professional legal advice. We recommend consulting a solicitor if your wishes differ significantly from the standard mirror will structure.',
   },
   {
     id: 'secondary_wish',
@@ -141,6 +146,7 @@ const MIRROR_STEPS = [
     ],
     customTextKey:         'inheritance_age_custom',
     customTextPlaceholder: 'Describe your custom inheritance arrangement, e.g. one third at 21, one third at 25, the remainder at 30...',
+    showIf: (r) => parseInt(r.children_count || 0) > 0,
   },
   // ── SECTION 4: Executors ─────────────────────────────────────
   {
@@ -149,40 +155,32 @@ const MIRROR_STEPS = [
     icon: '&#128203;',
     title: 'Executor if one of you passes away',
     subtitle: 'An executor <span class="quest-info-icon" data-tip="An executor is the person legally responsible for carrying out the instructions in your will — settling debts, distributing assets, and handling the estate administration.">&#9432;</span> is the person who carries out the wishes in your will.',
-    type: 'yesno',
-    key: 'executor_surviving_yes',
+    type: 'dual_yesno_with_text',
+    key:  'executor_surviving_yes',
+    key2: 'partner_executor_surviving_yes',
+    showTextOn: 'no',
     yesLabel: 'Yes — the surviving partner will be the executor',
     noLabel:  'No — I\'d like to appoint someone else',
+    textKey:         'executor_surviving_other',
+    textKey2:        'partner_executor_surviving_other',
+    textLabel:       'Name and address of the person you\'d like to appoint',
+    textPlaceholder: 'e.g. Jane Smith, 14 High Street, London EC1A 1BB (Sister)',
   },
   {
     id: 'executor_both',
     section: 'executors',
     icon: '&#128101;',
     title: 'Executors if you both pass away',
-    subtitle: 'You need two executors who are trustworthy, organised, and able to handle legal and financial matters. Ideally they should be under 70 and not benefit from the will.',
+    subtitle: 'You can name one or two executors — the people responsible for carrying out your wishes. Naming two is recommended so there\'s always someone who can act. Choose people you trust, ideally under 70 and not named as beneficiaries in your will.',
     type: 'executors',
   },
   // ── SECTION 5: Your Estate ───────────────────────────────────
-  {
-    id: 'net_assets',
-    section: 'estate',
-    icon: '&#127968;',
-    title: 'Your net assets',
-    subtitle: 'This covers everything you own — property, savings, investments, and personal possessions.',
-    type: 'yesno_with_text',
-    key: 'net_assets_yes',
-    yesLabel: 'Yes — net assets pass to each other; if we both pass, equally to our children',
-    noLabel:  'No — I have a different arrangement in mind',
-    textKey:        'net_assets_custom',
-    textLabel:      'Please describe your wishes',
-    textPlaceholder:'Describe how you\'d like your net assets distributed...',
-  },
   {
     id: 'business_interests',
     section: 'estate',
     icon: '&#128188;',
     title: 'Business interests',
-    subtitle: 'If you own a business or hold business interests, this clause ensures they are handled in the most tax-efficient way.',
+    subtitle: 'If you own a business or hold business interests, this clause ensures they are handled in the most tax-efficient way by your executors.',
     type: 'yesno',
     key: 'business_interests_yes',
     yesLabel: 'Yes — business interests pass to each other, managed tax-efficiently by the executor',
@@ -194,15 +192,17 @@ const MIRROR_STEPS = [
     icon: '&#127873;',
     title: 'Specific gifts or charitable donations',
     subtitle: 'Would you like to leave specific items — jewellery, artwork, a family heirloom — to particular people, or make a charitable donation?',
-    type: 'yesno_with_text',
-    key: 'specific_gifts_yes',
+    type: 'dual_yesno_with_text',
+    key:  'specific_gifts_yes',
+    key2: 'partner_specific_gifts_yes',
     showTextOn: 'yes',
     noFirst: true,
     yesLabel: 'Yes — I\'d like to leave specific gifts',
     noLabel:  'No specific gifts',
-    textKey:        'specific_gifts_details',
-    textLabel:      'Please describe the gifts or donations',
-    textPlaceholder:'e.g. My grandmother\'s engagement ring to my daughter Emma...',
+    textKey:         'specific_gifts_details',
+    textKey2:        'partner_specific_gifts_details',
+    textLabel:       'Please describe the gifts or donations',
+    textPlaceholder: 'e.g. My grandmother\'s engagement ring to my daughter Emma...',
   },
   {
     id: 'exclusions',
@@ -210,27 +210,19 @@ const MIRROR_STEPS = [
     icon: '&#128683;',
     title: 'Exclusions',
     subtitle: 'Is there anyone you specifically want to exclude from benefiting from your will? This is sometimes appropriate where there has been a family estrangement.',
-    type: 'yesno_with_text',
-    key: 'exclusions_yes',
+    type: 'dual_yesno_with_text',
+    key:  'exclusions_yes',
+    key2: 'partner_exclusions_yes',
     showTextOn: 'yes',
     noFirst: true,
     yesLabel: 'Yes — I want to exclude specific people',
     noLabel:  'No exclusions',
-    textKey:        'exclusions_details',
-    textLabel:      'Please name the person(s) you wish to exclude and the reason',
-    textPlaceholder:'e.g. John Smith — estranged since 2015...',
+    textKey:         'exclusions_details',
+    textKey2:        'partner_exclusions_details',
+    textLabel:       'Please name the person(s) you wish to exclude and the reason',
+    textPlaceholder: 'e.g. John Smith — estranged since 2015...',
   },
   // ── SECTION 6: Final Details ─────────────────────────────────
-  {
-    id: 'previous_wills',
-    section: 'final',
-    icon: '&#128196;',
-    title: 'Revoking previous wills',
-    subtitle: 'If you have an existing will, it\'s important to formally revoke it to ensure there is no ambiguity.',
-    type: 'checkbox_confirm',
-    key: 'previous_wills_confirmed',
-    label: 'I confirm that this will revokes and replaces any and all previous wills I have made',
-  },
   {
     id: 'funeral_wishes',
     section: 'final',
@@ -330,6 +322,14 @@ const SINGLE_STEPS = [
       { value: 'children', label: 'My children',    description: 'My estate passes to my children in equal shares' },
       { value: 'other',    label: 'Someone else',   description: 'I want to name a specific person as my primary beneficiary — my children would inherit if that person predeceases me' },
     ],
+    inlineFields: {
+      showOn: 'other',
+      fields: [
+        { key: 'beneficiary_name',         label: 'Full legal name',     type: 'text',     placeholder: 'e.g. James Robert Smith',        required: true },
+        { key: 'beneficiary_relationship', label: 'Relationship to you', type: 'text',     placeholder: 'e.g. Son, Partner, Friend',       required: true },
+        { key: 'beneficiary_address',      label: 'Address',             type: 'textarea', placeholder: 'Full address including postcode', required: true },
+      ],
+    },
   },
   {
     id: 'primary_beneficiary',
@@ -337,7 +337,7 @@ const SINGLE_STEPS = [
     icon: '&#128140;',
     title: 'Your primary beneficiary',
     subtitle: 'Who should inherit your entire estate if you pass away? Please provide their details below.',
-    showIf: (r) => parseInt(r.children_count || 0) === 0 || r.primary_beneficiary_type === 'other',
+    showIf: (r) => parseInt(r.children_count || 0) === 0,
     type: 'fields',
     fields: [
       { key: 'beneficiary_name',         label: 'Full legal name',     type: 'text',     placeholder: 'e.g. James Robert Smith',        required: true },
@@ -373,6 +373,7 @@ const SINGLE_STEPS = [
     ],
     customTextKey:         'inheritance_age_custom',
     customTextPlaceholder: 'Describe your custom inheritance arrangement, e.g. one third at 21, one third at 25, the remainder at 30...',
+    showIf: (r) => parseInt(r.children_count || 0) > 0,
   },
   // ── SECTION 4: Executors ─────────────────────────────────────
   {
@@ -385,25 +386,11 @@ const SINGLE_STEPS = [
   },
   // ── SECTION 5: Your Estate ───────────────────────────────────
   {
-    id: 'net_assets',
-    section: 'estate',
-    icon: '&#127968;',
-    title: 'Your net assets',
-    subtitle: 'This covers everything you own — property, savings, investments, and personal possessions.',
-    type: 'yesno_with_text',
-    key: 'net_assets_yes',
-    yesLabel: 'Yes — net assets pass to my primary beneficiary; if they predecease me, equally to my children',
-    noLabel:  'No — I have a different arrangement in mind',
-    textKey:        'net_assets_custom',
-    textLabel:      'Please describe your wishes',
-    textPlaceholder:'Describe how you\'d like your net assets distributed...',
-  },
-  {
     id: 'business_interests',
     section: 'estate',
     icon: '&#128188;',
     title: 'Business interests',
-    subtitle: 'If you own a business or hold business interests, this clause ensures they are handled in the most tax-efficient way.',
+    subtitle: 'If you own a business or hold business interests, this clause ensures they are handled in the most tax-efficient way by your executors.',
     type: 'yesno',
     key: 'business_interests_yes',
     yesLabel: 'Yes — business interests pass to my primary beneficiary, managed tax-efficiently by the executor',
@@ -442,16 +429,6 @@ const SINGLE_STEPS = [
     textPlaceholder:'e.g. John Smith — estranged since 2015...',
   },
   // ── SECTION 6: Final Details ─────────────────────────────────
-  {
-    id: 'previous_wills',
-    section: 'final',
-    icon: '&#128196;',
-    title: 'Revoking previous wills',
-    subtitle: 'If you have an existing will, it\'s important to formally revoke it to ensure there is no ambiguity.',
-    type: 'checkbox_confirm',
-    key: 'previous_wills_confirmed',
-    label: 'I confirm that this will revokes and replaces any and all previous wills I have made',
-  },
   {
     id: 'funeral_wishes',
     section: 'final',
@@ -516,6 +493,21 @@ async function initQuestionnaire() {
   const { data: { user } } = await sb.auth.getUser();
   if (!user) { window.location.href = 'login.html'; return; }
 
+  // Check edit window has not expired
+  const { data: activePurchases } = await sb
+    .from('purchases')
+    .select('expires_at')
+    .in('status', ['paid', 'renewal'])
+    .or(`user_id.eq.${user.id},email.eq.${user.email}`)
+    .order('created_at', { ascending: false })
+    .limit(1);
+
+  const latestPurchase = activePurchases?.[0];
+  if (latestPurchase?.expires_at && new Date(latestPurchase.expires_at) < new Date()) {
+    window.location.href = 'dashboard.html';
+    return;
+  }
+
   const { data: existing } = await sb
     .from('will_responses')
     .select('*')
@@ -532,6 +524,84 @@ async function initQuestionnaire() {
   }
 
   renderStep();
+}
+
+
+// ================================================================
+// POSTCODE LOOKUP
+// ================================================================
+
+function postcodeWidget(targetName) {
+  return `
+    <div class="pc-lookup" data-target="${targetName}">
+      <div class="pc-row">
+        <input class="quest-input pc-input" type="text" placeholder="Enter postcode" autocomplete="off" maxlength="8" />
+        <button type="button" class="btn btn-primary pc-btn">Find &rarr;</button>
+      </div>
+      <select class="quest-input pc-select" style="display:none;margin-top:8px;"></select>
+      <p class="pc-note"></p>
+    </div>`;
+}
+
+async function handlePostcodeLookup(widget) {
+  const input    = widget.querySelector('.pc-input');
+  const note     = widget.querySelector('.pc-note');
+  const select   = widget.querySelector('.pc-select');
+  const postcode = input.value.trim().toUpperCase();
+
+  if (!postcode) { note.textContent = 'Please enter a postcode.'; return; }
+
+  note.textContent = 'Searching…';
+  select.style.display = 'none';
+
+  try {
+    const res  = await fetch(
+      `https://api.ideal-postcodes.co.uk/v1/postcodes/${encodeURIComponent(postcode)}?api_key=${GA_KEY}`
+    );
+    const data = await res.json();
+
+    if (data.code !== 2000) {
+      if (data.code === 4040) {
+        note.textContent = 'Postcode not found — please check and try again.';
+      } else if (data.code === 4010) {
+        note.textContent = 'API key error — please type your address below.';
+      } else {
+        note.textContent = 'Lookup error — please type your address below.';
+      }
+      return;
+    }
+
+    const suggestions = (data.result || []).map(a => {
+      const parts = [a.line_1, a.line_2, a.line_3, a.post_town, a.county]
+        .filter(p => p && p.trim());
+      return { address: [...parts, a.postcode].join(', '), parts, postcode: a.postcode };
+    });
+    if (suggestions.length === 0) {
+      note.textContent = 'No addresses found — please type your address below.';
+      return;
+    }
+    note.textContent = `${suggestions.length} address${suggestions.length > 1 ? 'es' : ''} found — select one below.`;
+    select.innerHTML = '<option value="">— Select your address —</option>' +
+      suggestions.map((s, i) => `<option value="${i}">${s.address}</option>`).join('');
+    select.style.display = 'block';
+
+    select.onchange = () => {
+      const idx = parseInt(select.value);
+      if (isNaN(idx)) return;
+      const s     = suggestions[idx];
+      const parts = s.address.split(', ').map(p => p.trim()).filter(p => p);
+      if (!parts.some(p => /^[A-Z]{1,2}\d/i.test(p))) parts.push(s.postcode);
+      const formatted = parts.join('\n');
+      const target = widget.closest('.quest-field')?.querySelector(`[name="${widget.dataset.target}"]`)
+        || document.querySelector(`[name="${widget.dataset.target}"]`);
+      if (target) {
+        target.value = formatted;
+        responses[widget.dataset.target] = formatted;
+      }
+    };
+  } catch {
+    note.textContent = 'Lookup failed — please type your address below.';
+  }
 }
 
 
@@ -571,13 +641,15 @@ function renderStep() {
           ${isLast ? 'Complete &#10003;' : 'Continue &#8594;'}
         </button>
       </div>
-    </div>`;
+    </div>
+    <p class="quest-revision-note">You can update any answer or selection at any time — and once you've seen how your will reads, simply return to your questionnaire to make the changes you need to.</p>`;
 
   requestAnimationFrame(() =>
     main.querySelector('.quest-card')?.classList.add('quest-card-visible')
   );
 
   attachListeners(step);
+  updatePctTotal();
 }
 
 function renderGuardians() {
@@ -589,10 +661,11 @@ function renderGuardians() {
     </div>
     <div class="quest-field" style="margin-top:12px;">
       <label class="quest-label">Guardian's address</label>
+      ${postcodeWidget('guardian_address')}
       <textarea class="quest-input quest-textarea" name="guardian_address" placeholder="Full address including postcode" rows="3" required>${esc(responses.guardian_address || '')}</textarea>
     </div>
     <button type="button" id="addSecondaryGuardianBtn" class="btn btn-ghost" style="margin-top:14px;font-size:0.88rem;padding:8px 14px;">
-      ${hasSecondary ? '&#9660; Secondary guardian added' : '&#43; Add a secondary guardian'}
+      ${hasSecondary ? '&#9660; Secondary guardian added' : '&#43; Add a secondary guardian (optional)'}
     </button>
     <div id="secondaryGuardianPanel" class="quest-conditional${hasSecondary ? ' visible' : ''}" style="margin-top:10px;">
       <p class="quest-hint" style="margin-bottom:10px;">If the primary guardian has passed away, is unable or unwilling to act, this person will be appointed instead.</p>
@@ -602,6 +675,7 @@ function renderGuardians() {
       </div>
       <div class="quest-field" style="margin-top:12px;">
         <label class="quest-label">Secondary guardian's address</label>
+        ${postcodeWidget('secondary_guardian_address')}
         <textarea class="quest-input quest-textarea" name="secondary_guardian_address" placeholder="Full address including postcode" rows="3">${esc(responses.secondary_guardian_address || '')}</textarea>
       </div>
     </div>`;
@@ -613,8 +687,9 @@ function buildStepHTML(step) {
     case 'checkboxes':      return renderCheckboxes(step);
     case 'options':         return renderOptions(step);
     case 'yesno':           return renderYesNo(step);
-    case 'yesno_with_text': return renderYesNoWithText(step);
-    case 'children':        return renderChildren();
+    case 'yesno_with_text':      return renderYesNoWithText(step);
+    case 'dual_yesno_with_text': return renderDualYesNoWithText(step);
+    case 'children':             return renderChildren();
     case 'guardians':             return renderGuardians();
     case 'secondary_wish':        return renderSecondaryWish();
     case 'single_secondary_wish': return renderSingleSecondaryWish();
@@ -627,14 +702,16 @@ function buildStepHTML(step) {
 }
 
 function renderField(f) {
-  const val = esc(responses[f.key] || '');
-  const input = f.type === 'textarea'
+  const val      = esc(responses[f.key] || '');
+  const isAddr   = f.type === 'textarea' && f.key.endsWith('_address');
+  const input    = f.type === 'textarea'
     ? `<textarea class="quest-input quest-textarea" name="${f.key}" placeholder="${esc(f.placeholder || '')}" rows="3">${val}</textarea>`
     : `<input class="quest-input" type="${f.type}" name="${f.key}" placeholder="${esc(f.placeholder || '')}" value="${val}" />`;
   return `
     <div class="quest-field">
       <label class="quest-label">${f.label}${!f.required ? ' <span class="quest-optional">Optional</span>' : ''}</label>
       ${f.hint ? `<p class="quest-hint">${f.hint}</p>` : ''}
+      ${isAddr ? postcodeWidget(f.key) : ''}
       ${input}
     </div>`;
 }
@@ -658,6 +735,12 @@ function renderOptions(step) {
     const isCustom = responses[step.key] === 'custom';
     html += `<div id="conditionalText" class="quest-conditional${isCustom ? ' visible' : ''}" data-show-on="custom">
       <textarea class="quest-input quest-textarea" name="${step.customTextKey}" placeholder="${step.customTextPlaceholder || ''}" rows="4">${esc(responses[step.customTextKey] || '')}</textarea>
+    </div>`;
+  }
+  if (step.inlineFields) {
+    const show = responses[step.key] === step.inlineFields.showOn;
+    html += `<div class="quest-conditional${show ? ' visible' : ''}" data-for="${step.key}" data-show-on="${step.inlineFields.showOn}" style="margin-top:16px;">
+      ${step.inlineFields.fields.map(renderField).join('')}
     </div>`;
   }
   return html;
@@ -688,6 +771,49 @@ function renderYesNoWithText(step) {
       <div class="quest-field" style="margin-top:16px;">
         <label class="quest-label">${step.textLabel}</label>
         <textarea class="quest-input quest-textarea" name="${step.textKey}" placeholder="${esc(step.textPlaceholder)}" rows="4">${esc(responses[step.textKey] || '')}</textarea>
+        <p class="quest-textarea-tip">Tip: generate your will to see how this reads, then come back and tweak the wording until you're completely satisfied.</p>
+      </div>
+    </div>`;
+}
+
+function renderDualYesNoWithText(step) {
+  const trigger   = step.showTextOn || 'no';
+  const showText1 = responses[step.key]  === trigger;
+  const showText2 = responses[step.key2] === trigger;
+  const yesLabel  = typeof step.yesLabel === 'function' ? step.yesLabel(responses) : step.yesLabel;
+  const noLabel   = typeof step.noLabel  === 'function' ? step.noLabel(responses)  : step.noLabel;
+  const opts = step.noFirst
+    ? [{ value: 'no', label: noLabel }, { value: 'yes', label: yesLabel }]
+    : [{ value: 'yes', label: yesLabel }, { value: 'no', label: noLabel }];
+  return `
+    <div class="quest-dual-section">
+      <h4 class="quest-dual-heading">Your wishes</h4>
+      <div class="quest-options-grid quest-yesno">${opts.map(o => `
+        <button class="quest-option${responses[step.key] === o.value ? ' selected' : ''}" data-key="${step.key}" data-value="${o.value}">
+          ${o.label}
+        </button>`).join('')}</div>
+      <div class="quest-conditional${showText1 ? ' visible' : ''}" data-for="${step.key}" data-show-on="${trigger}">
+        ${step.warningText ? `<p class="quest-warning">${step.warningText}</p>` : ''}
+        <div class="quest-field" style="margin-top:16px;">
+          <label class="quest-label">${step.textLabel}</label>
+          <textarea class="quest-input quest-textarea" name="${step.textKey}" placeholder="${esc(step.textPlaceholder)}" rows="4">${esc(responses[step.textKey] || '')}</textarea>
+          <p class="quest-textarea-tip">Tip: generate your will to see how this reads, then come back and tweak the wording until you're completely satisfied.</p>
+        </div>
+      </div>
+    </div>
+    <div class="quest-dual-section" style="margin-top:24px;">
+      <h4 class="quest-dual-heading">Your partner's wishes</h4>
+      <div class="quest-options-grid quest-yesno">${opts.map(o => `
+        <button class="quest-option${responses[step.key2] === o.value ? ' selected' : ''}" data-key="${step.key2}" data-value="${o.value}">
+          ${o.label}
+        </button>`).join('')}</div>
+      <div class="quest-conditional${showText2 ? ' visible' : ''}" data-for="${step.key2}" data-show-on="${trigger}">
+        ${step.warningText ? `<p class="quest-warning">${step.warningText}</p>` : ''}
+        <div class="quest-field" style="margin-top:16px;">
+          <label class="quest-label">${step.textLabel}</label>
+          <textarea class="quest-input quest-textarea" name="${step.textKey2}" placeholder="${esc(step.textPlaceholder)}" rows="4">${esc(responses[step.textKey2] || '')}</textarea>
+          <p class="quest-textarea-tip">Tip: generate your will to see how this reads, then come back and tweak the wording until you're completely satisfied.</p>
+        </div>
       </div>
     </div>`;
 }
@@ -738,7 +864,9 @@ function renderSecondaryWish() {
       beneficiaryFields += `
         <div class="quest-field" style="margin-top:14px;">
           <label class="quest-label">Beneficiary ${i + 1}</label>
-          <input class="quest-input" type="text" name="secondary_ben_${i}_name" placeholder="Full name, address and relationship (e.g. Jane Smith, 14 High Street, Leeds LS1 1AA — Sister)" value="${esc(responses[`secondary_ben_${i}_name`] || '')}" style="margin-bottom:8px;" />
+          <input class="quest-input" type="text" name="secondary_ben_${i}_name" placeholder="Full name (e.g. Jane Smith)" value="${esc(responses[`secondary_ben_${i}_name`] || '')}" style="margin-bottom:8px;" />
+          <input class="quest-input" type="text" name="secondary_ben_${i}_address" placeholder="Address including postcode" value="${esc(responses[`secondary_ben_${i}_address`] || '')}" style="margin-bottom:8px;" />
+          <input class="quest-input" type="text" name="secondary_ben_${i}_relationship" placeholder="Relationship (e.g. Sister, Friend)" value="${esc(responses[`secondary_ben_${i}_relationship`] || '')}" style="margin-bottom:8px;" />
           <div class="quest-pct-input-wrap">
             <input class="quest-input quest-pct-input" type="number" name="secondary_ben_${i}_pct" min="0" max="100" value="${esc(String(responses[`secondary_ben_${i}_pct`] ?? defaultPct))}" />
             <span class="quest-pct-symbol">%</span>
@@ -756,7 +884,8 @@ function renderSecondaryWish() {
         </div>
       </div>
       <p class="quest-hint" style="margin-top:16px;">Percentages must add up to 100%</p>
-      ${beneficiaryFields}`;
+      ${beneficiaryFields}
+      <div class="quest-pct-total">Total: <span id="pctTotalVal">0</span>% <span id="pctTotalMsg"></span></div>`;
   }
 
   // Has children — offer equal split or custom percentages
@@ -766,7 +895,7 @@ function renderSecondaryWish() {
         Yes — divided equally between all our children
       </button>
       <button class="quest-option${isCustom ? ' selected' : ''}" data-key="secondary_equal" data-value="no">
-        No — I want to specify percentages
+        No — we want to specify percentages
       </button>
     </div>`;
 
@@ -788,6 +917,7 @@ function renderSecondaryWish() {
     <div class="quest-conditional${isCustom ? ' visible' : ''}" id="pctFields">
       <p class="quest-hint" style="margin-top:16px;">Percentages must add up to 100%</p>
       ${pctFields}
+      <div class="quest-pct-total">Total: <span id="pctTotalVal">0</span>% <span id="pctTotalMsg"></span></div>
     </div>`;
 }
 
@@ -855,13 +985,21 @@ function renderTextareaOptional(step) {
 
 function renderDualTextareaOptional(step) {
   return `
-    <div class="quest-field">
-      <label class="quest-label">Your wishes <span class="quest-optional">Optional</span></label>
-      <textarea class="quest-input quest-textarea" name="${step.key}" placeholder="${esc(step.placeholder)}" rows="4">${esc(responses[step.key] || '')}</textarea>
+    <div class="quest-dual-section">
+      <h4 class="quest-dual-heading">Your wishes</h4>
+      <div class="quest-field">
+        <span class="quest-optional">Optional</span>
+        <textarea class="quest-input quest-textarea" name="${step.key}" placeholder="${esc(step.placeholder)}" rows="4">${esc(responses[step.key] || '')}</textarea>
+        <p class="quest-textarea-tip">Tip: generate your will to see how this reads, then come back and tweak the wording until you're completely satisfied.</p>
+      </div>
     </div>
-    <div class="quest-field" style="margin-top:20px;">
-      <label class="quest-label">Your partner's wishes <span class="quest-optional">Optional</span></label>
-      <textarea class="quest-input quest-textarea" name="${step.key2}" placeholder="${esc(step.placeholder2)}" rows="4">${esc(responses[step.key2] || '')}</textarea>
+    <div class="quest-dual-section" style="margin-top:24px;">
+      <h4 class="quest-dual-heading">Your partner's wishes</h4>
+      <div class="quest-field">
+        <span class="quest-optional">Optional</span>
+        <textarea class="quest-input quest-textarea" name="${step.key2}" placeholder="${esc(step.placeholder2)}" rows="4">${esc(responses[step.key2] || '')}</textarea>
+        <p class="quest-textarea-tip">Tip: generate your will to see how this reads, then come back and tweak the wording until you're completely satisfied.</p>
+      </div>
     </div>`;
 }
 
@@ -913,7 +1051,16 @@ function attachListeners(step) {
       btn.classList.add('selected');
       responses[key] = value;
 
-      const conditional = document.getElementById('conditionalText') || document.getElementById('pctFields');
+      // Re-render the full step when beneficiary count changes so fields update immediately
+      if (key === 'secondary_beneficiary_count') {
+        collectInputValues();
+        renderStep();
+        return;
+      }
+
+      const conditional = document.querySelector(`.quest-conditional[data-for="${key}"]`)
+        || document.getElementById('conditionalText')
+        || document.getElementById('pctFields');
       if (conditional) {
         const showOn = conditional.dataset.showOn || 'no';
         conditional.classList.toggle('visible', value === showOn);
@@ -955,7 +1102,7 @@ function attachListeners(step) {
     const opening = !panel.classList.contains('visible');
     panel.classList.toggle('visible', opening);
     responses.show_secondary_guardian = opening ? 'yes' : 'no';
-    btn.textContent = opening ? '▼ Secondary guardian added' : '+ Add a secondary guardian';
+    btn.textContent = opening ? '▼ Secondary guardian added' : '+ Add a secondary guardian (optional)';
     if (!opening) {
       responses.secondary_guardian_name    = '';
       responses.secondary_guardian_address = '';
@@ -979,6 +1126,16 @@ function attachListeners(step) {
     });
   });
 
+  // Postcode lookup
+  document.querySelectorAll('.pc-btn').forEach(btn => {
+    btn.addEventListener('click', () => handlePostcodeLookup(btn.closest('.pc-lookup')));
+  });
+  document.querySelectorAll('.pc-input').forEach(input => {
+    input.addEventListener('keydown', e => {
+      if (e.key === 'Enter') { e.preventDefault(); handlePostcodeLookup(input.closest('.pc-lookup')); }
+    });
+  });
+
   bindInputListeners();
 }
 
@@ -988,8 +1145,32 @@ function bindInputListeners() {
       if (el.name) responses[el.name] = el.value;
       el.classList.remove('quest-input-error');
       el.parentNode.querySelector('.quest-error')?.remove();
+      if (el.classList.contains('quest-pct-input')) updatePctTotal();
     });
   });
+}
+
+function updatePctTotal() {
+  const totalVal = document.getElementById('pctTotalVal');
+  const totalMsg = document.getElementById('pctTotalMsg');
+  if (!totalVal) return;
+  let sum = 0;
+  document.querySelectorAll('.quest-pct-input').forEach(inp => {
+    sum += parseFloat(inp.value || 0);
+  });
+  const rounded = Math.round(sum);
+  totalVal.textContent = rounded;
+  if (totalMsg) {
+    if (rounded === 100) {
+      totalVal.style.color = 'var(--teal)';
+      totalMsg.style.color = 'var(--teal)';
+      totalMsg.textContent = '✓';
+    } else {
+      totalVal.style.color = 'var(--accent)';
+      totalMsg.style.color = 'var(--accent)';
+      totalMsg.textContent = rounded > 100 ? '— over 100%' : '— must reach 100%';
+    }
+  }
 }
 
 function collectInputValues() {
@@ -1022,6 +1203,16 @@ function validateStep(step) {
     }
   }
 
+  if (step.type === 'options' && step.inlineFields && responses[step.key] === step.inlineFields.showOn) {
+    for (const f of step.inlineFields.fields) {
+      if (f.required && !String(responses[f.key] || '').trim()) {
+        showFieldError(f.key, `Please enter ${f.label.toLowerCase()}`);
+        shakeBtn(nextBtn);
+        return false;
+      }
+    }
+  }
+
   if (step.type === 'fields') {
     for (const f of step.fields) {
       if (f.required && !String(responses[f.key] || '').trim()) {
@@ -1045,8 +1236,29 @@ function validateStep(step) {
     shakeBtn(nextBtn); return false;
   }
 
+  if (step.type === 'dual_yesno_with_text' && (!responses[step.key] || !responses[step.key2])) {
+    shakeBtn(nextBtn); return false;
+  }
+
   if (step.type === 'checkbox_confirm' && !responses[step.key]) {
     shakeBtn(nextBtn); return false;
+  }
+
+  if (step.type === 'secondary_wish' && responses.secondary_equal === 'no') {
+    const count = parseInt(responses.children_count || 0);
+    let total = 0;
+    if (count > 0) {
+      for (let i = 0; i < count; i++) total += parseFloat(responses[`child_${i}_pct`] || 0);
+    } else {
+      const numBen = parseInt(responses.secondary_beneficiary_count || 1);
+      for (let i = 0; i < numBen; i++) total += parseFloat(responses[`secondary_ben_${i}_pct`] || 0);
+    }
+    if (Math.round(total) !== 100) {
+      const msg = document.getElementById('pctTotalMsg');
+      if (msg) { msg.textContent = '— must add up to exactly 100%'; msg.style.color = 'var(--accent)'; }
+      shakeBtn(nextBtn);
+      return false;
+    }
   }
 
   if (step.type === 'executors') {
@@ -1096,6 +1308,7 @@ async function persistResponses() {
 
   const payload = {
     user_id:      user.id,
+    email:        user.email,
     product_type: PRODUCT_TYPE,
     responses,
     current_step: currentStep,

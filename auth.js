@@ -18,6 +18,13 @@ const sb = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY, {
 // onAuthStateChange reads from localStorage so there is no flash.
 // ----------------------------------------------------------------
 sb.auth.onAuthStateChange((_event, session) => {
+  if (_event === 'PASSWORD_RECOVERY') {
+    if (!window.location.pathname.endsWith('reset-password.html')) {
+      window.location.href = 'reset-password.html';
+    }
+    return;
+  }
+
   document.querySelectorAll('.nav-cta').forEach(cta => {
     if (session) {
       cta.textContent = 'Dashboard';
@@ -70,7 +77,55 @@ document.addEventListener('click', async (e) => {
   note.textContent = '';
 
   const { data: { session } } = await sb.auth.getSession();
+  const basket      = JSON.parse(localStorage.getItem('wa_basket') || '[]');
+  const productType = basket[0]?.id || null;
 
+  // Always validate first to determine voucher type
+  let checkResult;
+  try {
+    const checkResp = await fetch(
+      'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/check-voucher',
+      { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON_KEY}` }, body: JSON.stringify({ code, productType }) }
+    );
+    checkResult = await checkResp.json();
+    if (!checkResp.ok) {
+      note.style.color = 'var(--accent)';
+      note.textContent = checkResult.error || 'Invalid voucher code.';
+      btn.disabled    = false;
+      btn.textContent = 'Apply Voucher →';
+      return;
+    }
+  } catch {
+    note.style.color = 'var(--accent)';
+    note.textContent = 'Could not verify voucher. Please try again.';
+    btn.disabled    = false;
+    btn.textContent = 'Apply Voucher →';
+    return;
+  }
+
+  const isDiscount = checkResult.discount_type === 'percentage';
+
+  if (isDiscount) {
+    // Discount voucher: store and update basket UI — goes through Stripe checkout
+    localStorage.setItem('wa_discount_voucher', JSON.stringify({
+      code,
+      discountValue: checkResult.discount_value,
+      productType:   checkResult.product_type,
+    }));
+    if (session) {
+      renderBasket();
+      note.style.color = 'var(--teal)';
+      note.textContent = `✓ ${checkResult.discount_value}% discount applied! Proceed to checkout below.`;
+      btn.disabled    = false;
+      btn.textContent = 'Apply Voucher →';
+    } else {
+      // Not logged in — store discount and re-render basket in place, no redirect needed
+      renderBasket();
+    }
+    return;
+  }
+
+  // Free voucher path
   if (session) {
     try {
       const resp = await fetch(
@@ -78,7 +133,7 @@ document.addEventListener('click', async (e) => {
         {
           method:  'POST',
           headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${session.access_token}` },
-          body:    JSON.stringify({ code }),
+          body:    JSON.stringify({ code, productType }),
         }
       );
       const result = await resp.json();
@@ -121,14 +176,16 @@ document.addEventListener('click', async (e) => {
   btn.textContent = 'Redirecting to payment…';
 
   try {
-    const { data, error } = await sb.functions.invoke('create-checkout', {
-      body: { productId: basket[0].id },
-    });
+    const discountVoucher = JSON.parse(localStorage.getItem('wa_discount_voucher') || 'null');
+    const body = { productId: basket[0].id };
+    if (discountVoucher?.code) body.voucherCode = discountVoucher.code;
+
+    const { data, error } = await sb.functions.invoke('create-checkout', { body });
 
     if (error || !data?.url) throw new Error(error?.message || 'No checkout URL returned');
 
-    // Clear basket then redirect to Stripe
     localStorage.removeItem('wa_basket');
+    localStorage.removeItem('wa_discount_voucher');
     window.location.href = data.url;
   } catch (err) {
     console.error('Checkout error:', err);
@@ -220,7 +277,9 @@ if (loginForm) {
       btn.disabled    = false;
       btn.textContent = 'Sign In';
     } else {
-      window.location.href = 'dashboard.html';
+      const params     = new URLSearchParams(window.location.search);
+      const redirectTo = params.get('redirect');
+      window.location.href = redirectTo ? decodeURIComponent(redirectTo) : 'dashboard.html';
     }
   });
 }
@@ -304,13 +363,42 @@ if (dashboardContent) {
     const user = await requireAuth();
     if (!user) return;
 
-    // Check for a paid purchase against this email
+    // Check for a paid/renewal purchase against this user, most recent first
     const { data: purchases } = await sb
       .from('purchases')
       .select('*')
-      .eq('status', 'paid');
+      .in('status', ['paid', 'renewal'])
+      .or(`user_id.eq.${user.id},email.eq.${user.email}`)
+      .order('created_at', { ascending: false });
+
+    // Link any pending Stripe session — runs always so renewals (found via email) also get user_id set
+    const pendingSession = JSON.parse(localStorage.getItem('wa_pending_session') || 'null');
+    if (pendingSession?.sessionId) {
+      try {
+        const { data: { session: authSession } } = await sb.auth.getSession();
+        const resp = await fetch(
+          'https://fgyqumgvmllhiqdmgrfc.supabase.co/functions/v1/verify-session',
+          {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${authSession.access_token}` },
+            body:    JSON.stringify({ sessionId: pendingSession.sessionId }),
+          }
+        );
+        const result = await resp.json();
+        if (result.success) {
+          localStorage.removeItem('wa_pending_session');
+          if (!purchases || purchases.length === 0 || result.product_type === 'renewal') {
+            window.location.reload();
+            return;
+          }
+        }
+      } catch {
+        // Network error — continue to render dashboard
+      }
+    }
 
     if (!purchases || purchases.length === 0) {
+
       dashboardContent.innerHTML = `
         <div class="dashboard-welcome">
           <h2>Welcome to Wills Assured.</h2>
@@ -407,19 +495,44 @@ if (dashboardContent) {
       single:        'Single Will',
       mirror:        'Mirror Wills',
       comprehensive: 'Comprehensive Will',
+      renewal:       'Account Renewal',
     };
-    const productName = productLabels[purchase.product_id] || 'Will';
-    const amountPaid  = `£${(purchase.amount / 100).toFixed(2)}`;
+
+    // Find the original will purchase for product name/amount (not a renewal row)
+    const willPurchase = purchases.find(p => p.product_id !== 'renewal') || purchase;
+    const productName  = productLabels[willPurchase.product_id] || 'Will';
+    const amountPaid   = `£${(willPurchase.amount / 100).toFixed(2)}`;
+
+    const willTitles = { single: 'Your Single Will', mirror: 'Your Mirror Wills', comprehensive: 'Your Comprehensive Will' };
+    const willTitle  = willTitles[willPurchase.product_id] || 'Your Will';
+
+    // Expiry — read from willPurchase (the original paid row, not a legacy renewal row)
+    const expiresAt  = willPurchase.expires_at ? new Date(willPurchase.expires_at) : null;
+    const now        = new Date();
+    const isExpired  = expiresAt ? expiresAt < now : false;
+    const daysLeft   = expiresAt ? Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;
+
+    let expiryHtml = '';
+    if (expiresAt) {
+      const expiryStr = expiresAt.toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+      if (isExpired) {
+        expiryHtml = `<span class="dashboard-expiry expiry-expired">&#9888; Edit window expired ${expiryStr}</span>`;
+      } else if (daysLeft !== null && daysLeft <= 30) {
+        expiryHtml = `<span class="dashboard-expiry expiry-warning">&#9888; ${daysLeft} day${daysLeft === 1 ? '' : 's'} remaining &mdash; amendments expire ${expiryStr}</span>`;
+      } else {
+        expiryHtml = `<span class="dashboard-expiry">&#9679; Unlimited will amendments available until ${expiryStr}</span>`;
+      }
+    }
 
     // Check questionnaire progress
     const { data: questResponse } = await sb
       .from('will_responses')
       .select('completed, current_step')
       .eq('user_id', user.id)
-      .eq('product_type', purchase.product_id)
+      .eq('product_type', willPurchase.product_id)
       .maybeSingle();
 
-    const questUrl = `questionnaire.html?type=${purchase.product_id}`;
+    const questUrl = `questionnaire.html?type=${willPurchase.product_id}`;
     let questBtnLabel, questBtnHref;
     if (!questResponse) {
       questBtnLabel = 'Start Your Questionnaire &rarr;';
@@ -438,29 +551,46 @@ if (dashboardContent) {
       .select('id, testator_key')
       .eq('user_id', user.id);
 
-    const isMirror      = purchase.product_id === 'mirror';
     const questComplete = questResponse?.completed === true;
+
+    const isMirror = willPurchase.product_id === 'mirror';
 
     // Build will actions block
     let willActionsHtml = '';
-    if (questComplete) {
+    if (isExpired) {
+      // Expired: show view/download buttons only, lock editing
+      willActionsHtml = `<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;max-width:300px;">`;
+      if (questComplete) {
+        const primaryWill = generatedWills?.find(w => w.testator_key === 'primary');
+        const partnerWill = generatedWills?.find(w => w.testator_key === 'partner');
+        if (primaryWill) {
+          willActionsHtml += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary">View Your Will &rarr;</a>`;
+        }
+        if (isMirror && partnerWill) {
+          willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary">View Partner's Will &rarr;</a>`;
+        }
+      }
+      willActionsHtml += `<button id="renewBtn" class="btn btn-primary">Renew to Edit &mdash; £9.99 &rarr;</button>`;
+      willActionsHtml += `<p style="font-size:0.8rem;color:var(--muted);margin-top:2px;">Unlock editing for another 24 months</p>`;
+      willActionsHtml += `</div>`;
+    } else if (questComplete) {
       const primaryWill  = generatedWills?.find(w => w.testator_key === 'primary');
       const partnerWill  = generatedWills?.find(w => w.testator_key === 'partner');
       const hasAnyWill   = !!primaryWill || !!partnerWill;
 
       if (hasAnyWill) {
-        willActionsHtml += `<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;">`;
-        willActionsHtml += `<a href="${questUrl}" class="btn btn-primary" style="display:block;text-align:left;">View Questionnaire &rarr;</a>`;
+        willActionsHtml += `<div style="margin-top:14px;display:flex;flex-direction:column;gap:8px;max-width:300px;">`;
+        willActionsHtml += `<a href="${questUrl}" class="btn btn-primary">View Questionnaire &rarr;</a>`;
         if (primaryWill) {
-          willActionsHtml += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary" style="display:block;text-align:left;">View Your Will &rarr;</a>`;
+          willActionsHtml += `<a href="will-preview.html?id=${primaryWill.id}" class="btn btn-primary">View Your Will &rarr;</a>`;
         }
         if (isMirror && partnerWill) {
-          willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary" style="display:block;text-align:left;">View Partner's Will &rarr;</a>`;
+          willActionsHtml += `<a href="will-preview.html?id=${partnerWill.id}" class="btn btn-primary">View Partner's Will &rarr;</a>`;
         }
-        willActionsHtml += `<div style="display:flex;align-items:center;gap:10px;margin-top:4px;"><button id="regenWillBtn" class="btn btn-ghost" style="flex-shrink:0;font-size:0.8rem;color:var(--teal);opacity:0.8;">Regenerate Will &rarr;</button><span style="font-size:0.75rem;color:var(--white);">Regenerate your will after updating your questionnaire</span></div>`;
         willActionsHtml += `</div>`;
+        willActionsHtml += `<div style="display:flex;align-items:center;gap:10px;margin-top:8px;"><button id="regenWillBtn" class="btn btn-ghost" style="flex-shrink:0;font-size:0.8rem;color:var(--teal);opacity:0.8;padding-left:0;">Regenerate Will &rarr;</button><span style="font-size:0.75rem;color:var(--muted);min-width:0;">Regenerate your will after updating your questionnaire</span></div>`;
       } else {
-        willActionsHtml = `<button id="generateWillBtn" class="btn btn-primary" style="margin-top:14px;display:block;width:100%;text-align:left;">Generate My Will &rarr;</button>`;
+        willActionsHtml = `<button id="generateWillBtn" class="btn btn-primary" style="margin-top:14px;display:block;max-width:300px;">Generate My Will &rarr;</button>`;
       }
     }
 
@@ -473,17 +603,17 @@ if (dashboardContent) {
 
         <div class="dashboard-card">
           <div class="dashboard-card-icon">&#128196;</div>
-          <h3>Your Will</h3>
-          <p class="dashboard-status">${productName}</p>
-          <span class="dashboard-badge">Paid ${amountPaid}</span>
-          ${willActionsHtml || `<a href="${questBtnHref}" class="btn btn-primary" style="margin-top:14px;display:block;text-align:left;">${questBtnLabel}</a>`}
+          <h3>${willTitle}</h3>
+          ${willActionsHtml || (isExpired ? '' : `<a href="${questBtnHref}" class="btn btn-primary" style="margin-top:14px;display:block;max-width:300px;">${questBtnLabel}</a>`)}
         </div>
 
         <div class="dashboard-card">
           <div class="dashboard-card-icon">&#128100;</div>
           <h3>Account</h3>
           <p class="dashboard-status">${user.email}</p>
-          <button id="signOutBtn" class="btn btn-ghost">Sign out &rarr;</button>
+          <span class="dashboard-badge">Paid ${amountPaid}</span>
+          ${expiryHtml}
+          <button id="signOutBtn" class="btn btn-ghost" style="margin-top:auto;padding-left:0;">Sign out &rarr;</button>
         </div>
 
       </div>`;
@@ -527,6 +657,25 @@ if (dashboardContent) {
 
     const regenBtn = document.getElementById('regenWillBtn');
     if (regenBtn) regenBtn.addEventListener('click', () => triggerWillGeneration(regenBtn));
+
+    const renewBtn = document.getElementById('renewBtn');
+    if (renewBtn) {
+      renewBtn.addEventListener('click', async () => {
+        renewBtn.disabled    = true;
+        renewBtn.textContent = 'Redirecting to payment…';
+        try {
+          const { data, error } = await sb.functions.invoke('create-checkout', {
+            body: { productId: 'renewal', customerEmail: user.email },
+          });
+          if (error || !data?.url) throw new Error(error?.message || 'No checkout URL');
+          window.location.href = data.url;
+        } catch (err) {
+          renewBtn.disabled    = false;
+          renewBtn.textContent = 'Renew to Edit — £9.99 →';
+          alert('Something went wrong starting renewal. Please try again.');
+        }
+      });
+    }
   })();
 }
 

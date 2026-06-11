@@ -107,6 +107,7 @@ img { max-width: 100%; display: block; }
   transition: all var(--transition);
   border: 2px solid transparent;
   font-family: inherit;
+  white-space: nowrap;
 }
 
 /* Filled — primary brand colour */
@@ -353,6 +354,22 @@ img { max-width: 100%; display: block; }
   line-height: 1.75;
 }
 
+.hero-badges {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.hero-badges li {
+  font-size: 0.88rem;
+  color: var(--white);
+  font-weight: 500;
+  opacity: 0.92;
+}
+
 .hero-actions {
   display: flex;
   gap: 16px;
@@ -361,14 +378,38 @@ img { max-width: 100%; display: block; }
 }
 
 .nav-trustpilot {
+  border-top: 1px solid var(--glass-border);
+}
+
+.nav-tp-row {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  padding: 6px 0;
-  border-top: 1px solid var(--glass-border);
+  padding-top: 8px;
+  padding-bottom: 8px;
+  position: relative;
   flex-wrap: nowrap;
   white-space: nowrap;
+}
+
+.nav-instagram {
+  position: fixed;
+  top: 140px;
+  left: max(24px, calc(50vw - 572px));
+  z-index: 99;
+  color: var(--teal);
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  transition: var(--transition);
+}
+
+.nav-instagram:hover { opacity: 0.7; }
+
+.nav-instagram-icon {
+  width: 36px;
+  height: 36px;
 }
 
 .tp-stars {
@@ -378,7 +419,7 @@ img { max-width: 100%; display: block; }
 
 .tp-star {
   color: #00b67a;
-  font-size: 1.1rem;
+  font-size: 1.25rem;
   line-height: 1;
 }
 
@@ -390,29 +431,27 @@ img { max-width: 100%; display: block; }
 }
 
 .tp-label {
-  font-size: 0.85rem;
+  font-size: 0.92rem;
   font-weight: 700;
   color: var(--white);
 }
 
-.tp-score {
-  font-size: 0.82rem;
-  color: var(--muted);
-}
-
-.tp-score strong {
-  color: var(--white);
-}
-
 .tp-brand {
-  font-size: 0.82rem;
+  font-size: 0.88rem;
   color: var(--muted);
   font-weight: 500;
+  text-decoration: none;
+  cursor: default;
+}
+
+.tp-brand-star {
+  color: #f5a524;
+  font-size: 1.25rem;
 }
 
 .tp-divider {
   color: var(--mid);
-  font-size: 0.75rem;
+  font-size: 0.8rem;
 }
 
 
@@ -793,7 +832,7 @@ img { max-width: 100%; display: block; }
    10. PAGE HERO — compact header for inner pages
    --------------------------------------------------------- */
 .page-hero {
-  padding: 80px 0 64px;
+  padding: 80px 0 32px;
   background: var(--dark);
   text-align: center;
   position: relative;
@@ -821,9 +860,10 @@ img { max-width: 100%; display: block; }
   margin: 0 auto;
 }
 
-.page-hero .section-tag { display: block; margin-bottom: 14px; }
+.page-hero .section-tag { display: block; margin-bottom: 14px; font-size: 1.1rem; letter-spacing: 2.5px; }
 
-.page-hero h1 {
+.page-hero h1,
+.page-hero-title {
   font-size: clamp(1.5rem, 3.5vw, 2.4rem);
   font-weight: 900;
   letter-spacing: -1px;
@@ -907,6 +947,17 @@ img { max-width: 100%; display: block; }
   font-weight: 800;
   color: var(--white);
   margin-bottom: 8px;
+}
+
+.will-name-sub {
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: var(--muted);
+  margin-left: 6px;
+}
+
+.will-card.featured .will-name-sub {
+  color: rgba(255, 255, 255, 0.75);
 }
 
 .will-price { margin-bottom: 16px; }
@@ -1080,7 +1131,6 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 2.5rem;
   flex-shrink: 0;
 }
 
@@ -1429,7 +1479,6 @@ img { max-width: 100%; display: block; }
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 4rem;
   margin-bottom: 48px;
 }
 
@@ -1524,6 +1573,46 @@ img { max-width: 100%; display: block; }
   background: rgba(255, 255, 255, 0.90);
   transform: translateY(-2px);
 }
+
+.blog-disclaimer {
+  margin-top: 2rem;
+  padding: 0.875rem 1.25rem;
+  border-left: 3px solid var(--muted);
+  font-size: 0.82rem;
+  color: var(--muted);
+  line-height: 1.65;
+  opacity: 0.85;
+}
+
+.blog-related {
+  margin-top: 48px;
+  padding-top: 32px;
+  border-top: 1px solid var(--glass-border);
+}
+
+.blog-related-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 14px;
+}
+
+.blog-related-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.blog-related-link {
+  color: var(--primary);
+  text-decoration: none;
+  font-size: 0.93rem;
+  font-weight: 500;
+}
+
+.blog-related-link:hover { color: var(--teal); text-decoration: underline; }
 
 /* ---------------------------------------------------------
    17. DASHBOARD & SUCCESS PAGE
@@ -1649,7 +1738,7 @@ img { max-width: 100%; display: block; }
   border-radius: 50px;
   margin-top: 8px;
 }.dashboard-section {
-  padding: 64px 0 110px;
+  padding: 32px 0 110px;
   background: var(--surface);
   min-height: 60vh;
 }
@@ -1662,6 +1751,7 @@ img { max-width: 100%; display: block; }
 
 .dashboard-welcome {
   margin-bottom: 40px;
+  text-align: center;
 }
 
 .dashboard-welcome h2 {
@@ -1693,6 +1783,9 @@ img { max-width: 100%; display: block; }
   padding: 36px 32px;
   transition: all var(--transition);
   backdrop-filter: blur(8px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
 }
 
 .dashboard-card:hover {
@@ -1717,7 +1810,25 @@ img { max-width: 100%; display: block; }
 .dashboard-status {
   font-size: 0.9rem;
   color: var(--muted);
-  margin-bottom: 24px;
+  margin-bottom: 8px;
+}
+
+.dashboard-expiry {
+  display: block;
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--teal);
+  margin-bottom: 16px;
+  margin-top: 16px;
+}
+
+.dashboard-expiry.expiry-warning {
+  color: #F5A623;
+}
+
+.dashboard-expiry.expiry-expired {
+  color: var(--accent);
+  font-weight: 600;
 }
 
 /* ---------------------------------------------------------
@@ -2055,7 +2166,10 @@ img { max-width: 100%; display: block; }
 .quest-field   { display: flex; flex-direction: column; gap: 6px; }
 .quest-label   { font-size: 0.88rem; font-weight: 600; color: var(--white); }
 .quest-optional{ font-weight: 400; color: var(--muted); font-size: 0.8rem; }
+.quest-revision-note { font-size: 0.82rem; color: var(--muted); text-align: center; margin: 20px auto 0; max-width: 740px; line-height: 1.6; }
+.quest-textarea-tip  { font-size: 0.78rem; color: var(--muted); margin: 8px 0 0; line-height: 1.5; font-style: italic; }
 .quest-hint    { font-size: 0.8rem; color: var(--muted); margin: 0; }
+.quest-warning { font-size: 0.82rem; color: #e8a840; background: rgba(232,168,64,0.1); border: 1px solid rgba(232,168,64,0.3); border-radius: 8px; padding: 10px 14px; margin: 14px 0 0; line-height: 1.55; }
 
 .quest-input {
   width: 100%; padding: 12px 16px;
@@ -2073,6 +2187,10 @@ img { max-width: 100%; display: block; }
 .quest-textarea    { resize: vertical; min-height: 90px; }
 .quest-input-error { border-color: var(--accent) !important; }
 .quest-error       { font-size: 0.8rem; color: var(--accent); margin: 4px 0 0; }
+
+/* White calendar icon on date inputs and white eye icon on password inputs */
+input[type="date"]::-webkit-calendar-picker-indicator { filter: invert(1); cursor: pointer; }
+input[type="password"]::-ms-reveal                    { filter: invert(1); }
 
 /* Option cards */
 .quest-options-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
@@ -2126,6 +2244,10 @@ img { max-width: 100%; display: block; }
 .quest-conditional { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
 .quest-conditional.visible { max-height: 600px; }
 
+/* Dual yes/no sections (mirror will per-testator questions) */
+.quest-dual-section { border-left: 3px solid var(--primary); padding-left: 16px; }
+.quest-dual-heading { font-size: 0.9rem; font-weight: 600; color: var(--primary); margin: 0 0 12px; text-transform: uppercase; letter-spacing: 0.04em; }
+
 /* Children counter */
 .quest-counter     { display: flex; align-items: center; gap: 20px; }
 .quest-counter-btn {
@@ -2157,8 +2279,43 @@ img { max-width: 100%; display: block; }
 .quest-pct-input-wrap { display: flex; align-items: center; gap: 8px; }
 .quest-pct-input { width: 80px; text-align: center; }
 .quest-pct-symbol { font-weight: 700; color: var(--muted); }
+.quest-pct-total  { margin-top: 16px; font-size: 0.9rem; font-weight: 600; color: var(--muted); }
 
 /* Executors */
+.pc-lookup {
+  margin-bottom: 8px;
+}
+
+.pc-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pc-input {
+  flex: 1;
+  font-size: 0.78rem;
+  margin-bottom: 0 !important;
+}
+
+.pc-btn {
+  white-space: nowrap;
+  padding: 10px 16px;
+  font-size: 0.85rem;
+}
+
+.pc-note {
+  font-size: 0.78rem;
+  color: var(--muted);
+  min-height: 18px;
+  margin: 4px 0 0;
+}
+
+.pc-select {
+  width: 100%;
+  cursor: pointer;
+}
+
 .quest-executor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .quest-executor-card {
   border: 1.5px solid var(--mid); border-radius: var(--radius);
@@ -2295,12 +2452,13 @@ img { max-width: 100%; display: block; }
   .testimonials-grid { grid-template-columns: 1fr; }
 
   /* Trustpilot strip — shrink to fit one line */
-  .nav-trustpilot { gap: 6px; padding: 5px 12px; }
-  .tp-star        { font-size: 0.85rem; }
-  .tp-label       { font-size: 0.7rem; }
-  .tp-score       { font-size: 0.68rem; }
-  .tp-brand       { font-size: 0.68rem; }
-  .tp-divider     { font-size: 0.6rem; }
+  .nav-tp-row        { gap: 6px; padding-top: 6px; padding-bottom: 6px; }
+  .nav-instagram     { top: 130px; left: 16px; }
+  .nav-instagram-icon { width: 20px; height: 20px; }
+  .tp-star        { font-size: 0.95rem; }
+  .tp-label       { font-size: 0.75rem; }
+  .tp-brand       { font-size: 0.72rem; }
+  .tp-divider     { font-size: 0.65rem; }
 
   /* Hide desktop nav; show hamburger */
   .nav-links,
@@ -2562,7 +2720,8 @@ img { max-width: 100%; display: block; }
   -webkit-text-fill-color: transparent;
   background-clip: text;
   margin-bottom: 32px;
-  display: inline-block;
+  display: block;
+  text-align: center;
 }
 
 /* ---------------------------------------------------------
@@ -2832,4 +2991,6 @@ img { max-width: 100%; display: block; }
   .cookie-banner { flex-direction: column; align-items: flex-start; }
   .cookie-banner-actions { width: 100%; }
   .cookie-banner-actions .btn { flex: 1; text-align: center; }
+  .quest-nav-left .btn { font-size: 0.75rem; padding: 6px 10px; }
+  #questNext { font-size: 0.85rem; padding: 10px 18px; }
 }

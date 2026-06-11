@@ -23,7 +23,7 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Unauthorised' }), { status: 401, headers: cors })
     }
 
-    const { code } = await req.json()
+    const { code, productType } = await req.json()
     if (!code) {
       return new Response(JSON.stringify({ error: 'Voucher code is required' }), { status: 400, headers: cors })
     }
@@ -41,6 +41,18 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Voucher code not found. Please check and try again.' }), { status: 404, headers: cors })
     }
 
+    // Reject discount vouchers — they go through Stripe checkout, not this endpoint
+    if (voucher.discount_type && voucher.discount_type !== 'free') {
+      return new Response(JSON.stringify({ error: 'This is a discount voucher. Add your item to the basket and apply the code there to get your discount.' }), { status: 400, headers: cors })
+    }
+
+    // Check product type matches basket
+    if (productType && voucher.product_type !== productType) {
+      const voucherLabel = voucher.product_type === 'mirror' ? 'Mirror Wills' : 'Single Will'
+      const basketLabel  = productType === 'mirror' ? 'Mirror Wills' : 'Single Will'
+      return new Response(JSON.stringify({ error: `This is a ${voucherLabel} voucher and cannot be used for a ${basketLabel}.` }), { status: 409, headers: cors })
+    }
+
     // Check uses remaining
     if (voucher.use_count >= voucher.max_uses) {
       return new Response(JSON.stringify({ error: 'This voucher has no remaining uses.' }), { status: 409, headers: cors })
@@ -50,24 +62,25 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'This voucher has expired.' }), { status: 410, headers: cors })
     }
 
-    // Check user doesn't already have a paid purchase
+    // Check user doesn't already have an active will purchase
     const { data: existing } = await supabase
       .from('purchases')
       .select('id')
-      .eq('status', 'paid')
+      .in('status', ['paid', 'renewal'])
+      .eq('email', user.email!)
       .maybeSingle()
 
     if (existing) {
       return new Response(JSON.stringify({ error: 'Your account already has an active will product.' }), { status: 409, headers: cors })
     }
 
-    // Atomic increment — guard against race conditions by only updating
-    // if use_count is still below max_uses at the moment of the write.
+    // Atomic increment — optimistic lock: only updates if use_count hasn't
+    // changed since we read it, guarding against concurrent redemptions.
     const { data: updated, error: updateError } = await supabase
       .from('vouchers')
       .update({ use_count: voucher.use_count + 1 })
       .eq('id', voucher.id)
-      .lt('use_count', voucher.max_uses)
+      .eq('use_count', voucher.use_count)
       .select('id')
       .maybeSingle()
 
@@ -77,13 +90,18 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'This voucher has just been fully redeemed. Please contact us if you need help.' }), { status: 409, headers: cors })
     }
 
+    const expiresAt = new Date()
+    expiresAt.setMonth(expiresAt.getMonth() + 24)
+
     // Create purchase record for this user
     const { error: purchaseError } = await supabase.from('purchases').insert({
       stripe_session_id: `voucher-${voucher.code}-${user.id.slice(0, 8)}`,
       email:             user.email,
+      user_id:           user.id,
       product_id:        voucher.product_type,
       amount:            voucher.product_type === 'mirror' ? 2999 : 1999,
       status:            'paid',
+      expires_at:        expiresAt.toISOString(),
     })
     if (purchaseError) throw new Error(purchaseError.message)
 

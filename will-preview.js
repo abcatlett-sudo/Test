@@ -13,7 +13,7 @@ async function initWillPreview() {
   const willId      = params.get('id')
   const testatorKey = params.get('testator') || 'primary'
 
-  let query = _sb
+  let query = sb
     .from('generated_wills')
     .select('will_text, testator_key, product_type')
     .eq('user_id', user.id)
@@ -184,12 +184,5 @@ function formatWillBody(text) {
 
   return html
 }
-
-const _sb = window.supabase
-  ? window.supabase.createClient(
-      'https://fgyqumgvmllhiqdmgrfc.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZneXF1bWd2bWxsaGlxZG1ncmZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzQ1NDYsImV4cCI6MjA5MjUxMDU0Nn0.GwQsnXsraNegEqdYASRwagOxMgyAZg2iNXzP3Syqii8'
-    )
-  : null
 
 initWillPreview()
