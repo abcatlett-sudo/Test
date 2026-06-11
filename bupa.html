@@ -459,10 +459,12 @@
   <header class="bupa-header">
     <div class="bupa-header-inner">
       <a href="#" class="bupa-logo" aria-label="Bupa">
-        <svg width="52" height="52" viewBox="0 0 52 52" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bupa logo">
-          <rect width="52" height="52" rx="4" fill="#009EE0"/>
-          <text x="6" y="26" font-family="Arial, Helvetica, sans-serif" font-size="15" font-weight="800" font-style="italic" fill="white">Bupa</text>
-          <path d="M6 38 L18 38 L22 20 L27 46 L31 34 L40 34 Q45 34 48 29" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        <svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bupa logo">
+          <rect width="60" height="60" rx="5" fill="#009EE0"/>
+          <!-- 'Bupa' text occupies x=5–41, y=12–28 -->
+          <text x="5" y="28" font-family="Arial, Helvetica, sans-serif" font-size="16" font-weight="800" font-style="italic" fill="white">Bupa</text>
+          <!-- ECG flat line sits below text at y=44; spike starts at x=42 (past text right edge) -->
+          <path d="M4 44 L42 44 L46 14 L50 56 L53 40 L60 40" stroke="white" stroke-width="2.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
       </a>
       <div class="bupa-header-divider"></div>
