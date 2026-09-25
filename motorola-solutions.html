@@ -348,7 +348,25 @@
       .claim-section { padding: 24px 20px; }
       .voucher-code  { font-size: 1.5rem; letter-spacing: 0.08em; }
       .copy-btn      { top: auto; bottom: 8px; right: 8px; }
-      .ms-wordmark-secondary { display: none; }
+
+      /* Mobile header: stack wordmark + section text, centred */
+      .ms-header-inner {
+        flex-direction: column;
+        justify-content: center;
+        height: auto;
+        padding: 10px 0;
+        gap: 2px;
+      }
+      .ms-header-divider { display: none; }
+      .ms-header-section {
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-align: center;
+      }
+      .ms-logo { justify-content: center; }
+      .ms-wordmark { gap: 4px; }
+      .ms-wordmark-primary { font-size: 1rem; }
+      .ms-wordmark-secondary { display: inline; font-size: 0.8rem; font-style: italic; }
     }
   </style>
 </head>
