@@ -1,0 +1,717 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Will Writing — Bupa Employee Benefits</title>
+  <meta name="robots" content="noindex, nofollow" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --blue:       #009EE0;
+      --blue-d:     #007BB5;
+      --blue-tint:  #E5F6FD;
+      --blue-mid:   #B3E4F7;
+      --navy:       #003087;
+      --text:       #1A1A1A;
+      --muted:      #6B7280;
+      --border:     #E0E0E0;
+      --bg:         #F8FAFC;
+      --white:      #ffffff;
+      --radius:     8px;
+      --shadow:     0 2px 16px rgba(0,158,224,0.12);
+    }
+
+    body {
+      font-family: 'Inter', Arial, sans-serif;
+      color: var(--text);
+      background: var(--bg);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* ── Header ── */
+    .bupa-header {
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+    .bupa-header-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      height: 64px;
+    }
+    .bupa-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+    .bupa-header-divider { width: 1px; height: 28px; background: var(--border); }
+    .bupa-header-section { font-size: 0.85rem; font-weight: 500; color: var(--muted); }
+
+    /* ── Main ── */
+    main { flex: 1; }
+
+    /* ── Hero ── */
+    .hero {
+      background: var(--blue);
+      padding: 56px 24px 64px;
+      text-align: center;
+    }
+    .hero-tag {
+      display: inline-block;
+      background: rgba(255,255,255,0.25);
+      color: var(--white);
+      font-size: 0.72rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 16px;
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+    .hero h1 {
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 800;
+      color: var(--white);
+      line-height: 1.2;
+      max-width: 580px;
+      margin: 0 auto 16px;
+      letter-spacing: -0.5px;
+    }
+    .hero p {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.75);
+      max-width: 540px;
+      margin: 0 auto;
+      line-height: 1.6;
+    }
+
+    /* ── Container ── */
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 24px;
+    }
+
+    /* ── Section ── */
+    .section { padding: 52px 0 16px; }
+    .section-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .section-sub {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+      line-height: 1.6;
+    }
+
+    /* ── Product cards ── */
+    .products-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 36px;
+    }
+
+    .product-card {
+      background: var(--white);
+      border: 2px solid var(--border);
+      border-radius: var(--radius);
+      padding: 28px;
+      cursor: pointer;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      position: relative;
+      user-select: none;
+    }
+    .product-card:hover {
+      border-color: var(--blue);
+      box-shadow: var(--shadow);
+    }
+    .product-card.selected {
+      border-color: var(--blue);
+      background: var(--blue-tint);
+      box-shadow: var(--shadow);
+    }
+    .product-card.selected .card-check { opacity: 1; }
+
+    .card-check {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      width: 22px;
+      height: 22px;
+      background: var(--blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      transition: opacity 0.2s;
+    }
+    .card-check svg { width: 12px; height: 12px; stroke: #fff; stroke-width: 2.5; fill: none; }
+
+    .card-icon { margin-bottom: 10px; display: block; }
+    .card-icon svg { width: 2rem; height: 2rem; fill: var(--blue); display: block; }
+    .card-name { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
+    .card-desc { font-size: 0.87rem; color: var(--muted); line-height: 1.6; margin-bottom: 18px; }
+    .card-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .card-features li {
+      font-size: 0.85rem;
+      color: var(--text);
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+      line-height: 1.4;
+    }
+    .card-features li::before {
+      content: '';
+      width: 16px;
+      height: 16px;
+      min-width: 16px;
+      background: var(--blue);
+      border-radius: 50%;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='2,6 5,9 10,3'/%3E%3C/svg%3E");
+      background-size: 70%;
+      background-repeat: no-repeat;
+      background-position: center;
+      margin-top: 1px;
+    }
+
+    /* ── Claim form ── */
+    .claim-section {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px;
+      margin-bottom: 52px;
+    }
+    .claim-section h2 {
+      font-size: 1.05rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .claim-section p {
+      font-size: 0.88rem;
+      color: var(--muted);
+      line-height: 1.6;
+      margin-bottom: 24px;
+    }
+
+    .selected-product-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--blue-tint);
+      border: 1px solid var(--blue-mid);
+      color: var(--blue-d);
+      font-size: 0.82rem;
+      font-weight: 600;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    .form-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+    }
+    .form-group { flex: 1; }
+    .form-group label {
+      display: block;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1.5px solid var(--border);
+      border-radius: 6px;
+      font-size: 0.92rem;
+      font-family: inherit;
+      color: var(--text);
+      background: var(--white);
+      transition: border-color 0.2s;
+      outline: none;
+    }
+    .form-group input:focus { border-color: var(--blue); }
+    .form-group input.error { border-color: #DC2626; }
+
+    .btn-claim {
+      background: var(--blue);
+      color: var(--white);
+      border: none;
+      border-radius: 6px;
+      padding: 12px 28px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      font-family: inherit;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: background 0.2s;
+    }
+    .btn-claim:hover { background: var(--blue-d); }
+    .btn-claim:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .form-error {
+      font-size: 0.82rem;
+      color: #DC2626;
+      margin-top: 8px;
+      display: none;
+    }
+    .form-error.visible { display: block; }
+
+    /* ── Success state ── */
+    .success-section {
+      display: none;
+      background: var(--blue-tint);
+      border: 2px solid var(--blue);
+      border-radius: var(--radius);
+      padding: 40px 32px;
+      text-align: center;
+      margin-bottom: 52px;
+    }
+    .success-section.visible { display: block; }
+
+    .success-icon {
+      width: 52px;
+      height: 52px;
+      background: var(--blue);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0 auto 20px;
+    }
+    .success-icon svg { width: 26px; height: 26px; stroke: #fff; stroke-width: 2.5; fill: none; }
+
+    .success-section h2 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--navy);
+      margin-bottom: 8px;
+    }
+    .success-section .success-sub {
+      font-size: 0.92rem;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+
+    .voucher-box {
+      display: inline-block;
+      position: relative;
+      background: var(--white);
+      border: 2px solid var(--blue);
+      border-radius: 8px;
+      padding: 20px 40px;
+      margin-bottom: 24px;
+    }
+    .copy-btn {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: none;
+      border: 1px solid var(--blue-mid);
+      border-radius: 6px;
+      padding: 3px 6px;
+      cursor: pointer;
+      color: var(--blue);
+      font-size: 0.65rem;
+      font-weight: 600;
+      font-family: inherit;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: background 0.15s;
+    }
+    .copy-btn:hover { background: var(--blue-tint); }
+    .copy-btn svg { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2; fill: none; }
+
+    .voucher-label {
+      font-size: 0.72rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--blue);
+      margin-bottom: 6px;
+    }
+    .voucher-code {
+      font-size: 2rem;
+      font-weight: 800;
+      letter-spacing: 0.12em;
+      color: var(--navy);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .existing-notice {
+      display: none;
+      font-size: 0.82rem;
+      color: var(--muted);
+      background: rgba(0,0,0,0.03);
+      border-radius: 6px;
+      padding: 10px 16px;
+      margin-bottom: 20px;
+    }
+    .existing-notice.visible { display: block; }
+
+    .btn-redeem {
+      display: inline-block;
+      background: var(--blue);
+      color: var(--white);
+      text-decoration: none;
+      border-radius: 6px;
+      padding: 14px 32px;
+      font-size: 0.92rem;
+      font-weight: 700;
+      transition: background 0.2s;
+    }
+    .btn-redeem:hover { background: var(--blue-d); }
+
+    /* ── How it works ── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      padding-bottom: 52px;
+    }
+    .step-card {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .step-num {
+      width: 30px;
+      height: 30px;
+      background: var(--blue);
+      color: var(--white);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+    }
+    .step-card h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 6px; }
+    .step-card p  { font-size: 0.83rem; color: var(--muted); line-height: 1.5; }
+
+    /* ── Footer ── */
+    .footer {
+      background: var(--white);
+      border-top: 1px solid var(--border);
+      padding: 24px;
+      text-align: center;
+    }
+    .footer p { font-size: 0.78rem; color: var(--muted); line-height: 1.8; }
+    .footer a { color: var(--blue); text-decoration: none; font-weight: 600; }
+    .footer a:hover { text-decoration: underline; }
+
+    .powered-by {
+      text-align: center;
+      padding: 16px 24px 0;
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+    .powered-by-brand {
+      font-weight: 700;
+      background: linear-gradient(90deg, #7C4DFF, #00C4A7);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    @media (max-width: 640px) {
+      .products-grid { grid-template-columns: 1fr; }
+      .steps-grid    { grid-template-columns: 1fr; }
+      .form-row      { flex-direction: column; align-items: stretch; }
+      .form-group    { width: 100%; }
+      .btn-claim     { width: 100%; text-align: center; }
+      .hero          { padding: 40px 24px 48px; }
+      .claim-section { padding: 24px 20px; }
+      .voucher-code  { font-size: 1.5rem; letter-spacing: 0.08em; }
+      .copy-btn      { top: auto; bottom: 8px; right: 8px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header -->
+  <header class="bupa-header">
+    <div class="bupa-header-inner">
+      <a href="#" class="bupa-logo" aria-label="Bupa">
+        <svg width="60" height="60" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bupa logo">
+          <rect width="100" height="100" rx="8" fill="#009EE0"/>
+          <!-- Bupa: baseline y=48, top ~y=22, right edge ~x=65 -->
+          <text x="5" y="48" font-family="Arial, Helvetica, sans-serif" font-size="26" font-weight="800" font-style="italic" fill="white">Bupa</text>
+          <!-- ECG: flat at y=70 (below text); spike at x=68+ (right of text); curved tail up-right -->
+          <path d="M5,70 L68,70 L72,18 L77,88 L81,62 L87,62 Q93,62 96,48" stroke="white" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+      <div class="bupa-header-divider"></div>
+      <span class="bupa-header-section">Employee Benefits — Will Writing</span>
+    </div>
+  </header>
+
+  <main>
+
+    <!-- Hero -->
+    <section class="hero">
+      <span class="hero-tag">Your Will</span>
+      <h1>Peace of mind.<br/>Covered by Bupa.</h1>
+      <p>Select your Will, enter your Bupa email, and receive your personal voucher code instantly.</p>
+    </section>
+
+    <!-- Powered by strip -->
+    <p class="powered-by">Powered by <span class="powered-by-brand">Wills Assured</span></p>
+
+    <!-- Product selection -->
+    <section class="section">
+      <div class="container">
+        <h2 class="section-title">Step 1 — Choose your free Will</h2>
+        <p class="section-sub">Select the will that suits your circumstances.</p>
+
+        <div class="products-grid">
+
+          <div class="product-card" data-product="single" role="radio" aria-checked="false" tabindex="0">
+            <div class="card-check" aria-hidden="true">
+              <svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><polyline points="2,6 5,9 10,3"/></svg>
+            </div>
+            <span class="card-icon"><svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><circle cx="12" cy="7" r="4"/><path d="M4 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></span>
+            <p class="card-name">Single Will</p>
+            <p class="card-desc">Ideal for individuals who are single, divorced, or prefer to make independent arrangements.</p>
+            <ul class="card-features">
+              <li>Appoint an executor of your choice</li>
+              <li>Name beneficiaries for all assets</li>
+              <li>Guardianship wishes for children</li>
+              <li>Funeral and care preferences</li>
+              <li>Unlimited amendments for 24 months</li>
+            </ul>
+          </div>
+
+          <div class="product-card" data-product="mirror" role="radio" aria-checked="false" tabindex="0">
+            <div class="card-check" aria-hidden="true">
+              <svg viewBox="0 0 12 12" xmlns="http://www.w3.org/2000/svg"><polyline points="2,6 5,9 10,3"/></svg>
+            </div>
+            <span class="card-icon"><svg viewBox="0 0 28 24" xmlns="http://www.w3.org/2000/svg"><circle cx="18" cy="7" r="3.5" opacity="0.4"/><path d="M11 21c0-4 2.8-7 7-7 1.8 0 3.4.6 4.7 1.6" opacity="0.4"/><circle cx="10" cy="7" r="4"/><path d="M2 21c0-4.4 3.6-8 8-8s8 3.6 8 8"/></svg></span>
+            <p class="card-name">Mirror Wills</p>
+            <p class="card-desc">Two complementary wills for couples, each leaving their estate to the other. Ideal for married couples and civil partners.</p>
+            <ul class="card-features">
+              <li>Everything in Single Will &times; 2</li>
+              <li>Automatically mirrors your partner's wishes</li>
+              <li>Joint executor appointments</li>
+              <li>Covers both partners fully</li>
+              <li>Unlimited amendments for 24 months</li>
+            </ul>
+          </div>
+
+        </div>
+
+        <!-- Claim form -->
+        <div class="claim-section" id="claimForm">
+          <h2>Step 2 — Enter your Bupa email</h2>
+          <p>We&rsquo;ll send your voucher code straight to your inbox.</p>
+
+          <div class="selected-product-badge" id="selectedBadge" style="display:none;">
+            <span>&#10003;</span> <span id="selectedLabel">Single Will</span> selected
+          </div>
+
+          <form id="voucherForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="emailInput">Email address</label>
+                <input type="email" id="emailInput" placeholder="your.name@bupa.com" autocomplete="email" />
+              </div>
+              <button type="submit" class="btn-claim" id="submitBtn">Get My Voucher &rarr;</button>
+            </div>
+            <p class="form-error" id="formError"></p>
+          </form>
+        </div>
+
+        <!-- Success -->
+        <div class="success-section" id="successSection">
+          <div class="success-icon" aria-hidden="true">
+            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><polyline points="4,12 9,17 20,6"/></svg>
+          </div>
+          <h2>Your voucher is ready!</h2>
+          <p class="success-sub">We&rsquo;ve also sent it to <strong id="confirmedEmail"></strong> — check your inbox.</p>
+          <div class="existing-notice" id="existingNotice">
+            A voucher was already issued to this email — we have resent your original code.
+          </div>
+          <div class="voucher-box">
+            <button class="copy-btn" id="copyBtn" aria-label="Copy voucher code">
+              <svg viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg"><rect x="5" y="5" width="9" height="9" rx="1"/><path d="M11 5V3a1 1 0 0 0-1-1H3a1 1 0 0 0-1 1v7a1 1 0 0 0 1 1h2"/></svg>
+              <span id="copyLabel">Copy</span>
+            </button>
+            <p class="voucher-label">Your Voucher Code</p>
+            <p class="voucher-code" id="voucherCode"></p>
+          </div>
+          <br/>
+          <a href="https://www.willsassured.co.uk/redeem.html" id="redeemLink" class="btn-redeem">Redeem at Wills Assured &rarr;</a>
+          <p style="font-size:0.78rem;color:#6B7280;margin-top:16px;">Create your account on Wills Assured and apply this code at checkout. Your will takes under 20 minutes to complete.</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- How it works -->
+    <section style="padding-bottom:0;">
+      <div class="container">
+        <h2 class="section-title">How it works</h2>
+        <p class="section-sub" style="margin-bottom:24px;">Three simple steps to your completed will.</p>
+        <div class="steps-grid">
+          <div class="step-card">
+            <div class="step-num">1</div>
+            <h3>Claim your voucher</h3>
+            <p>Select your will type and enter your email above. Your personal voucher code arrives instantly.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">2</div>
+            <h3>Create your account</h3>
+            <p>Visit <a href="https://www.willsassured.co.uk" target="_blank" rel="noopener noreferrer" style="color:var(--blue);font-weight:600;">willsassured.co.uk</a>, apply your code at checkout, and create your secure account.</p>
+          </div>
+          <div class="step-card">
+            <div class="step-num">3</div>
+            <h3>Complete your will</h3>
+            <p>Answer the guided questions. Your legally binding will is generated in under 20 minutes.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <p>
+      This benefit is available to eligible Bupa employees as part of the employee benefits programme.<br/>
+      Powered by <a href="https://www.willsassured.co.uk" target="_blank" rel="noopener noreferrer">Wills Assured</a> — UK online will writing.
+      &nbsp;|&nbsp;
+      <a href="https://www.willsassured.co.uk/privacy-policy.html" target="_blank" rel="noopener noreferrer">Privacy Policy</a>
+      &nbsp;|&nbsp;
+      <a href="https://www.willsassured.co.uk/terms.html" target="_blank" rel="noopener noreferrer">Terms &amp; Conditions</a>
+    </p>
+  </footer>
+
+  <script>
+    const SUPABASE_URL  = 'https://fgyqumgvmllhiqdmgrfc.supabase.co'
+    const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZneXF1bWd2bWxsaGlxZG1ncmZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzQ1NDYsImV4cCI6MjA5MjUxMDU0Nn0.GwQsnXsraNegEqdYASRwagOxMgyAZg2iNXzP3Syqii8'
+    const FUNCTION_URL  = `${SUPABASE_URL}/functions/v1/claim-corporate-voucher`
+
+    let selectedProduct = null
+
+    const cards          = document.querySelectorAll('.product-card')
+    const claimForm      = document.getElementById('claimForm')
+    const successSec     = document.getElementById('successSection')
+    const selectedBadge  = document.getElementById('selectedBadge')
+    const selectedLabel  = document.getElementById('selectedLabel')
+    const emailInput     = document.getElementById('emailInput')
+    const submitBtn      = document.getElementById('submitBtn')
+    const formError      = document.getElementById('formError')
+    const voucherCode    = document.getElementById('voucherCode')
+    const confirmedEmail = document.getElementById('confirmedEmail')
+    const redeemLink     = document.getElementById('redeemLink')
+    const existingNotice = document.getElementById('existingNotice')
+    const copyBtn        = document.getElementById('copyBtn')
+    const copyLabel      = document.getElementById('copyLabel')
+
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(voucherCode.textContent.trim()).then(() => {
+        copyLabel.textContent = 'Copied!'
+        copyBtn.style.background = 'var(--blue-tint)'
+        setTimeout(() => { copyLabel.textContent = 'Copy'; copyBtn.style.background = '' }, 2000)
+      })
+    })
+
+    function selectProduct(card) {
+      cards.forEach(c => {
+        c.classList.remove('selected')
+        c.setAttribute('aria-checked', 'false')
+      })
+      card.classList.add('selected')
+      card.setAttribute('aria-checked', 'true')
+      selectedProduct = card.dataset.product
+      selectedLabel.textContent = selectedProduct === 'mirror' ? 'Mirror Wills' : 'Single Will'
+      selectedBadge.style.display = 'inline-flex'
+      formError.classList.remove('visible')
+    }
+
+    cards.forEach(card => {
+      card.addEventListener('click', () => selectProduct(card))
+      card.addEventListener('keydown', e => {
+        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); selectProduct(card) }
+      })
+    })
+
+    document.getElementById('voucherForm').addEventListener('submit', async (e) => {
+      e.preventDefault()
+      formError.classList.remove('visible')
+      emailInput.classList.remove('error')
+
+      if (!selectedProduct) {
+        formError.textContent = 'Please select a will type above.'
+        formError.classList.add('visible')
+        return
+      }
+
+      const email = emailInput.value.trim()
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailInput.classList.add('error')
+        formError.textContent = 'Please enter a valid email address.'
+        formError.classList.add('visible')
+        return
+      }
+
+      submitBtn.disabled = true
+      submitBtn.textContent = 'Sending…'
+
+      try {
+        const res = await fetch(FUNCTION_URL, {
+          method:  'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${SUPABASE_ANON}` },
+          body:    JSON.stringify({ email, productType: selectedProduct, clientSlug: 'bupa' }),
+        })
+        const data = await res.json()
+
+        if (!res.ok || !data.success) {
+          throw new Error(data.error || 'Something went wrong. Please try again.')
+        }
+
+        voucherCode.textContent = data.code
+        confirmedEmail.textContent = email
+        redeemLink.href = `https://www.willsassured.co.uk/redeem.html?code=${encodeURIComponent(data.code)}`
+        existingNotice.classList.toggle('visible', !!data.existing)
+
+        claimForm.style.display = 'none'
+        successSec.classList.add('visible')
+        successSec.scrollIntoView({ behavior: 'smooth', block: 'center' })
+
+      } catch (err) {
+        formError.textContent = err.message
+        formError.classList.add('visible')
+        submitBtn.disabled = false
+        submitBtn.textContent = 'Get My Voucher →'
+      }
+    })
+  </script>
+
+</body>
+</html>

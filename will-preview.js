@@ -2,6 +2,25 @@
 // WILL-PREVIEW.JS — Fetches and renders a generated will document
 // ================================================================
 
+function buildPdfFilename(willText, isoDate) {
+  // Extract testator name from the "OF JOHN MICHAEL SMITH" line
+  const ofLine = (willText || '').split('\n').map(l => l.trim()).find(l => l.startsWith('OF '))
+  const capsName = ofLine ? ofLine.replace(/^OF\s+/, '').trim() : ''
+
+  // Convert JOHN MICHAEL SMITH → John_Michael_Smith
+  const namePart = capsName
+    ? capsName.split(/\s+/).map(w => w.charAt(0) + w.slice(1).toLowerCase()).join('_')
+    : 'Will'
+
+  // Format date as DDMMYYYY
+  const d    = isoDate ? new Date(isoDate) : new Date()
+  const dd   = String(d.getDate()).padStart(2, '0')
+  const mm   = String(d.getMonth() + 1).padStart(2, '0')
+  const yyyy = d.getFullYear()
+
+  return `${namePart}_Will_${dd}${mm}${yyyy}`
+}
+
 async function initWillPreview() {
   const container = document.getElementById('willDocument')
   if (!container) return
@@ -13,9 +32,9 @@ async function initWillPreview() {
   const willId      = params.get('id')
   const testatorKey = params.get('testator') || 'primary'
 
-  let query = _sb
+  let query = sb
     .from('generated_wills')
-    .select('will_text, testator_key, product_type')
+    .select('will_text, testator_key, product_type, created_at')
     .eq('user_id', user.id)
 
   if (willId) {
@@ -27,6 +46,7 @@ async function initWillPreview() {
   const { data, error } = await query.maybeSingle()
 
   if (error || !data) {
+    console.error('[will-preview] fetch error:', error)
     container.innerHTML = `
       <div style="text-align:center;padding:60px 0;color:var(--muted);">
         <p>Will not found. <a href="dashboard.html" style="color:var(--primary)">Return to dashboard &rarr;</a></p>
@@ -34,10 +54,24 @@ async function initWillPreview() {
     return
   }
 
-  // Set page title
+  // Build PDF filename: extract name from will text "OF JOHN MICHAEL SMITH" line
+  const pdfFilename = buildPdfFilename(data.will_text, data.created_at)
+
+  // Human-readable tab title
   document.title = data.testator_key === 'partner'
     ? "Partner's Will — Wills Assured"
     : "Your Will — Wills Assured"
+
+  // Wire download button to set filename-as-title before print dialog opens
+  const downloadBtn = document.querySelector('.will-download-btn')
+  if (downloadBtn) {
+    downloadBtn.onclick = () => {
+      const humanTitle   = document.title
+      document.title     = pdfFilename
+      window.print()
+      document.title     = humanTitle
+    }
+  }
 
   // Render the will text as formatted HTML
   container.innerHTML = `<div class="will-brand-header">WillsAssured.co.uk</div>` + formatWillText(data.will_text)
@@ -97,9 +131,14 @@ function formatWillBody(text) {
   let inAttest = false
   let firstClause = true
 
-  // Bold any **customer data** markers from Claude
+  // Escape HTML entities before inserting into innerHTML
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  }
+
+  // Bold any **customer data** markers from Claude — escape first, then inject safe <strong> tags
   function applyBold(str) {
-    return str.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    return escapeHtml(str).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
   }
 
   for (let i = 0; i < lines.length; i++) {
@@ -184,12 +223,5 @@ function formatWillBody(text) {
 
   return html
 }
-
-const _sb = window.supabase
-  ? window.supabase.createClient(
-      'https://fgyqumgvmllhiqdmgrfc.supabase.co',
-      'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImZneXF1bWd2bWxsaGlxZG1ncmZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzY5MzQ1NDYsImV4cCI6MjA5MjUxMDU0Nn0.GwQsnXsraNegEqdYASRwagOxMgyAZg2iNXzP3Syqii8'
-    )
-  : null
 
 initWillPreview()
