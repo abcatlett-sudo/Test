@@ -1788,6 +1788,27 @@ img { max-width: 100%; display: block; }
   align-items: flex-start;
 }
 
+.will-generated-notice {
+  margin-top: 16px;
+  padding: 16px 18px;
+  background: rgba(0, 196, 167, 0.08);
+  border: 1px solid rgba(0, 196, 167, 0.35);
+  border-radius: 10px;
+  width: 100%;
+}
+.wgn-heading {
+  margin: 0 0 6px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--teal);
+}
+.wgn-body {
+  margin: 0;
+  font-size: 0.85rem;
+  color: var(--muted);
+  line-height: 1.55;
+}
+
 .dashboard-card:hover {
   transform: translateY(-4px);
   border-color: rgba(124, 77, 255, 0.30);
