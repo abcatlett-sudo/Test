@@ -649,9 +649,18 @@ if (dashboardContent) {
         const result = await resp.json();
         if (!resp.ok) throw new Error(result.error || 'Generation failed');
 
-        // Redirect to first generated will
-        const first = result.wills[0];
-        window.location.href = `will-preview.html?id=${first.id}`;
+        const isMirror = result.wills.length > 1;
+        const heading  = isMirror ? 'Both wills have been generated' : 'Your will has been generated';
+        const body     = isMirror
+          ? 'Each person should review, print, and sign their own will in the presence of two witnesses. You can update your answers and regenerate both wills at any time.'
+          : 'Review it carefully, then print and sign in the presence of two witnesses to make it legally binding. You can update your answers and regenerate your will at any time.';
+
+        btn.closest('.dashboard-card').insertAdjacentHTML('beforeend', `
+          <div class="will-generated-notice">
+            <p class="wgn-heading">&#10003; ${heading}</p>
+            <p class="wgn-body">${body}</p>
+          </div>`);
+        btn.remove();
       } catch (err) {
         console.error('Will generation error:', err);
         btn.disabled    = false;
