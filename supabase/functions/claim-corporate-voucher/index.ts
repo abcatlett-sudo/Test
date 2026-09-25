@@ -84,7 +84,7 @@ async function sendVoucherEmail(to: string, code: string, productType: string, c
             <td style="background:#F9F9F9;border-top:1px solid #eee;padding:20px 40px;text-align:center;">
               <p style="margin:0;font-size:0.75rem;color:#999;">
                 This voucher was issued as part of the ${clientName} employee benefits programme.<br/>
-                Powered by <a href="https://www.willsassured.co.uk" style="color:${brandColour};">Wills Assured</a> &mdash; UK online will writing from £39.00.
+                Powered by <a href="https://www.willsassured.co.uk" style="color:${brandColour};">Wills Assured</a> &mdash; UK online will writing from £39.
               </p>
             </td>
           </tr>
