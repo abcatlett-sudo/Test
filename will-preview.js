@@ -2,6 +2,25 @@
 // WILL-PREVIEW.JS — Fetches and renders a generated will document
 // ================================================================
 
+function buildPdfFilename(willText, isoDate) {
+  // Extract testator name from the "OF JOHN MICHAEL SMITH" line
+  const ofLine = (willText || '').split('\n').map(l => l.trim()).find(l => l.startsWith('OF '))
+  const capsName = ofLine ? ofLine.replace(/^OF\s+/, '').trim() : ''
+
+  // Convert JOHN MICHAEL SMITH → John_Michael_Smith
+  const namePart = capsName
+    ? capsName.split(/\s+/).map(w => w.charAt(0) + w.slice(1).toLowerCase()).join('_')
+    : 'Will'
+
+  // Format date as DDMMYYYY
+  const d    = isoDate ? new Date(isoDate) : new Date()
+  const dd   = String(d.getDate()).padStart(2, '0')
+  const mm   = String(d.getMonth() + 1).padStart(2, '0')
+  const yyyy = d.getFullYear()
+
+  return `${namePart}_Will_${dd}${mm}${yyyy}`
+}
+
 async function initWillPreview() {
   const container = document.getElementById('willDocument')
   if (!container) return
@@ -15,7 +34,7 @@ async function initWillPreview() {
 
   let query = sb
     .from('generated_wills')
-    .select('will_text, testator_key, product_type')
+    .select('will_text, testator_key, product_type, updated_at, created_at')
     .eq('user_id', user.id)
 
   if (willId) {
@@ -34,10 +53,24 @@ async function initWillPreview() {
     return
   }
 
-  // Set page title
+  // Build PDF filename: extract name from will text "OF JOHN MICHAEL SMITH" line
+  const pdfFilename = buildPdfFilename(data.will_text, data.updated_at || data.created_at)
+
+  // Human-readable tab title
   document.title = data.testator_key === 'partner'
     ? "Partner's Will — Wills Assured"
     : "Your Will — Wills Assured"
+
+  // Wire download button to set filename-as-title before print dialog opens
+  const downloadBtn = document.querySelector('.will-download-btn')
+  if (downloadBtn) {
+    downloadBtn.onclick = () => {
+      const humanTitle   = document.title
+      document.title     = pdfFilename
+      window.print()
+      document.title     = humanTitle
+    }
+  }
 
   // Render the will text as formatted HTML
   container.innerHTML = `<div class="will-brand-header">WillsAssured.co.uk</div>` + formatWillText(data.will_text)
