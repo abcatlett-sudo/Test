@@ -325,11 +325,19 @@ Deno.serve(async (req) => {
           .maybeSingle()
 
         if (voucher) {
-          // Increment use_count
-          await supabase
+          // Increment use_count with optimistic lock to prevent concurrent over-redemption
+          const { data: lockedVoucher } = await supabase
             .from('vouchers')
             .update({ use_count: voucher.use_count + 1 })
             .eq('id', voucher.id)
+            .eq('use_count', voucher.use_count)
+            .select('id')
+            .maybeSingle()
+
+          if (!lockedVoucher) {
+            console.warn(`[WEBHOOK] Discount voucher ${discountVoucherCode} use_count race — skipping earnings log`)
+            return new Response(JSON.stringify({ received: true }), { headers: { 'Content-Type': 'application/json' } })
+          }
 
           // Log earnings if voucher is linked to a partner
           if (voucher.corporate_client_id) {
@@ -366,8 +374,9 @@ Deno.serve(async (req) => {
       }
     }
 
-    // Generate voucher if applicable
-    if (isVoucher) {
+    // Generate voucher if applicable — only when purchase was successfully recorded
+    // (guards against duplicate codes being sent on Stripe webhook retries)
+    if (isVoucher && !purchaseError) {
       const productType = productId.replace('voucher-', '') as 'single' | 'mirror'
       const code        = generateVoucherCode()
       const voucherExp  = new Date()

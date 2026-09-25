@@ -97,9 +97,14 @@ function formatWillBody(text) {
   let inAttest = false
   let firstClause = true
 
-  // Bold any **customer data** markers from Claude
+  // Escape HTML entities before inserting into innerHTML
+  function escapeHtml(str) {
+    return str.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+  }
+
+  // Bold any **customer data** markers from Claude — escape first, then inject safe <strong> tags
   function applyBold(str) {
-    return str.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    return escapeHtml(str).replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
   }
 
   for (let i = 0; i < lines.length; i++) {

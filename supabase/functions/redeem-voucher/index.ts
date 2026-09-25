@@ -99,11 +99,19 @@ Deno.serve(async (req) => {
       email:             user.email,
       user_id:           user.id,
       product_id:        voucher.product_type,
-      amount:            voucher.product_type === 'mirror' ? 2999 : 1999,
+      amount:            voucher.product_type === 'mirror' ? 5900 : 3900,
       status:            'paid',
       expires_at:        expiresAt.toISOString(),
     })
-    if (purchaseError) throw new Error(purchaseError.message)
+
+    if (purchaseError) {
+      // Roll back the use_count increment so the voucher remains usable
+      await supabase
+        .from('vouchers')
+        .update({ use_count: voucher.use_count })
+        .eq('id', voucher.id)
+      throw new Error(purchaseError.message)
+    }
 
     return new Response(JSON.stringify({ success: true, product_type: voucher.product_type }), {
       headers: { ...cors, 'Content-Type': 'application/json' },

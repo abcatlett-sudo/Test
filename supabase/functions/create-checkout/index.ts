@@ -12,10 +12,10 @@ const supabase = createClient(
 )
 
 const BASE_PRICES: Record<string, { name: string; amount: number }> = {
-  single:           { name: 'Single Will',                      amount: 1999 },
-  mirror:           { name: 'Mirror Wills',                     amount: 2999 },
-  'voucher-single': { name: 'Single Will Voucher',              amount: 1999 },
-  'voucher-mirror': { name: 'Mirror Wills Voucher',             amount: 2999 },
+  single:           { name: 'Single Will',                      amount: 3900 },
+  mirror:           { name: 'Mirror Wills',                     amount: 5900 },
+  'voucher-single': { name: 'Single Will Voucher',              amount: 3900 },
+  'voucher-mirror': { name: 'Mirror Wills Voucher',             amount: 5900 },
   renewal:          { name: 'Wills Assured — 24 Month Renewal', amount: 999  },
 }
 
@@ -69,9 +69,11 @@ Deno.serve(async (req) => {
         })
       }
       // Check product type match if voucher is product-specific
-      if (voucher.product_type && voucher.product_type !== productId) {
+      // Normalise productId so 'voucher-single' compares correctly against 'single'
+      const normProductId = productId.replace('voucher-', '')
+      if (voucher.product_type && voucher.product_type !== normProductId) {
         const vLabel = voucher.product_type === 'mirror' ? 'Mirror Wills' : 'Single Will'
-        const pLabel = productId === 'mirror' ? 'Mirror Wills' : 'Single Will'
+        const pLabel = normProductId === 'mirror' ? 'Mirror Wills' : 'Single Will'
         return new Response(JSON.stringify({ error: `This voucher is for ${vLabel} and cannot be used for ${pLabel}.` }), {
           status: 400, headers: { ...cors, 'Content-Type': 'application/json' },
         })

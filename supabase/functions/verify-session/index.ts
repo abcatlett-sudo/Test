@@ -66,8 +66,11 @@ Deno.serve(async (req) => {
       .maybeSingle()
 
     if (existing) {
-      // Link purchase to authenticated user if not yet linked
+      // Link purchase to authenticated user if not yet linked — email must match
       if (!existing.user_id) {
+        if (user.email?.toLowerCase() !== email) {
+          return new Response(JSON.stringify({ error: 'This purchase does not belong to this account' }), { status: 403, headers: cors })
+        }
         await supabase.from('purchases').update({ user_id: user.id }).eq('id', existing.id)
       }
       return new Response(JSON.stringify({ success: true, product_type: existing.product_id }), {
