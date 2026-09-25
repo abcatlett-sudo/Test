@@ -12,17 +12,17 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --brand:       #1A1A1A;
-      --brand-d:     #000000;
-      --brand-tint:  #F2F2F2;
-      --brand-mid:   #CCCCCC;
-      --text:        #1A1A1A;
-      --muted:       #6B7280;
-      --border:      #D1D5DB;
-      --bg:          #F9FAFB;
+      --brand:       #484848;
+      --brand-d:     #333333;
+      --brand-tint:  #F3F3F3;
+      --brand-mid:   #C8C8C8;
+      --text:        #2E2E2E;
+      --muted:       #7A8390;
+      --border:      #D8DBDF;
+      --bg:          #F7F8FA;
       --white:       #ffffff;
       --radius:      10px;
-      --shadow:      0 2px 16px rgba(0,0,0,0.10);
+      --shadow:      0 2px 16px rgba(0,0,0,0.08);
     }
 
     body {
@@ -358,25 +358,23 @@
   <header class="ms-header">
     <div class="ms-header-inner">
       <a href="#" class="ms-logo" aria-label="Motorola Solutions">
-        <!--
-          Motorola Solutions badge: black circle + white batwing M
-          The batwing M shape: two symmetrical wings arching upward,
-          meeting at a shallow centre dip, with broad curved bases.
-        -->
-        <svg width="38" height="38" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Motorola Solutions logo">
-          <circle cx="50" cy="50" r="50" fill="#1A1A1A"/>
-          <!-- Batwing M: outer edges sweep up from bottom corners,
-               curve inward at the top, meet at a centre dip ~y=50,
-               inner edges return to the bottom flanking the centre. -->
+        <svg width="40" height="40" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Motorola Solutions logo">
+          <circle cx="50" cy="50" r="50" fill="#404040"/>
+          <!--
+            Batwing M: each wing has a broad outer arc sweeping from
+            a low base corner up and inward to the top, then curves
+            down to the shallow centre V. Inner edges return from the
+            centre back to the base. Symmetric about x=50.
+          -->
           <path d="
-            M 14,76
-            C 11,56 16,32 34,24
-            C 41,21 46,34 50,47
-            C 54,34 59,21 66,24
-            C 84,32 89,56 86,76
-            L 74,76
-            C 70,57 66,44 50,56
-            C 34,44 30,57 26,76
+            M 13,80
+            C  8,58  12,34  28,22
+            C 36,16  44,30  50,50
+            C 56,30  64,16  72,22
+            C 88,34  92,58  87,80
+            L 75,80
+            C 71,60  65,46  50,60
+            C 35,46  29,60  25,80
             Z
           " fill="white"/>
         </svg>
