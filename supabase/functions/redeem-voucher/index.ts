@@ -99,7 +99,7 @@ Deno.serve(async (req) => {
       email:             user.email,
       user_id:           user.id,
       product_id:        voucher.product_type,
-      amount:            voucher.product_type === 'mirror' ? 2999 : 1999,
+      amount:            voucher.product_type === 'mirror' ? 5900 : 3900,
       status:            'paid',
       expires_at:        expiresAt.toISOString(),
     })

@@ -12,10 +12,10 @@ const supabase = createClient(
 )
 
 const BASE_PRICES: Record<string, { name: string; amount: number }> = {
-  single:           { name: 'Single Will',                      amount: 1999 },
-  mirror:           { name: 'Mirror Wills',                     amount: 2999 },
-  'voucher-single': { name: 'Single Will Voucher',              amount: 1999 },
-  'voucher-mirror': { name: 'Mirror Wills Voucher',             amount: 2999 },
+  single:           { name: 'Single Will',                      amount: 3900 },
+  mirror:           { name: 'Mirror Wills',                     amount: 5900 },
+  'voucher-single': { name: 'Single Will Voucher',              amount: 3900 },
+  'voucher-mirror': { name: 'Mirror Wills Voucher',             amount: 5900 },
   renewal:          { name: 'Wills Assured — 24 Month Renewal', amount: 999  },
 }
 
