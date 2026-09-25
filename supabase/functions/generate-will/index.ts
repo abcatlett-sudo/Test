@@ -421,6 +421,19 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Unauthorised' }), { status: 401, headers: cors })
     }
 
+    // Verify user has an active, non-expired purchase (server-side expiry enforcement)
+    const { data: activePurchase } = await supabase
+      .from('purchases')
+      .select('id')
+      .eq('user_id', user.id)
+      .in('status', ['paid', 'renewal'])
+      .gt('expires_at', new Date().toISOString())
+      .maybeSingle()
+
+    if (!activePurchase) {
+      return new Response(JSON.stringify({ error: 'No active purchase found. Please renew your account.' }), { status: 403, headers: cors })
+    }
+
     // Fetch will responses
     const { data: willResponse, error: fetchError } = await supabase
       .from('will_responses')
@@ -449,6 +462,12 @@ Deno.serve(async (req) => {
       })
 
       const willText = (message.content[0] as { type: string; text: string }).text
+
+      // Validate no unresolved [NEXT_CLAUSE] placeholders remain in the output
+      if (willText.includes('[NEXT_CLAUSE]')) {
+        console.error(`[generate-will] Unresolved [NEXT_CLAUSE] placeholder in ${testatorKey} will`)
+        throw new Error('Will generation incomplete — clause numbering failed. Please try again.')
+      }
 
       // Upsert into generated_wills
       const { data: inserted, error: insertError } = await supabase

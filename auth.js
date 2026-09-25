@@ -510,8 +510,12 @@ if (dashboardContent) {
     const willTitles = { single: 'Your Single Will', mirror: 'Your Mirror Wills', comprehensive: 'Your Comprehensive Will' };
     const willTitle  = willTitles[willPurchase.product_id] || 'Your Will';
 
-    // Expiry — read from willPurchase (the original paid row, not a legacy renewal row)
-    const expiresAt  = willPurchase.expires_at ? new Date(willPurchase.expires_at) : null;
+    // Expiry — prefer most recent renewal if one exists, otherwise use original purchase
+    const latestRenewal = purchases
+      .filter(p => p.product_id === 'renewal')
+      .sort((a, b) => new Date(b.expires_at).getTime() - new Date(a.expires_at).getTime())[0];
+    const expirySource = latestRenewal || willPurchase;
+    const expiresAt  = expirySource.expires_at ? new Date(expirySource.expires_at) : null;
     const now        = new Date();
     const isExpired  = expiresAt ? expiresAt < now : false;
     const daysLeft   = expiresAt ? Math.ceil((expiresAt.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)) : null;

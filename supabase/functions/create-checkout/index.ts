@@ -69,9 +69,11 @@ Deno.serve(async (req) => {
         })
       }
       // Check product type match if voucher is product-specific
-      if (voucher.product_type && voucher.product_type !== productId) {
+      // Normalise productId so 'voucher-single' compares correctly against 'single'
+      const normProductId = productId.replace('voucher-', '')
+      if (voucher.product_type && voucher.product_type !== normProductId) {
         const vLabel = voucher.product_type === 'mirror' ? 'Mirror Wills' : 'Single Will'
-        const pLabel = productId === 'mirror' ? 'Mirror Wills' : 'Single Will'
+        const pLabel = normProductId === 'mirror' ? 'Mirror Wills' : 'Single Will'
         return new Response(JSON.stringify({ error: `This voucher is for ${vLabel} and cannot be used for ${pLabel}.` }), {
           status: 400, headers: { ...cors, 'Content-Type': 'application/json' },
         })

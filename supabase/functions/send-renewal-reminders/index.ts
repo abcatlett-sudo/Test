@@ -16,7 +16,7 @@ async function sendReminderEmail(to: string, firstName: string, expiresAt: Date,
   const dashboardUrl = 'https://www.willsassured.co.uk/dashboard.html'
   const isUrgent     = daysLeft <= 7
   const subject      = isUrgent
-    ? `Your Wills Assured editing window closes in ${daysLeft} days`
+    ? `Action required — your Wills Assured editing window closes in ${daysLeft} days`
     : `Your Wills Assured editing window closes in ${daysLeft} days`
 
   const emailRes = await fetch('https://api.resend.com/emails', {
@@ -93,14 +93,25 @@ async function sendReminderEmail(to: string, firstName: string, expiresAt: Date,
 }
 
 Deno.serve(async (req) => {
+  // Verify the request carries the expected cron secret to prevent public triggering
+  const cronSecret = Deno.env.get('CRON_SECRET')
+  if (cronSecret) {
+    const authHeader = req.headers.get('Authorization') ?? ''
+    if (authHeader !== `Bearer ${cronSecret}`) {
+      return new Response('Unauthorized', { status: 401 })
+    }
+  }
+
   try {
     const now          = new Date()
     const results: string[] = []
 
-    // Query purchases in the 30-day and 7-day reminder windows
+    // Use a ±8-hour window (16 hours total) rather than ±24 hours to reduce
+    // the chance of duplicate sends if the function is triggered more than once per day
     for (const daysTarget of [30, 7]) {
-      const windowStart = new Date(now.getTime() + (daysTarget - 1) * 24 * 60 * 60 * 1000)
-      const windowEnd   = new Date(now.getTime() + (daysTarget + 1) * 24 * 60 * 60 * 1000)
+      const halfWindowMs = 8 * 60 * 60 * 1000
+      const windowStart  = new Date(now.getTime() + daysTarget * 24 * 60 * 60 * 1000 - halfWindowMs)
+      const windowEnd    = new Date(now.getTime() + daysTarget * 24 * 60 * 60 * 1000 + halfWindowMs)
 
       const { data: purchases, error } = await supabase
         .from('purchases')
