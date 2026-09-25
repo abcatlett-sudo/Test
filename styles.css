@@ -2332,10 +2332,34 @@ input[type="password"]::-ms-reveal                    { filter: invert(1); }
   margin: 4px 0 0;
 }
 
-.pc-select {
-  width: 100%;
-  cursor: pointer;
+.pc-listbox {
+  width: 100%; margin-top: 8px;
+  background: var(--mid);
+  border: 1.5px solid var(--primary);
+  border-radius: 8px;
+  overflow-y: auto;
+  max-height: 240px;
+  box-sizing: border-box;
 }
+.pc-listbox-header {
+  padding: 10px 14px;
+  font-size: 0.85rem;
+  color: var(--muted);
+  border-bottom: 1px solid rgba(255,255,255,0.08);
+  cursor: default;
+  user-select: none;
+}
+.pc-listbox-item {
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  color: var(--white);
+  cursor: pointer;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  transition: background var(--transition);
+  line-height: 1.4;
+}
+.pc-listbox-item:last-child { border-bottom: none; }
+.pc-listbox-item:hover { background: rgba(124,77,255,0.22); color: var(--white); }
 
 .quest-executor-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
 .quest-executor-card {

@@ -538,7 +538,7 @@ function postcodeWidget(targetName) {
         <input class="quest-input pc-input" type="text" placeholder="Enter postcode" autocomplete="off" maxlength="8" />
         <button type="button" class="btn btn-primary pc-btn">Find &rarr;</button>
       </div>
-      <select class="quest-input pc-select" style="display:none;margin-top:8px;"></select>
+      <div class="pc-listbox" style="display:none;" role="listbox" aria-label="Select your address"></div>
       <p class="pc-note"></p>
     </div>`;
 }
@@ -546,13 +546,14 @@ function postcodeWidget(targetName) {
 async function handlePostcodeLookup(widget) {
   const input    = widget.querySelector('.pc-input');
   const note     = widget.querySelector('.pc-note');
-  const select   = widget.querySelector('.pc-select');
+  const listbox  = widget.querySelector('.pc-listbox');
   const postcode = input.value.trim().toUpperCase();
 
   if (!postcode) { note.textContent = 'Please enter a postcode.'; return; }
 
   note.textContent = 'Searching…';
-  select.style.display = 'none';
+  listbox.style.display = 'none';
+  listbox.innerHTML = '';
 
   try {
     const res  = await fetch(
@@ -581,24 +582,36 @@ async function handlePostcodeLookup(widget) {
       return;
     }
     note.textContent = `${suggestions.length} address${suggestions.length > 1 ? 'es' : ''} found — select one below.`;
-    select.innerHTML = '<option value="">— Select your address —</option>' +
-      suggestions.map((s, i) => `<option value="${i}">${s.address}</option>`).join('');
-    select.style.display = 'block';
 
-    select.onchange = () => {
-      const idx = parseInt(select.value);
-      if (isNaN(idx)) return;
-      const s     = suggestions[idx];
-      const parts = s.address.split(', ').map(p => p.trim()).filter(p => p);
-      if (!parts.some(p => /^[A-Z]{1,2}\d/i.test(p))) parts.push(s.postcode);
-      const formatted = parts.join('\n');
-      const target = widget.closest('.quest-field')?.querySelector(`[name="${widget.dataset.target}"]`)
-        || document.querySelector(`[name="${widget.dataset.target}"]`);
-      if (target) {
-        target.value = formatted;
-        responses[widget.dataset.target] = formatted;
-      }
-    };
+    const header = document.createElement('div');
+    header.className = 'pc-listbox-header';
+    header.textContent = '— Select your address —';
+    listbox.appendChild(header);
+
+    suggestions.forEach((s, i) => {
+      const item = document.createElement('div');
+      item.className = 'pc-listbox-item';
+      item.setAttribute('role', 'option');
+      item.setAttribute('data-idx', i);
+      item.textContent = s.address;
+      item.addEventListener('click', () => {
+        const parts = s.address.split(', ').map(p => p.trim()).filter(p => p);
+        if (!parts.some(p => /^[A-Z]{1,2}\d/i.test(p))) parts.push(s.postcode);
+        const formatted = parts.join('\n');
+        const target = widget.closest('.quest-field')?.querySelector(`[name="${widget.dataset.target}"]`)
+          || document.querySelector(`[name="${widget.dataset.target}"]`);
+        if (target) {
+          target.value = formatted;
+          responses[widget.dataset.target] = formatted;
+        }
+        listbox.style.display = 'none';
+        note.textContent = '✓ Address selected';
+        note.style.color = 'var(--teal)';
+      });
+      listbox.appendChild(item);
+    });
+
+    listbox.style.display = 'block';
   } catch {
     note.textContent = 'Lookup failed — please type your address below.';
   }
