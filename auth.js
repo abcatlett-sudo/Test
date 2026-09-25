@@ -279,7 +279,11 @@ if (loginForm) {
     } else {
       const params     = new URLSearchParams(window.location.search);
       const redirectTo = params.get('redirect');
-      window.location.href = redirectTo ? decodeURIComponent(redirectTo) : 'dashboard.html';
+      const safeRedirect =
+        redirectTo && !redirectTo.startsWith('http') && !redirectTo.startsWith('//')
+          ? decodeURIComponent(redirectTo)
+          : 'dashboard.html';
+      window.location.href = safeRedirect;
     }
   });
 }

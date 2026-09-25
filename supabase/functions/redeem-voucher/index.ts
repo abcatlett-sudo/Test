@@ -103,7 +103,15 @@ Deno.serve(async (req) => {
       status:            'paid',
       expires_at:        expiresAt.toISOString(),
     })
-    if (purchaseError) throw new Error(purchaseError.message)
+
+    if (purchaseError) {
+      // Roll back the use_count increment so the voucher remains usable
+      await supabase
+        .from('vouchers')
+        .update({ use_count: voucher.use_count })
+        .eq('id', voucher.id)
+      throw new Error(purchaseError.message)
+    }
 
     return new Response(JSON.stringify({ success: true, product_type: voucher.product_type }), {
       headers: { ...cors, 'Content-Type': 'application/json' },

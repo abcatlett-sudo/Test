@@ -99,7 +99,7 @@
   <script defer src="script.js"></script>
   <script defer src="auth.js"></script>
   <script>
-    (async () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       // Auto-fill code from URL param
       const params = new URLSearchParams(window.location.search)
       const codeParam = params.get('code')
@@ -185,7 +185,7 @@
           btn.textContent = 'Redeem Voucher →'
         }
       })
-    })()
+    })
   </script>
 
   <footer class="footer">
