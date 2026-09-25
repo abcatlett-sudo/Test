@@ -34,7 +34,7 @@ async function initWillPreview() {
 
   let query = sb
     .from('generated_wills')
-    .select('will_text, testator_key, product_type, updated_at, created_at')
+    .select('will_text, testator_key, product_type, created_at')
     .eq('user_id', user.id)
 
   if (willId) {
@@ -46,6 +46,7 @@ async function initWillPreview() {
   const { data, error } = await query.maybeSingle()
 
   if (error || !data) {
+    console.error('[will-preview] fetch error:', error)
     container.innerHTML = `
       <div style="text-align:center;padding:60px 0;color:var(--muted);">
         <p>Will not found. <a href="dashboard.html" style="color:var(--primary)">Return to dashboard &rarr;</a></p>
@@ -54,7 +55,7 @@ async function initWillPreview() {
   }
 
   // Build PDF filename: extract name from will text "OF JOHN MICHAEL SMITH" line
-  const pdfFilename = buildPdfFilename(data.will_text, data.updated_at || data.created_at)
+  const pdfFilename = buildPdfFilename(data.will_text, data.created_at)
 
   // Human-readable tab title
   document.title = data.testator_key === 'partner'
