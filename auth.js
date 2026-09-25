@@ -631,6 +631,25 @@ if (dashboardContent) {
       window.location.href = 'index.html';
     });
 
+    // Show success notice if this page load followed a will generation
+    const generatedFlag = sessionStorage.getItem('wa_will_generated');
+    if (generatedFlag) {
+      sessionStorage.removeItem('wa_will_generated');
+      const isMirror = generatedFlag === 'mirror';
+      const heading  = isMirror ? 'Both wills have been generated' : 'Your will has been generated';
+      const body     = isMirror
+        ? 'Each person should review, print, and sign their own will in the presence of two witnesses. You can update your answers and regenerate both wills at any time.'
+        : 'Review it carefully, then print and sign in the presence of two witnesses to make it legally binding. You can update your answers and regenerate your will at any time.';
+      const willCard = document.querySelector('.dashboard-card');
+      if (willCard) {
+        willCard.insertAdjacentHTML('beforeend', `
+          <div class="will-generated-notice">
+            <p class="wgn-heading">&#10003; ${heading}</p>
+            <p class="wgn-body">${body}</p>
+          </div>`);
+      }
+    }
+
     async function triggerWillGeneration(btn) {
       btn.disabled    = true;
       btn.textContent = 'Generating your will…';
@@ -650,17 +669,10 @@ if (dashboardContent) {
         if (!resp.ok) throw new Error(result.error || 'Generation failed');
 
         const isMirror = result.wills.length > 1;
-        const heading  = isMirror ? 'Both wills have been generated' : 'Your will has been generated';
-        const body     = isMirror
-          ? 'Each person should review, print, and sign their own will in the presence of two witnesses. You can update your answers and regenerate both wills at any time.'
-          : 'Review it carefully, then print and sign in the presence of two witnesses to make it legally binding. You can update your answers and regenerate your will at any time.';
-
-        btn.closest('.dashboard-card').insertAdjacentHTML('beforeend', `
-          <div class="will-generated-notice">
-            <p class="wgn-heading">&#10003; ${heading}</p>
-            <p class="wgn-body">${body}</p>
-          </div>`);
-        btn.remove();
+        // Store notice details for display after page reload
+        sessionStorage.setItem('wa_will_generated', isMirror ? 'mirror' : 'single');
+        // Reload so the dashboard rebuilds with the new will data and shows View buttons
+        window.location.reload();
       } catch (err) {
         console.error('Will generation error:', err);
         btn.disabled    = false;
