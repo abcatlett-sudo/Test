@@ -48,9 +48,11 @@ Deno.serve(async (req) => {
       })
     }
 
-    if (productType && voucher.product_type && voucher.product_type !== productType) {
+    // Normalise 'voucher-single' → 'single' etc. so basket product IDs compare correctly
+    const normProductType = productType ? productType.replace('voucher-', '') : null
+    if (normProductType && voucher.product_type && voucher.product_type !== normProductType) {
       const voucherLabel = voucher.product_type === 'mirror' ? 'Mirror Wills' : 'Single Will'
-      const basketLabel  = productType === 'mirror' ? 'Mirror Wills' : 'Single Will'
+      const basketLabel  = normProductType === 'mirror' ? 'Mirror Wills' : 'Single Will'
       return new Response(JSON.stringify({ valid: false, error: `This is a ${voucherLabel} voucher and cannot be used for a ${basketLabel}.` }), {
         status: 409, headers: { ...cors, 'Content-Type': 'application/json' },
       })
