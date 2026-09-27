@@ -46,12 +46,16 @@ Deno.serve(async (req) => {
       return new Response(JSON.stringify({ error: 'This is a discount voucher. Add your item to the basket and apply the code there to get your discount.' }), { status: 400, headers: cors })
     }
 
-    // Check product type matches basket
-    if (productType && voucher.product_type !== productType) {
+    // Normalise basket product IDs (e.g. 'voucher-single' → 'single')
+    const normProductType = productType ? productType.replace('voucher-', '') : null
+    // Check product type matches basket — only when the voucher is product-specific (not null)
+    if (normProductType && voucher.product_type && voucher.product_type !== normProductType) {
       const voucherLabel = voucher.product_type === 'mirror' ? 'Mirror Wills' : 'Single Will'
-      const basketLabel  = productType === 'mirror' ? 'Mirror Wills' : 'Single Will'
+      const basketLabel  = normProductType === 'mirror' ? 'Mirror Wills' : 'Single Will'
       return new Response(JSON.stringify({ error: `This is a ${voucherLabel} voucher and cannot be used for a ${basketLabel}.` }), { status: 409, headers: cors })
     }
+    // Resolve effective product type: voucher-specific takes priority, then fall back to basket
+    const effectiveProductType = voucher.product_type || normProductType || 'single'
 
     // Check uses remaining
     if (voucher.use_count >= voucher.max_uses) {
@@ -98,8 +102,8 @@ Deno.serve(async (req) => {
       stripe_session_id: `voucher-${voucher.code}-${user.id.slice(0, 8)}`,
       email:             user.email,
       user_id:           user.id,
-      product_id:        voucher.product_type,
-      amount:            voucher.product_type === 'mirror' ? 5900 : 3900,
+      product_id:        effectiveProductType,
+      amount:            effectiveProductType === 'mirror' ? 5900 : 3900,
       status:            'paid',
       expires_at:        expiresAt.toISOString(),
     })
