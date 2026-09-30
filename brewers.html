@@ -37,7 +37,8 @@
 
     /* ── Header ── */
     .br-header {
-      background: var(--blue);
+      background: var(--white);
+      border-bottom: 1px solid var(--border);
       padding: 0 24px;
       position: sticky;
       top: 0;
@@ -58,8 +59,8 @@
       line-height: 1;
     }
     .br-logo-svg { height: 44px; width: auto; display: block; }
-    .br-header-divider { width: 1px; height: 28px; background: rgba(255,255,255,0.35); }
-    .br-header-section { font-size: 0.85rem; font-weight: 500; color: rgba(255,255,255,0.85); }
+    .br-header-divider { width: 1px; height: 28px; background: var(--border); }
+    .br-header-section { font-size: 0.85rem; font-weight: 500; color: var(--muted); }
 
     /* ── Main ── */
     main { flex: 1; }
