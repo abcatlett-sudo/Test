@@ -58,27 +58,10 @@
       text-decoration: none;
       flex-shrink: 0;
     }
-    /* Wordmark: MOTOROLA bold + SOLUTIONS light */
-    .ms-wordmark {
-      display: flex;
-      align-items: baseline;
-      gap: 6px;
-      line-height: 1;
-    }
-    .ms-wordmark-primary {
-      font-size: 1.05rem;
-      font-weight: 800;
-      color: var(--brand);
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
-    }
-    .ms-wordmark-secondary {
-      font-size: 0.82rem;
-      font-weight: 400;
-      color: #555;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      font-style: italic;
+    .ms-logo-img {
+      height: 36px;
+      width: auto;
+      display: block;
     }
     .ms-header-divider { width: 1px; height: 32px; background: var(--border); margin: 0 4px; }
     .ms-header-section { font-size: 0.85rem; font-weight: 500; color: var(--muted); }
@@ -349,13 +332,13 @@
       .voucher-code  { font-size: 1.5rem; letter-spacing: 0.08em; }
       .copy-btn      { top: auto; bottom: 8px; right: 8px; }
 
-      /* Mobile header: stack wordmark + section text, centred */
+      /* Mobile header: stack logo + section text, centred */
       .ms-header-inner {
         flex-direction: column;
         justify-content: center;
         height: auto;
         padding: 10px 0;
-        gap: 2px;
+        gap: 4px;
       }
       .ms-header-divider { display: none; }
       .ms-header-section {
@@ -364,9 +347,7 @@
         text-align: center;
       }
       .ms-logo { justify-content: center; }
-      .ms-wordmark { gap: 4px; }
-      .ms-wordmark-primary { font-size: 1rem; }
-      .ms-wordmark-secondary { display: inline; font-size: 0.8rem; font-style: italic; }
+      .ms-logo-img { height: 28px; }
     }
   </style>
 </head>
@@ -376,10 +357,7 @@
   <header class="ms-header">
     <div class="ms-header-inner">
       <a href="#" class="ms-logo" aria-label="Motorola Solutions">
-        <div class="ms-wordmark">
-          <span class="ms-wordmark-primary">Motorola</span>
-          <span class="ms-wordmark-secondary">Solutions</span>
-        </div>
+        <img src="assets/logos/Motorola_Solutions_logo.png" class="ms-logo-img" alt="Motorola Solutions" />
       </a>
       <div class="ms-header-divider"></div>
       <span class="ms-header-section">Will Writing Programme</span>
