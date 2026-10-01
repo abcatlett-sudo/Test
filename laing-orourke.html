@@ -57,8 +57,8 @@
       text-decoration: none;
       line-height: 1;
     }
-    .lor-logo-img { height: 40px; width: auto; display: block; }
-    .lor-header-divider { width: 1px; height: 28px; background: rgba(255,255,255,0.2); }
+    .lor-logo-img { height: 52px; width: auto; display: block; }
+    .lor-header-divider { width: 1px; height: 32px; background: rgba(255,255,255,0.2); }
     .lor-header-section { font-size: 0.85rem; font-weight: 500; color: rgba(255,255,255,0.65); }
 
     /* ── Main ── */
@@ -336,8 +336,20 @@
       .claim-section { padding: 24px 20px; }
       .voucher-code  { font-size: 1.5rem; letter-spacing: 0.08em; }
       .copy-btn      { top: auto; bottom: 8px; right: 8px; }
-      .lor-header-inner { gap: 12px; }
-      .lor-logo-img  { height: 32px; }
+      .lor-header-inner {
+        flex-direction: column;
+        justify-content: center;
+        height: auto;
+        padding: 10px 0;
+        gap: 4px;
+      }
+      .lor-header-divider { display: none; }
+      .lor-header-section {
+        font-size: 0.75rem;
+        text-align: center;
+      }
+      .lor-logo { justify-content: center; }
+      .lor-logo-img { height: 36px; }
     }
   </style>
 </head>
@@ -350,7 +362,7 @@
         <img src="assets/logos/Laing_ORorke_logo.png" class="lor-logo-img" alt="Laing O'Rourke" />
       </a>
       <div class="lor-header-divider"></div>
-      <span class="lor-header-section">Employee Benefits — Will Writing</span>
+      <span class="lor-header-section">Will Writing Programme</span>
     </div>
   </header>
 
