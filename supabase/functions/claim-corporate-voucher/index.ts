@@ -16,7 +16,7 @@ function generateCode(prefix: string): string {
   return `${prefix}-${seg()}-${seg()}`
 }
 
-async function sendVoucherEmail(to: string, code: string, productType: string, clientName: string, brandColour = '#006A4E', brandColourTint = '#E8F5F1'): Promise<void> {
+async function sendVoucherEmail(to: string, code: string, productType: string, clientName: string, brandColour = '#2E2C3F', brandColourTint = '#F4F3FF'): Promise<void> {
   const resendKey = Deno.env.get('RESEND_API_KEY')
   if (!resendKey) {
     console.log(`[CORPORATE-VOUCHER] ${code} → ${to}`)
@@ -37,8 +37,8 @@ async function sendVoucherEmail(to: string, code: string, productType: string, c
 <!DOCTYPE html>
 <html lang="en">
 <head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1.0"/></head>
-<body style="margin:0;padding:0;background-color:#F0F4F3;font-family:Arial,sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F0F4F3;padding:40px 20px;">
+<body style="margin:0;padding:0;background-color:#F4F4F4;font-family:Arial,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#F4F4F4;padding:40px 20px;">
     <tr>
       <td align="center">
         <table width="100%" cellpadding="0" cellspacing="0" style="max-width:560px;background:#ffffff;border-radius:8px;overflow:hidden;box-shadow:0 2px 16px rgba(0,0,0,0.10);">
