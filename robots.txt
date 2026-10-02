@@ -16,5 +16,6 @@ Disallow: /bupa.html
 Disallow: /motorola-solutions.html
 Disallow: /brewers.html
 Disallow: /laing-orourke.html
+Disallow: /dentsu.html
 
 Sitemap: https://willsassured.co.uk/sitemap.xml
