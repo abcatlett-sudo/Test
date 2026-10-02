@@ -12,17 +12,17 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --red:       #E8341C;
-      --red-d:     #C42A15;
-      --red-tint:  #FEF0EE;
-      --red-mid:   #F5B8B0;
+      --dk:        #000014;
+      --dk-d:      #000008;
+      --dk-tint:   #F0F0F4;
+      --dk-mid:    #C0C0CC;
       --text:      #1A1A1A;
       --muted:     #6B7280;
       --border:    #E0E0E0;
       --bg:        #F8F8F8;
       --white:     #ffffff;
       --radius:    8px;
-      --shadow:    0 2px 16px rgba(232,52,28,0.14);
+      --shadow:    0 2px 16px rgba(0,0,20,0.14);
     }
 
     body {
@@ -66,7 +66,7 @@
 
     /* ── Hero ── */
     .hero {
-      background: var(--red);
+      background: var(--dk);
       padding: 56px 24px 64px;
       text-align: center;
     }
@@ -129,10 +129,10 @@
       position: relative;
       user-select: none;
     }
-    .product-card:hover { border-color: var(--red); box-shadow: var(--shadow); }
+    .product-card:hover { border-color: var(--dk); box-shadow: var(--shadow); }
     .product-card.selected {
-      border-color: var(--red);
-      background: var(--red-tint);
+      border-color: var(--dk);
+      background: var(--dk-tint);
       box-shadow: var(--shadow);
     }
     .product-card.selected .card-check { opacity: 1; }
@@ -141,7 +141,7 @@
       position: absolute;
       top: 16px; right: 16px;
       width: 22px; height: 22px;
-      background: var(--red);
+      background: var(--dk);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       opacity: 0;
@@ -150,7 +150,7 @@
     .card-check svg { width: 12px; height: 12px; stroke: #fff; stroke-width: 2.5; fill: none; }
 
     .card-icon { margin-bottom: 10px; display: block; }
-    .card-icon svg { width: 2rem; height: 2rem; fill: var(--red); display: block; }
+    .card-icon svg { width: 2rem; height: 2rem; fill: var(--dk); display: block; }
     .card-name { font-size: 1.05rem; font-weight: 700; color: var(--text); margin-bottom: 6px; }
     .card-desc { font-size: 0.87rem; color: var(--muted); line-height: 1.6; margin-bottom: 18px; }
     .card-features { list-style: none; display: flex; flex-direction: column; gap: 8px; }
@@ -161,7 +161,7 @@
     .card-features li::before {
       content: '';
       width: 16px; height: 16px; min-width: 16px;
-      background: var(--red);
+      background: var(--dk);
       border-radius: 50%;
       background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 12 12' fill='none' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='2,6 5,9 10,3'/%3E%3C/svg%3E");
       background-size: 70%; background-repeat: no-repeat; background-position: center;
@@ -183,9 +183,9 @@
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      background: var(--red-tint);
-      border: 1px solid var(--red-mid);
-      color: var(--red-d);
+      background: var(--dk-tint);
+      border: 1px solid var(--dk-mid);
+      color: var(--dk);
       font-size: 0.82rem;
       font-weight: 600;
       padding: 5px 12px;
@@ -204,18 +204,18 @@
       color: var(--text); background: var(--white);
       transition: border-color 0.2s; outline: none;
     }
-    .form-group input:focus { border-color: var(--red); }
+    .form-group input:focus { border-color: var(--dk); }
     .form-group input.error { border-color: #DC2626; }
 
     .btn-claim {
-      background: var(--red); color: var(--white);
+      background: var(--dk); color: var(--white);
       border: none; border-radius: 6px;
       padding: 12px 28px;
       font-size: 0.92rem; font-weight: 700; font-family: inherit;
       cursor: pointer; white-space: nowrap;
       transition: background 0.2s;
     }
-    .btn-claim:hover { background: var(--red-d); }
+    .btn-claim:hover { background: var(--dk-d); }
     .btn-claim:disabled { opacity: 0.6; cursor: not-allowed; }
 
     .form-error { font-size: 0.82rem; color: #DC2626; margin-top: 8px; display: none; }
@@ -224,8 +224,8 @@
     /* ── Success state ── */
     .success-section {
       display: none;
-      background: var(--red-tint);
-      border: 2px solid var(--red);
+      background: var(--dk-tint);
+      border: 2px solid var(--dk);
       border-radius: var(--radius);
       padding: 40px 32px;
       text-align: center;
@@ -235,38 +235,38 @@
 
     .success-icon {
       width: 52px; height: 52px;
-      background: var(--red);
+      background: var(--dk);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       margin: 0 auto 20px;
     }
     .success-icon svg { width: 26px; height: 26px; stroke: #fff; stroke-width: 2.5; fill: none; }
 
-    .success-section h2 { font-size: 1.2rem; font-weight: 800; color: var(--red-d); margin-bottom: 8px; }
+    .success-section h2 { font-size: 1.2rem; font-weight: 800; color: var(--dk); margin-bottom: 8px; }
     .success-section .success-sub { font-size: 0.92rem; color: var(--muted); margin-bottom: 28px; }
 
     .voucher-box {
       display: inline-block; position: relative;
       background: var(--white);
-      border: 2px solid var(--red);
+      border: 2px solid var(--dk);
       border-radius: 8px;
       padding: 20px 40px;
       margin-bottom: 24px;
     }
     .copy-btn {
       position: absolute; top: 8px; right: 8px;
-      background: none; border: 1px solid var(--red-mid);
+      background: none; border: 1px solid var(--dk-mid);
       border-radius: 6px; padding: 3px 6px;
-      cursor: pointer; color: var(--red);
+      cursor: pointer; color: var(--dk);
       font-size: 0.65rem; font-weight: 600; font-family: inherit;
       display: flex; align-items: center; gap: 4px;
       transition: background 0.15s;
     }
-    .copy-btn:hover { background: var(--red-tint); }
+    .copy-btn:hover { background: var(--dk-tint); }
     .copy-btn svg { width: 12px; height: 12px; stroke: currentColor; stroke-width: 2; fill: none; }
 
-    .voucher-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--red); margin-bottom: 6px; }
-    .voucher-code { font-size: 2rem; font-weight: 800; letter-spacing: 0.12em; color: var(--red-d); font-variant-numeric: tabular-nums; }
+    .voucher-label { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dk); margin-bottom: 6px; }
+    .voucher-code { font-size: 2rem; font-weight: 800; letter-spacing: 0.12em; color: var(--dk); font-variant-numeric: tabular-nums; }
 
     .existing-notice {
       display: none; font-size: 0.82rem; color: var(--muted);
@@ -277,13 +277,13 @@
 
     .btn-redeem {
       display: inline-block;
-      background: var(--red); color: var(--white);
+      background: var(--dk); color: var(--white);
       text-decoration: none; border-radius: 6px;
       padding: 14px 32px;
       font-size: 0.92rem; font-weight: 700;
       transition: background 0.2s;
     }
-    .btn-redeem:hover { background: var(--red-d); }
+    .btn-redeem:hover { background: var(--dk-d); }
 
     /* ── How it works ── */
     .steps-grid {
@@ -300,7 +300,7 @@
     }
     .step-num {
       width: 30px; height: 30px;
-      background: var(--red); color: var(--white);
+      background: var(--dk); color: var(--white);
       border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
       font-size: 0.82rem; font-weight: 700;
@@ -316,7 +316,7 @@
       padding: 24px; text-align: center;
     }
     .footer p { font-size: 0.78rem; color: var(--muted); line-height: 1.8; }
-    .footer a { color: var(--red); text-decoration: none; font-weight: 600; }
+    .footer a { color: var(--dk); text-decoration: none; font-weight: 600; }
     .footer a:hover { text-decoration: underline; }
 
     .powered-by { text-align: center; padding: 16px 24px 0; font-size: 0.8rem; color: var(--muted); }
@@ -478,7 +478,7 @@
           <div class="step-card">
             <div class="step-num">2</div>
             <h3>Create your account</h3>
-            <p>Visit <a href="https://www.willsassured.co.uk" target="_blank" rel="noopener noreferrer" style="color:var(--red);font-weight:600;">willsassured.co.uk</a>, apply your code at checkout, and create your secure account.</p>
+            <p>Visit <a href="https://www.willsassured.co.uk" target="_blank" rel="noopener noreferrer" style="color:var(--dk);font-weight:600;">willsassured.co.uk</a>, apply your code at checkout, and create your secure account.</p>
           </div>
           <div class="step-card">
             <div class="step-num">3</div>
@@ -527,7 +527,7 @@
     copyBtn.addEventListener('click', () => {
       navigator.clipboard.writeText(voucherCode.textContent.trim()).then(() => {
         copyLabel.textContent = 'Copied!'
-        copyBtn.style.background = 'var(--red-tint)'
+        copyBtn.style.background = 'var(--dk-tint)'
         setTimeout(() => { copyLabel.textContent = 'Copy'; copyBtn.style.background = '' }, 2000)
       })
     })
