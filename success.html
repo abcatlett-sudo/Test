@@ -18,6 +18,21 @@
     gtag('js', new Date());
     gtag('config', 'G-YEW9B8CT2Y');
   </script>
+
+  <link rel="canonical" href="https://willsassured.co.uk/success.html" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="Wills Assured" />
+  <meta property="og:url" content="https://willsassured.co.uk/success.html" />
+  <meta property="og:title" content="Payment Confirmed — Wills Assured" />
+  <meta property="og:description" content="Payment confirmed. Create your Wills Assured account to begin your guided will questionnaire." />
+  <meta property="og:image" content="https://willsassured.co.uk/og-image.png" />
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Payment Confirmed — Wills Assured" />
+  <meta name="twitter:description" content="Payment confirmed. Create your Wills Assured account to begin your guided will questionnaire." />
+  <meta name="twitter:image" content="https://willsassured.co.uk/og-image.png" />
 </head>
 <body>
 
@@ -37,16 +52,19 @@
       <button class="nav-toggle" aria-label="Toggle menu">&#9776;</button>
     </div>
     <div class="nav-trustpilot">
-      <div class="tp-stars">
-        <span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star tp-star-half">&#9733;</span>
+      <div class="container nav-tp-row">
+        <div class="tp-stars">
+          <span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star">&#9733;</span><span class="tp-star tp-star-half">&#9733;</span>
+        </div>
+        <span class="tp-label">Excellent</span>
+        <span class="tp-divider">|</span>
+        <a class="tp-brand" href="https://www.trustpilot.com/review/willsassured.co.uk" target="_blank" rel="noopener noreferrer"><span class="tp-brand-star">&#9733;</span> Trustpilot</a>
       </div>
-      <span class="tp-label">Excellent</span>
-      <span class="tp-divider">|</span>
-      <span class="tp-score"><strong>4.8</strong> out of 5</span>
-      <span class="tp-divider">|</span>
-      <span class="tp-brand">&#11088; Trustpilot</span>
     </div>
   </nav>
+  <a class="nav-instagram" href="https://www.instagram.com/willsassured.co.uk?igsh=ajQ2MXJmN29rdDho" target="_blank" rel="noopener noreferrer" aria-label="Wills Assured on Instagram">
+    <svg class="nav-instagram-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1.5" fill="currentColor" stroke="none"/></svg>
+  </a>
 
   <!-- =====================
        SUCCESS CONTENT
@@ -84,6 +102,18 @@
       <p class="auth-footer" style="margin-top: 20px;">
         Already have an account? <a href="login.html">Sign in &rarr;</a>
       </p>
+    </div>
+
+    <!-- Renewal purchase -->
+    <div class="auth-card success-card" id="renewalSuccess" style="display:none;">
+      <div class="success-icon" style="background: linear-gradient(135deg, var(--primary), var(--teal));">&#10003;</div>
+      <div class="auth-header">
+        <h1>Account renewed</h1>
+        <p>Your editing window has been extended by 24 months. Your will is ready to update.</p>
+      </div>
+      <a href="dashboard.html" class="btn btn-full" style="margin-top: 8px;">
+        Go to Dashboard &rarr;
+      </a>
     </div>
 
     <!-- Voucher purchase -->
@@ -144,13 +174,23 @@
     </div>
   </footer>
 
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-  <script src="script.js"></script>
-  <script src="auth.js"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script defer src="script.js"></script>
+  <script defer src="auth.js"></script>
   <script>
-    const params = new URLSearchParams(window.location.search);
-    const type   = params.get('type') || '';
-    if (type.startsWith('voucher')) {
+    const params    = new URLSearchParams(window.location.search);
+    const type      = params.get('type') || '';
+    const sessionId = params.get('session_id') || '';
+
+    // Fix 1 — persist session ID immediately so it survives lost connections
+    if (sessionId && !type.startsWith('voucher')) {
+      localStorage.setItem('wa_pending_session', JSON.stringify({ sessionId, productType: type }));
+    }
+
+    if (type === 'renewal') {
+      document.getElementById('regularSuccess').style.display = 'none';
+      document.getElementById('renewalSuccess').style.display = '';
+    } else if (type.startsWith('voucher')) {
       document.getElementById('regularSuccess').style.display = 'none';
       document.getElementById('voucherSuccess').style.display = '';
     }

@@ -28,3 +28,29 @@ jobs:
           name: willsassured-backup-${{ github.run_id }}
           path: ${{ env.BACKUP_FILE }}
           retention-days: 90
+
+      - name: Setup Supabase CLI
+        uses: supabase/setup-cli@v1
+        with:
+          version: latest
+
+      - name: Dump Supabase database
+        env:
+          SUPABASE_ACCESS_TOKEN: ${{ secrets.SUPABASE_ACCESS_TOKEN }}
+          SUPABASE_DB_URL: ${{ secrets.SUPABASE_DB_URL }}
+        run: |
+          if [ -n "$SUPABASE_DB_URL" ]; then
+            DATE=$(date +'%Y-%m-%d')
+            supabase db dump --project-ref fgyqumgvmllhiqdmgrfc --db-url "$SUPABASE_DB_URL" > "willsassured-db-${DATE}.sql"
+            echo "DB_DUMP_FILE=willsassured-db-${DATE}.sql" >> $GITHUB_ENV
+          else
+            echo "SUPABASE_DB_URL secret not configured — skipping database dump"
+          fi
+
+      - name: Upload database dump
+        if: env.DB_DUMP_FILE != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: willsassured-db-backup-${{ github.run_id }}
+          path: ${{ env.DB_DUMP_FILE }}
+          retention-days: 90

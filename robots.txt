@@ -1,0 +1,22 @@
+User-agent: *
+Allow: /
+
+# Private/app pages — not for indexing
+Disallow: /dashboard.html
+Disallow: /questionnaire.html
+Disallow: /will-preview.html
+Disallow: /basket.html
+Disallow: /success.html
+Disallow: /reset-password.html
+Disallow: /redeem.html
+
+# Corporate partner pages — internal use only
+Disallow: /lloyds.html
+Disallow: /bupa.html
+Disallow: /motorola-solutions.html
+Disallow: /brewers.html
+Disallow: /laing-orourke.html
+Disallow: /dentsu.html
+Disallow: /abports.html
+
+Sitemap: https://willsassured.co.uk/sitemap.xml
